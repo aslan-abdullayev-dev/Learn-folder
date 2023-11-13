@@ -1,0 +1,7 @@
+.mapboxgl-ctrl-attrib-inner {
+  color: black;
+}
+
+.mapboxgl-ctrl-attrib-inner a {
+  display: none;
+}

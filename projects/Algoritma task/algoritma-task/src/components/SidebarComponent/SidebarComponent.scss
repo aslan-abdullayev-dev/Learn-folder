@@ -1,0 +1,10 @@
+.sidebar {
+    padding: 30px;
+    height: 100%;
+    list-style-type: none;
+    background-color: #f7f7f7;
+
+    &__item {
+        margin-block: 15px;
+    }
+}

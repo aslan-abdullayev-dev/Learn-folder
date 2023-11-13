@@ -1,0 +1,22 @@
+.orders {
+  height: 100%;
+  padding-inline: 16px;
+  display: flex;
+  flex-direction: column;
+
+  &__nav {
+    width: 100%;
+    padding-block: 16px;
+    border-bottom: 1px solid #10ad58;
+    font-weight: 600;
+    color: #10ad58;
+  }
+
+  &__content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}

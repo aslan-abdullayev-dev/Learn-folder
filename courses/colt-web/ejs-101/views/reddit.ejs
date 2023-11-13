@@ -1,0 +1,35 @@
+<%- include("partials/head.ejs") -%>
+
+  <div class="container">
+    <!-- header -->
+    <h1>Browsing The <%= name %> subreddit</h1>
+
+    <!-- description -->
+    <h2>
+      <%= description %>
+    </h2>
+
+    <!-- number of subscribers -->
+    <p>
+      <%= subscribers %> Total subscribers
+    </p>
+
+    <hr />
+
+    <!-- posts -->
+    <h2>posts</h2>
+    <% posts.forEach((post)=> { %>
+      <article>
+        <p>
+          <%= post.title %> - <b>
+              <%= post.author %>
+            </b>
+        </p>
+        <% if(post.img) { %>
+          <img src=<%=post.img %> />
+          <% } %>
+      </article>
+      <% }) %>
+  </div>
+
+  <%- include("partials/footer.ejs") -%>

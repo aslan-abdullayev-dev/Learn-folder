@@ -1,0 +1,15 @@
+<%- include("partials/head.ejs") -%>
+
+<div class="container">
+  <h1>cats</h1>
+
+  <ul>
+    <% cats.forEach((cat) => { %>
+    <li><%= cat %></li>
+    <% }) %>
+  </ul>
+
+  <br />
+</div>
+
+<%- include("partials/footer.ejs") -%>
