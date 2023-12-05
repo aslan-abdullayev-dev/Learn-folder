@@ -3,6 +3,8 @@ public class For_Loops {
         System.out.println("basic loop -------------------");
         for (int i = 0; i < 10; i++) {
             System.out.println("salam " + (i + 1));
+            int i2 = i * 3;
+            System.out.println(i2);
         }
         System.out.println("son");
         System.out.println("basic loop -------------------");
