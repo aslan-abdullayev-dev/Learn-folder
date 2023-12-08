@@ -23,5 +23,8 @@ public class String_Methods {
         System.out.println("last index of a = " + str.lastIndexOf("a")); //! returns -1 if not found
 
         System.out.println("replace a with '' = " + str.replace("a", ""));
+
+        System.out.println("=====================================================");
+        System.out.println("=====================================================");
     }
 }
