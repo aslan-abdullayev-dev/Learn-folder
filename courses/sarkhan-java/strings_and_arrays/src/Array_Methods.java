@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Array_Methods {
@@ -28,6 +29,7 @@ public class Array_Methods {
             for (int j = 0; j < firstLevelItem.length; j++) {
                 firstLevelItem[j] = i * 10 + j;
                 System.out.println(firstLevelItem[j]);
+                System.out.println("firstLevelItem stringify = " + Arrays.toString(firstLevelItem));
             }
         }
     }
