@@ -1,14 +1,9 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Array_Methods {
     public static void runArrayMethods() {
         oneRowArray();
         multipleRowArray();
-
-        System.out.println("=====================================================");
-        System.out.println("=====================================================");
     }
 
     public static void oneRowArray() {
