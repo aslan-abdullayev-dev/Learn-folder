@@ -1,0 +1,17 @@
+----------------------------------------------------------------------------------------------------
+It IS possible to import individual classes of the package.
+----------------------------------------------------------------------------------------------------
+It IS possible to import all the classes from the package.
+----------------------------------------------------------------------------------------------------
+It IS possible to import all the static methods of the individual class from other package.
+----------------------------------------------------------------------------------------------------
+It is NOT possible to import all the non-static methods from one class in java.
+
+It is because if you need non-static methods of the certain class,
+you also need class itself to instantiate that class and use non-static methods of it.
+----------------------------------------------------------------------------------------------------
+Also it is NOT possible to import all the static methods from multiple classes of the same package.
+
+Probably because there can be same named static properties from different classes of the same package.
+For example: "name", "getName"
+----------------------------------------------------------------------------------------------------
