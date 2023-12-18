@@ -1,8 +1,41 @@
 public class User {
-    public String name;
-    public String surname;
-    public int age;
-    public static String companyName;
+    private String name;
+    private String surname;
+    private int age;
+    private static String companyName;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public static String getCompanyName() {
+        return companyName;
+    }
+
+    public static void setCompanyName(String companyName) {
+        User.companyName = companyName;
+    }
 
     public static void foo() {
         System.out.println("user class static foo");
