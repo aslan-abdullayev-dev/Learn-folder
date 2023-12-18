@@ -1,0 +1,28 @@
+.link {
+  text-decoration: none;
+  &__content {
+    color: #000000;
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    padding: 10px 20px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 500;
+    
+    svg {
+      color: #000000;
+    }
+    
+    &--active {
+      color: #10ad58;
+      background-color: #ffffff;
+      font-weight: 600;
+
+      svg {
+        fill: #10ad58;
+      }
+    }
+  }
+}
