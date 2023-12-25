@@ -1,11 +1,25 @@
 .layout {
-  background-color: aquamarine;
   display: flex;
-  height: 100vh;
   &-left {
     flex-shrink: 0;
+    height: 100vh;
   }
   &-right {
+    height: 100vh;
     flex-grow: 1;
+    position: relative;
+    overflow-y: auto;
+    --navbar-height: 108px;
+
+    .layout-navbar {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+    }
+    .layout-body {
+      height: calc(100vh - var(--navbar-height));
+    }
   }
 }

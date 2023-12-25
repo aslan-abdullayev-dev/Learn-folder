@@ -1,20 +1,16 @@
 import "./Sidebar.scss";
-import img1 from "../../assets/img/sidebar-img-1.png";
-import img2 from "../../assets/img/sidebar-img-2.png";
-import Logo from "../../assets/svg/be_logo.svg?react";
 
 import React, { useState } from "react";
 
 import { sidebarData } from "../../constants/sidebarData";
 import ToggleSidebarButton from "../ToggleSidebarButton/ToggleSidebarButton";
 
-function Sidebar() {
-  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(false);
-  const [isMouseOnMenuItem, setIsMouseOnMenuItem] = useState(false);
+import img1 from "../../assets/img/sidebar-img-1.png";
+import img2 from "../../assets/img/sidebar-img-2.png";
+import Logo from "../../assets/svg/be_logo.svg?react";
 
-  const handleToggleSidebar = () => {
-    setSidebarIsCollapsed(!sidebarIsCollapsed);
-  };
+function Sidebar() {
+  const [isMouseOnMenuItem, setIsMouseOnMenuItem] = useState(false);
 
   const handleHoverMenuItem = (type, menuHasChildren) => {
     if (menuHasChildren && type === "on") {
@@ -25,23 +21,10 @@ function Sidebar() {
   };
 
   return (
-    <div className={`sidebar ${sidebarIsCollapsed ? "collapsed" : ""}`}>
+    <div className="sidebar">
       <div className="sidebar-top">
         <Logo />
-        {!sidebarIsCollapsed && !isMouseOnMenuItem && (
-          <ToggleSidebarButton
-            isOpen={!sidebarIsCollapsed}
-            onClick={handleToggleSidebar}
-          />
-        )}
-        <div className="sidebar-close-button">
-          {sidebarIsCollapsed && (
-            <ToggleSidebarButton
-              isOpen={!sidebarIsCollapsed}
-              onClick={handleToggleSidebar}
-            />
-          )}
-        </div>
+        {!isMouseOnMenuItem && <ToggleSidebarButton isOpen={true} />}
       </div>
       <ul className="sidebar-bottom">
         {sidebarData.map((menuItem, i) => {

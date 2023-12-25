@@ -1,13 +1,13 @@
 import "./ToggleSidebarButton.scss";
 
-import { DoubleLeftOutlined, DoubleRightOutlined } from "@ant-design/icons";
+import { DoubleLeftOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import React from "react";
 
-function ToggleSidebarButton({ isOpen, onClick }) {
+function ToggleSidebarButton() {
   return (
-    <Button onClick={onClick} className="toggle-sidebar-button">
-      {isOpen ? <DoubleLeftOutlined /> : <DoubleRightOutlined />}
+    <Button className="toggle-sidebar-button">
+      <DoubleLeftOutlined />
     </Button>
   );
 }

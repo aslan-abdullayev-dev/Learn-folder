@@ -32,12 +32,13 @@
       flex-shrink: 0;
       width: 60px;
     }
-    .sidebar-close-button {
-      position: absolute;
-      top: 34px;
-      right: 0;
-      transform: translateX(calc(100% + 10px));
-    }
+    // .sidebar-close-button {
+    //   position: absolute;
+    //   top: 34px;
+    //   right: 0;
+    //   transform: translateX(calc(100% + 10px));
+    //   z-index: 10;
+    // }
   }
   &-bottom {
     height: calc(100vh - 100px);
@@ -88,6 +89,7 @@
             height: 100vh;
             width: calc(100vw - 100%);
             padding: 100px 20px 20px 20px;
+            z-index: 10;
 
             display: flex;
             align-items: flex-start;
