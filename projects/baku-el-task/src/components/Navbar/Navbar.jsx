@@ -19,10 +19,23 @@ function Navbar() {
         <NavbarSearch />
       </div>
       <div className="navbar-right">
-        <NavbarNotificationButton icon={<ScalesIcon />} />
-        <NavbarNotificationButton icon={<BasketIcon />} />
-        <NavbarNotificationButton icon={<HeartIcon />} notificationCount={5} />
-        <NavbarNotificationButton icon={<LoginIcon />} notificationCount={11} />
+        <div className="links">
+          <span className="link bold">Kampaniyalar</span>
+          <span className="link">Xidmətlər</span>
+          <span className="link">Xidmətlər</span>
+        </div>
+        <div className="buttons">
+          <NavbarNotificationButton icon={<ScalesIcon />} />
+          <NavbarNotificationButton icon={<BasketIcon />} />
+          <NavbarNotificationButton
+            icon={<HeartIcon />}
+            notificationCount={5}
+          />
+          <NavbarNotificationButton
+            icon={<LoginIcon />}
+            notificationCount={11}
+          />
+        </div>
       </div>
     </div>
   );
