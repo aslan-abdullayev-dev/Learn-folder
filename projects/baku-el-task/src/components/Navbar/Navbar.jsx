@@ -4,6 +4,12 @@ import React from "react";
 
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 import NavbarSearch from "../NavbarSearch/NavbarSearch";
+import NavbarNotificationButton from "../NavbarNotificationButton/NavbarNotificationButton";
+
+import ScalesIcon from "../../assets/svg/scales.svg?react";
+import BasketIcon from "../../assets/svg/basket.svg?react";
+import HeartIcon from "../../assets/svg/heart.svg?react";
+import LoginIcon from "../../assets/svg/login.svg?react";
 
 function Navbar() {
   return (
@@ -12,7 +18,12 @@ function Navbar() {
         <ThemeSwitch />
         <NavbarSearch />
       </div>
-      <div className="navbar-right"></div>
+      <div className="navbar-right">
+        <NavbarNotificationButton icon={<ScalesIcon />} />
+        <NavbarNotificationButton icon={<BasketIcon />} />
+        <NavbarNotificationButton icon={<HeartIcon />} notificationCount={5} />
+        <NavbarNotificationButton icon={<LoginIcon />} notificationCount={11} />
+      </div>
     </div>
   );
 }
