@@ -23,7 +23,7 @@ function Navbar() {
         <div className="links">
           <span className="link bold">Kampaniyalar</span>
           <span className="link">Xidmətlər</span>
-          <span className="link">Xidmətlər</span>
+          <span className="link">Digər</span>
         </div>
         <div className="buttons">
           <LangSelect />

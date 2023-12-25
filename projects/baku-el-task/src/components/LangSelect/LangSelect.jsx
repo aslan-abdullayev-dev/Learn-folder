@@ -14,7 +14,6 @@ function LangSelect() {
         ]}
         defaultValue="en"
         suffixIcon={null}
-        defaultOpen
         popupClassName="lang-select-dropdown"
       />
     </div>
