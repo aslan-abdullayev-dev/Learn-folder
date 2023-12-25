@@ -10,6 +10,7 @@ import ScalesIcon from "../../assets/svg/scales.svg?react";
 import BasketIcon from "../../assets/svg/basket.svg?react";
 import HeartIcon from "../../assets/svg/heart.svg?react";
 import LoginIcon from "../../assets/svg/login.svg?react";
+import LangSelect from "../LangSelect/LangSelect";
 
 function Navbar() {
   return (
@@ -25,6 +26,7 @@ function Navbar() {
           <span className="link">Xidmətlər</span>
         </div>
         <div className="buttons">
+          <LangSelect />
           <NavbarNotificationButton icon={<ScalesIcon />} />
           <NavbarNotificationButton icon={<BasketIcon />} />
           <NavbarNotificationButton
