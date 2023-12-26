@@ -4,6 +4,7 @@ import { Input, Space } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 
 import SearchIcon from "../../assets/svg/search.svg?react";
+import ProductCard from "../ProductCard/ProductCard";
 
 function NavbarSearch() {
   const searchRef = useRef(null);
@@ -62,14 +63,14 @@ function NavbarSearch() {
                   <SearchIcon />
                   <span>Apple Iphone 15 pro, 128GB, Gold</span>
                 </div>
-                <div className="categories-item">
+                {/* <div className="categories-item">
                   <SearchIcon />
                   <span>Apple Macbook Air 15 </span>
                 </div>
                 <div className="categories-item">
                   <SearchIcon />
                   <span>Apple Macbook Pro 16 inch, 256 GB</span>
-                </div>
+                </div> */}
               </div>
               <div className="category-list">
                 <h2 className="categories-products-title">Kategoriyalar</h2>
@@ -87,7 +88,17 @@ function NavbarSearch() {
                 </div>
               </div>
             </div>
-            <div className="products categories-products-item">433</div>
+            <div className="products">
+              <div className="top">
+                <h2 className="categories-products-title">Məhsullar</h2>
+                <div className="prducts-wrapper">
+                  <ProductCard />
+                  <ProductCard />
+                  {/* <ProductCard /> */}
+                </div>
+              </div>
+              <div className="bottom">dsad</div>
+            </div>
           </div>
         </div>
       </div>
