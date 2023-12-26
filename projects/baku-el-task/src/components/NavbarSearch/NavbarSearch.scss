@@ -128,9 +128,17 @@
             }
           }
           .bottom {
+            margin-top: 14px;
             border-radius: 16px;
             background: #fff;
-            padding: 18px 24px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 142px;
+
+            img {
+              width: 70%;
+            }
           }
         }
       }

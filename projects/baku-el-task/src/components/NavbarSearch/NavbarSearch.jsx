@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import SearchIcon from "../../assets/svg/search.svg?react";
 import ProductCard from "../ProductCard/ProductCard";
+import honorAdvertImg from "../../assets/img/honor-advert.png";
 
 function NavbarSearch() {
   const searchRef = useRef(null);
@@ -97,7 +98,9 @@ function NavbarSearch() {
                   {/* <ProductCard /> */}
                 </div>
               </div>
-              <div className="bottom">dsad</div>
+              <div className="bottom">
+                <img src={honorAdvertImg} alt="" />
+              </div>
             </div>
           </div>
         </div>
