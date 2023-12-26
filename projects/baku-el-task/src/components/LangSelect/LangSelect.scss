@@ -8,6 +8,13 @@
       background-color: #f5f5f5 !important;
       border: 0 !important;
       border-radius: 12px !important;
+
+      &:hover {
+        background-color: #ea2427 !important;
+        .ant-select-selection-item {
+          color: #fff !important;
+        }
+      }
     }
     &-selection-item {
       color: #333;

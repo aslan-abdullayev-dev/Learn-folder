@@ -65,6 +65,11 @@
         gap: 8px;
         color: #7a7a7a;
         text-wrap: nowrap;
+        font-size: 14px;
+
+        svg {
+          flex-shrink: 0;
+        }
       }
 
       &-hover-content {
