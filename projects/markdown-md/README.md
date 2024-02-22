@@ -21,7 +21,6 @@
 <!-- ITALICS -->
 
 *Italicised* text
-*\Italicised\* text
 
 # *Italicesed header content*
 
