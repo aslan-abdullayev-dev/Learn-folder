@@ -1,4 +1,4 @@
-> * # Next version: 13.1.6
+> * # Next version: 13.2.3
 > * # App directory
 >     * ## Global Layout
 >     * ## Error Page
