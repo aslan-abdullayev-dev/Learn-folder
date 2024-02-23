@@ -1,9 +1,11 @@
 > * # Next version: 13.2.3
-> * # App directory
->     * ## Global Layout
->     * ## Error Page
->     * ## Loading Page
->     * ## Head Component
+> * # Deprecated Head
+>      * # New Metada
+> * # Fetching data
+>      * # Fetch data on the server
+>      * # Fetch data in parallel
+> * # Dynamic routing
+> * # Using suspense for loading screen of individual component instead of Loading component
 
 ---
 
