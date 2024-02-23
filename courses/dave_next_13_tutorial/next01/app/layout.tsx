@@ -1,5 +1,8 @@
 import './globals.css'
 
+// * this layout applied to all the routes inside "app" directory
+// * basically it is a parent layout
+
 export default function RootLayout({
   children,
 }: {
@@ -12,7 +15,12 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body>{children}</body>
+      <body>
+        <nav>
+          <h1>My Navbar</h1>
+        </nav>
+        {children}
+      </body>
     </html>
   )
 }

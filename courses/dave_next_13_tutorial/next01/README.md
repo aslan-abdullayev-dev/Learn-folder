@@ -1,3 +1,13 @@
+<!-- # Next version: 13.1.6
+# Next version: 13.1.6
+# Next version: 13.1.6 -->
+> * # Next version: 13.1.6
+> * # App directory
+>     * ## Global Layout
+>     * ## Error Page
+>     * ## Loading Page
+>     * ## Head Component
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
