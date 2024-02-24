@@ -1,30 +1,30 @@
 type Post = {
-  userId: 2;
-  id: 11;
-  title: "et ea vero quia laudantium autem";
-  body: "delectus reiciendis molestiae occaecati non minima eveniet qui voluptatibus\naccusamus in eum beatae sit\nvel qui neque voluptates ut commodi qui incidunt\nut animi commodi";
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
 };
 
 type User = {
-  id: 1;
-  name: "Leanne Graham";
-  username: "Bret";
-  email: "Sincere@april.biz";
+  id: number;
+  name: string;
+  username: string;
+  email: string;
   address: {
-    street: "Kulas Light";
-    suite: "Apt. 556";
-    city: "Gwenborough";
-    zipcode: "92998-3874";
+    street: string;
+    suite: string;
+    city: string;
+    zipcode: string;
     geo: {
-      lat: "-37.3159";
-      lng: "81.1496";
+      lat: string;
+      lng: string;
     };
   };
-  phone: "1-770-736-8031 x56442";
-  website: "hildegard.org";
+  phone: string;
+  website: string;
   company: {
-    name: "Romaguera-Crona";
-    catchPhrase: "Multi-layered client-server neural-net";
-    bs: "harness real-time e-markets";
+    name: string;
+    catchPhrase: string;
+    bs: string;
   };
 };

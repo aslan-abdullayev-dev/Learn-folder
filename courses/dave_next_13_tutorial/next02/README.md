@@ -1,6 +1,7 @@
 > * # Next version: 13.2.3
 > * # Deprecated Head
 >      * # New Metada
+>      * # Dynamic Metada
 > * # Fetching data
 >      * # Fetch data on the server
 >      * # Fetch data in parallel

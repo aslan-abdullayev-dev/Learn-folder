@@ -1,4 +1,5 @@
-import { Suspense } from "react"
+import { Suspense, use } from "react"
+import { Metadata } from "next"
 
 import getUser from "@/lib/getUser"
 import getUserPosts from "@/lib/getUserPosts"
@@ -7,6 +8,17 @@ import UserPosts from "./components/UserPosts"
 type Params = {
   params: {
     userId: string
+  }
+}
+
+// * "generateMetadata" is reserved keyword
+export async function generateMetadata({ params: { userId } }: Params): Promise<Metadata> {
+  const userData: Promise<User> = getUser(userId)
+  const user: User = await userData
+
+  return {
+    title: user.name,
+    description: `This is the name of ${user.name}`
   }
 }
 
