@@ -1,5 +1,8 @@
-> * # Next version: 13.2.3
-> * # SSG SSR ISR
+> - # Next version: 13.2.3
+> - # CSR SSG SSR ISR
+>   - ## Incremental Static Regenaration (ISR)
+>   - ## Static Site Generation (SSG)
+>   - ## Turning SSR to SSG
 
 ---
 
