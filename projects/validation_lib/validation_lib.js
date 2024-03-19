@@ -1,79 +1,84 @@
-class CVString {
-  #nullable = false;
-  #value = "";
-  #key = "";
-  nullable(isNullable) {
-    this.#nullable = isNullable;
-    return this;
-  }
-  setStringValue(newVal) {
-    this.#value = newVal;
-  }
-  setStringKey(key) {
-    this.#key = key;
-  }
-  getStringKey() {
-    return this.#key;
-  }
-  validate() {
-    let message = "";
-    if (typeof this.#value !== "string") {
-      message = "field has to be a string";
-    }
-    if (!this.#nullable && !this.#value) {
-      message = "field is required";
-    }
-    return message;
-  }
-}
+// !--------------------------------------------------
+// !--------------------------------------------------
+// * CVS class
+// * should return  {values, errors, validate, static string, static number, static object}
 
+// * CVS.shape() :
+// * should return CSV class instance
+// ! shape() should be class itself
+// ! when it returns CSV class instance it is not possible to access latest data of CSV properties {schema, errors, values}
+
+// * CVS.string() :
+// * should return CSV string class instance. {#key, #isValid, #errMessage, validate}
+
+// * CVS.number() :
+// * should return CSV string class instance. {key, isValid, errMessage, validate}
+
+// * CVS.object() :
+// * should return CSV object class instance. {key, isValid, errMessage, validate}
+// !--------------------------------------------------
+// !--------------------------------------------------
 class CVS {
-  static #values = {};
-  static #errors = {};
-  static #shape = {};
-  static shape(validationSchema) {
-    this.#shape = validationSchema;
+  static values = {};
+  static errors = {};
+  static globalSchema = {};
+  static validate() {}
+  static shape() {
     return this;
   }
   static string() {
-    return new CVString();
+    return new CVSString();
   }
-  static validate(data) {
-    for (const shapeKey in this.#shape) {
-      this.#shape[shapeKey].setStringValue(data[shapeKey]);
-      this.#shape[shapeKey].setStringKey(shapeKey);
-      const errMessage = this.#shape[shapeKey].validate();
-      if (errMessage) {
-        this.#errors[shapeKey] = errMessage;
-      } else {
-        this.#values[shapeKey] = data[shapeKey];
-      }
-    }
+  static object(obj) {
+    const cvsObj = new CVSObject(obj);
+    this.schema = cvsObj;
+    return cvsObj;
+  }
+}
 
-    if (Object.keys(this.#errors).length) {
-      return { isValid: false, data: this.getErrors() };
-    } else {
-      return { isValid: true, data: this.getValues() };
-    }
-  }
-  static getValues() {
-    return this.#values;
-  }
-  static getErrors() {
-    return this.#errors;
+class CVSType {
+  key = "";
+  errMessage = "";
+  isValid = false;
+  value = "";
+  schema = {};
+}
+
+class CVSString extends CVSType {}
+class CVSObject extends CVSType {
+  constructor(obj) {
+    super();
+    this.schema = obj;
   }
 }
 
 const myData = {
   name: "Aslan",
-  surname: 5,
+  surname: "Abdullayev",
+  jobInfo: {
+    title: "Developer",
+  },
+  hobbies: ["programming", "games"],
 };
 
-const mySchema = CVS.shape({
-  name: CVS.string(),
-  surname: CVS.string().nullable(true),
-});
+// !---------------------------------------
+// const mySchema = CVS.shape().object({
+// name: CVS.string(),
+// surname: CVS.string().nullable(true),
+// jobInfo: CVS.object({
+//   title: CVS.string(),
+// }),
+// hobbies: CVS.array().min(5).of(CVS.string()),
+// });
+// const validatedVals = mySchema.validate(myData);
+// !---------------------------------------
+const mySchema = CVS.shape(
+  CVS.object({
+    name: CVS.string(),
+    jobInfo: CVS.object({
+      title: CVS.string(),
+    }),
+  })
+);
 
-const validatedVals = mySchema.validate(myData);
-
-console.log(validatedVals);
+console.log(mySchema);
