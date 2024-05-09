@@ -13,6 +13,10 @@ function ts_square(num: number): number {
 // ts_square("asd")
 // ts_square(true)
 
-function print_number(num: number = 0) {
+function print_number(num: number = 0): void {
   console.log("num ==>", num)
+}
+
+function give_error (msg:string): never {
+ throw new Error(msg)
 }
