@@ -10,3 +10,6 @@ const norma: Chicken = {
   eggsPerWeek: 4,
   name: "Norma",
 }
+
+function a(a) {
+}
