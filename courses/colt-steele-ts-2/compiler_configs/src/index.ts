@@ -11,5 +11,5 @@ const norma: Chicken = {
   name: "Norma",
 }
 
-function a(a) {
+function a(a: any) {
 }
