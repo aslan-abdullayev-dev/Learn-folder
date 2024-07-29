@@ -1,0 +1,21 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    .content__left {
+      img {
+
+      }
+    }
+
+    .content__right {
+    }
+  }
+}

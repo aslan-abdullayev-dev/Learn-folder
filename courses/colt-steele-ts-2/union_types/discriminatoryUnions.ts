@@ -69,6 +69,7 @@ const data2: Working_Simple_Intersection_Discriminatory_Union = {
   default: [],
   nullable: false,
   dataParser: "",
+  cssEditor:""
 }
 
 //======================================================
