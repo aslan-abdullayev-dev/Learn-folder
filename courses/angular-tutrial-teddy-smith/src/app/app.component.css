@@ -1,3 +1,7 @@
-.imgSrc {
-  width: 100%;
+.cool-bool {
+  background: aqua;
+}
+
+.active {
+  color: red
 }
