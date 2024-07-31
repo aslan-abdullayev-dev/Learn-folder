@@ -1,4 +1,4 @@
-type TUser = { id: string; name: string; avatar: string; }
+export type TUser = { id: string; name: string; avatar: string; }
 
 export const DUMMY_USERS: TUser[] = [
   {
