@@ -1,3 +1,10 @@
+<div>
+  <button (click)="onSelectUser()">
+    <img [src]="imagePath" [alt]="name">
+    <span>{{name}}</span>
+  </button>
+</div>
+
 <!------------------------- ZONE JS TEMPLATE ------------------------->
 <!--<div>-->
 <!--  <button (click)="onSelectUser()">-->
@@ -6,12 +13,11 @@
 <!--  </button>-->
 <!--</div>-->
 <!------------------------- ZONE JS TEMPLATE ------------------------->
-
 <!------------------------- SIGNALS TEMPLATE ------------------------->
-<div>
-  <button (click)="onSelectUser()">
-    <img [src]="imagePath()" [alt]="selectedUser().name">
-    <span>{{ selectedUser().name }}</span>
-  </button>
-</div>
+<!--<div>-->
+<!--  <button (click)="onSelectUser()">-->
+<!--    <img [src]="imagePath()" [alt]="selectedUser().name">-->
+<!--    <span>{{ selectedUser().name }}</span>-->
+<!--  </button>-->
+<!--</div>-->
 <!------------------------- SIGNALS TEMPLATE ------------------------->
