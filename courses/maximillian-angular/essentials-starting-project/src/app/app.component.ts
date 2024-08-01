@@ -12,12 +12,12 @@ import { TasksComponent } from "./tasks/tasks.component";
   imports: [
     HeaderComponent,
     UserComponent,
-    TasksComponent
+    TasksComponent,
   ]
 })
 export class AppComponent {
   users = DUMMY_USERS;
-  selectedUserId!: string;
+  selectedUserId?: string;
 
   onSelectUser(id: string) {
     this.selectedUserId = id;
