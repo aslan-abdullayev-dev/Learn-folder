@@ -1,14 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { TUser } from "../dummy-users";
 import { TaskComponent } from "./task/task.component";
-
-export type TTask = {
-  id: string
-  userId: string
-  title: string
-  summary: string
-  dueDate: string
-}
+import { type TTask } from "./tasks.model";
+import { type TUser } from "../user/user.model";
 
 @Component({
   selector: 'app-tasks',
@@ -46,7 +39,8 @@ export class TasksComponent {
       dueDate: '2024-06-15',
     },
   ]
-  get getUserTasks() {
+
+  get selectedUserTasks() {
     return this.tasks.filter(t => t.userId === this.user?.id)
   }
 }

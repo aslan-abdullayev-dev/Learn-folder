@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TUser } from "../dummy-users"
+import { type TUser } from "./user.model";
 
 // const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
 

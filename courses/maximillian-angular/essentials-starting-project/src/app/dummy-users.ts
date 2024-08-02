@@ -1,4 +1,4 @@
-export type TUser = { id: string; name: string; avatar: string; }
+import { TUser } from "./user/user.model";
 
 export const DUMMY_USERS: TUser[] = [
   {
