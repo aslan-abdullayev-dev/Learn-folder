@@ -12,7 +12,7 @@
   </header>
 
   @if (showNewTaskDialog) {
-    <app-new-task/>
+    <app-new-task (close)="closeNewTaskDialog()"/>
   }
 
   <ul>

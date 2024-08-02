@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskComponent } from "./task/task.component";
 import { type TTask } from "./tasks.model";
 import { type TUser } from "../user/user.model";
-import { NewTaskComponent } from "../new-task/new-task.component";
+import { NewTaskComponent } from "./new-task/new-task.component";
 
 @Component({
   selector: 'app-tasks',
@@ -52,7 +52,11 @@ export class TasksComponent {
     this.tasks = this.tasks.filter(t => t.id !== id);
   }
 
-  openNewTaskDialog(): void {
+  openNewTaskDialog() {
     this.showNewTaskDialog = true;
+  }
+
+  closeNewTaskDialog() {
+    this.showNewTaskDialog = false;
   }
 }
