@@ -1,15 +1,27 @@
 <section id="tasks">
   <header>
-    <h2>{{ user?.name }}`s Tasks</h2>
+    <h2>{{ user.name }}`s Tasks</h2>
     <menu>
-      <button>Add Task</button>
+      <button
+        (click)="openNewTaskDialog()"
+        [disabled]="showNewTaskDialog"
+      >
+        Add Task
+      </button>
     </menu>
   </header>
 
+  @if (showNewTaskDialog) {
+    <app-new-task
+      (close)="closeNewTaskDialog()"
+      [userId]="user.id"
+    />
+  }
+
   <ul>
-    @for (task of getUserTasks; track task.id) {
+    @for (task of selectedUserTasks; track task.id) {
       <li>
-        <app-task/>
+        <app-task [task]="task"/>
       </li>
     }
   </ul>
