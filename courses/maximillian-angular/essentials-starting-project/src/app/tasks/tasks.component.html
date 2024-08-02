@@ -12,7 +12,10 @@
   </header>
 
   @if (showNewTaskDialog) {
-    <app-new-task (close)="closeNewTaskDialog()"/>
+    <app-new-task
+      (close)="closeNewTaskDialog()"
+      (add)="handleSubmittedTask($event)"
+    />
   }
 
   <ul>

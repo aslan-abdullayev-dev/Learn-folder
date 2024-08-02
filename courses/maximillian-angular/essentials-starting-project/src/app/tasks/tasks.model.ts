@@ -5,3 +5,5 @@ export type TTask = {
   summary: string
   dueDate: string
 }
+
+export type TNewTask = Omit<TTask, "id" | "userId">

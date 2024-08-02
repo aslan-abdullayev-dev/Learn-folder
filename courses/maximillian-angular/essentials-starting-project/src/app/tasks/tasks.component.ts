@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskComponent } from "./task/task.component";
-import { type TTask } from "./tasks.model";
+import { type TNewTask, type TTask } from "./tasks.model";
 import { type TUser } from "../user/user.model";
 import { NewTaskComponent } from "./new-task/new-task.component";
 
@@ -58,5 +58,14 @@ export class TasksComponent {
 
   closeNewTaskDialog() {
     this.showNewTaskDialog = false;
+  }
+
+  handleSubmittedTask(taskData: TNewTask) {
+    const newTask: TTask = {
+      ...taskData,
+      id: "" + Math.random() * 1_000_000,
+      userId: this.user.id,
+    }
+    this.tasks.unshift(newTask);
   }
 }
