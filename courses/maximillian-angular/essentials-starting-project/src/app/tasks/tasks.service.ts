@@ -30,6 +30,13 @@ export class TasksService {
     },
   ]
 
+  constructor() {
+    const tasks = localStorage.getItem("tasks")
+    if (tasks) {
+      this.tasks = JSON.parse(tasks)
+    }
+  }
+
   getUserTasks(userId: TUser["id"]): TTask[] {
     return this.tasks.filter(t => t.userId === userId)
   }
@@ -41,9 +48,15 @@ export class TasksService {
       userId: userId,
     }
     this.tasks.unshift(newTask);
+    this.saveTask()
   }
 
   removeTask(taskId: TTask["id"]) {
     this.tasks = this.tasks.filter(t => t.id !== taskId);
+    this.saveTask()
+  }
+
+  private saveTask() {
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
   }
 }
