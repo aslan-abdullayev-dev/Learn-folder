@@ -6,14 +6,14 @@ import { type TUser } from "../user/user.model";
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  templateUrl: './tasks.component.html',
   imports: [
     TaskComponent
   ],
+  templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
 export class TasksComponent {
-  @Input() user?: TUser;
+  @Input({ required: true }) user!: TUser;
   tasks: TTask[] = [
     {
       id: 't1',
