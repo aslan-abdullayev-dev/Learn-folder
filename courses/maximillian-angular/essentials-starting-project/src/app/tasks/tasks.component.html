@@ -2,9 +2,18 @@
   <header>
     <h2>{{ user?.name }}`s Tasks</h2>
     <menu>
-      <button>Add Task</button>
+      <button
+        (click)="openNewTaskDialog()"
+        [disabled]="showNewTaskDialog"
+      >
+        Add Task
+      </button>
     </menu>
   </header>
+
+  @if (showNewTaskDialog) {
+    <app-new-task/>
+  }
 
   <ul>
     @for (task of selectedUserTasks; track task.id) {
