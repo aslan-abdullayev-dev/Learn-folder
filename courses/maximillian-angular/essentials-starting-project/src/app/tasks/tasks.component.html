@@ -14,7 +14,7 @@
   @if (showNewTaskDialog) {
     <app-new-task
       (close)="closeNewTaskDialog()"
-      (add)="handleSubmittedTask($event)"
+      [userId]="user.id"
     />
   }
 

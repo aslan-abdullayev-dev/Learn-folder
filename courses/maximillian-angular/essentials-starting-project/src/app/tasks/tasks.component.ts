@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { TaskComponent } from "./task/task.component";
 import { type TNewTask, type TTask } from "./tasks.model";
 import { type TUser } from "../user/user.model";
 import { NewTaskComponent } from "./new-task/new-task.component";
+import { TasksService } from "./tasks.service";
 
 @Component({
   selector: 'app-tasks',
@@ -17,39 +18,14 @@ import { NewTaskComponent } from "./new-task/new-task.component";
 export class TasksComponent {
   @Input({ required: true }) user!: TUser;
   showNewTaskDialog: boolean = false;
-
-  tasks: TTask[] = [
-    {
-      id: 't1',
-      userId: 'u1',
-      title: 'Master Angular',
-      summary:
-        'Learn all the basic and advanced features of Angular & how to apply them.',
-      dueDate: '2025-12-31',
-    },
-    {
-      id: 't2',
-      userId: 'u3',
-      title: 'Build first prototype',
-      summary: 'Build a first prototype of the online shop website',
-      dueDate: '2024-05-31',
-    },
-    {
-      id: 't3',
-      userId: 'u3',
-      title: 'Prepare issue template',
-      summary:
-        'Prepare and describe an issue template which will help with project management',
-      dueDate: '2024-06-15',
-    },
-  ]
+  private tasksService = inject(TasksService);
 
   get selectedUserTasks() {
-    return this.tasks.filter(t => t.userId === this.user?.id)
+    return this.tasksService.getUserTasks(this.user.id);
   }
 
   completeTheTask(id: TTask["id"]) {
-    this.tasks = this.tasks.filter(t => t.id !== id);
+    this.tasksService.removeTask(id)
   }
 
   openNewTaskDialog() {
@@ -58,14 +34,5 @@ export class TasksComponent {
 
   closeNewTaskDialog() {
     this.showNewTaskDialog = false;
-  }
-
-  handleSubmittedTask(taskData: TNewTask) {
-    const newTask: TTask = {
-      ...taskData,
-      id: "" + Math.random() * 1_000_000,
-      userId: this.user.id,
-    }
-    this.tasks.unshift(newTask);
   }
 }
