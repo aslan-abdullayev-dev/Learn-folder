@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskComponent } from "./task/task.component";
 import { type TTask } from "./tasks.model";
 import { type TUser } from "../user/user.model";
@@ -14,6 +14,7 @@ import { type TUser } from "../user/user.model";
 })
 export class TasksComponent {
   @Input({ required: true }) user!: TUser;
+
   tasks: TTask[] = [
     {
       id: 't1',
@@ -42,5 +43,9 @@ export class TasksComponent {
 
   get selectedUserTasks() {
     return this.tasks.filter(t => t.userId === this.user?.id)
+  }
+
+  completeTheTask(id: TTask["id"]) {
+    this.tasks = this.tasks.filter(t => t.id !== id);
   }
 }
