@@ -5,12 +5,12 @@
       <app-server-status [currentStatus]="currentStatus"/>
     </app-dashboard-item>
 
-    <app-dashboard-item alt="A globe" src="globe.png" title="Traffic">
-      <app-tickets [dummyTrafficData]="dummyTrafficData" [maxTraffic]="maxTraffic"/>
+    <app-dashboard-item src="globe.png" alt="A list of items" title="Traffic">
+      <app-traffic [dummyTrafficData]="dummyTrafficData" [maxTraffic]="maxTraffic"/>
     </app-dashboard-item>
 
-    <app-dashboard-item  src="list.png" alt="A list of items" title="Support Tickets">
-      <app-traffic/>
+    <app-dashboard-item src="list.png" alt="A globe" title="Support Tickets">
+      <app-tickets/>
     </app-dashboard-item>
   </div>
 </main>

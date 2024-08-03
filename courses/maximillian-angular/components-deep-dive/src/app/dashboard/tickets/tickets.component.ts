@@ -1,13 +1,14 @@
 import { Component, Input } from '@angular/core';
+import { NewTicketComponent } from "./new-ticket/new-ticket.component";
 
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [],
+  imports: [
+    NewTicketComponent
+  ],
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.css'
 })
 export class TicketsComponent {
-  @Input({ required: true }) public dummyTrafficData!: { id: string, value: number }[];
-  @Input({ required: true }) public maxTraffic!: number;
 }
