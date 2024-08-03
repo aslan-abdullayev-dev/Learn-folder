@@ -10,7 +10,7 @@ import { InvestmentResultsService } from "../investment-results/investment-resul
   styleUrl: './user-input.component.css'
 })
 export class UserInputComponent {
-  investmentResultsService = inject(InvestmentResultsService);
+  private investmentResultsService = inject(InvestmentResultsService);
 
   initialInvestment = signal("1000");
   annualInvestment = signal("200");

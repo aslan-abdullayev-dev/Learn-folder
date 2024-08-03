@@ -12,5 +12,6 @@ import { InvestmentResultsService } from "./investment-results.service";
   styleUrl: './investment-results.component.css'
 })
 export class InvestmentResultsComponent {
-  results = inject(InvestmentResultsService).results;
+  private investmentResultsService = inject(InvestmentResultsService);
+  results = this.investmentResultsService.results
 }
