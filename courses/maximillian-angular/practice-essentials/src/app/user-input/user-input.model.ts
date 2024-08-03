@@ -1,4 +1,4 @@
-export type TInvestmentData = {
+export type TUserInput = {
   initialInvestment: number,
   duration: number,
   expectedReturn: number,
