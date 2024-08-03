@@ -18,7 +18,6 @@ import { InvestmentResultsComponent } from "./investment-results/investment-resu
     BrowserModule,
     FormsModule
   ],
-  providers: [AppComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {
