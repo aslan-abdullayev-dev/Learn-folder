@@ -11,7 +11,4 @@ import { ButtonComponent } from "../shared/button/button.component";
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  ngOnInit() {
-
-  }
 }
