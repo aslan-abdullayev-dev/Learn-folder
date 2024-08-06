@@ -8,9 +8,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './roll-dice-btn.component.scss'
 })
 export class RollDiceBtnComponent {
-  @Output() onRollTheDices = new EventEmitter<boolean>(false);
+  @Output() onRollTheDices = new EventEmitter<void>();
 
   handleRollTheDices() {
-    this.onRollTheDices.emit(true)
+    this.onRollTheDices.emit()
   };
 }
