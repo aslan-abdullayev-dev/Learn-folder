@@ -1,0 +1,28 @@
+$header-height: 160px;
+.header {
+  height: $header-height;
+}
+
+.rest {
+  display: flex;
+  width: 100%;
+  height: calc(100% - $header-height);
+
+  .left-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+  .board {
+    flex-grow: 1;
+    height: 100%;
+  }
+
+  .right-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+}

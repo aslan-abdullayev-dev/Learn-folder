@@ -1,0 +1,193 @@
+.container {
+  width: var(--cube-size);
+  height: var(--cube-size);
+  position: relative;
+
+  perspective: 1000px;
+  perspective-origin: 50% 100%;
+}
+
+#cube {
+  width: var(--cube-size);
+  height: var(--cube-size);
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 6s;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  div {
+    background: #fff;
+    display: block;
+    position: absolute;
+    width: var(--cube-size);
+    height: var(--cube-size);
+    border: 2px solid #ab1a1a;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 500%;
+    text-align: center;
+  }
+
+
+  .dot {
+    display: block;
+    position: absolute;
+    width: var(--dote-size);
+    height: var(--dote-size);
+    background: #000;
+    border-radius: 15px;
+  }
+}
+
+.front {
+  transform: translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.back {
+  transform: rotateX(-180deg) translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 60%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot2 {
+    top: 40%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.right {
+  transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 20%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot2 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot3 {
+    top: 80%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.left {
+  transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot2 {
+    top: 30%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot3 {
+    top: 70%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot4 {
+    top: 70%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.top {
+  transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 20%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot2 {
+    top: 20%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot4 {
+    top: 80%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot5 {
+    top: 80%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2));
+
+  .dot1 {
+    top: 30%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot2 {
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot3 {
+    top: 30%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot4 {
+    top: 70%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot5 {
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .dot6 {
+    top: 70%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+}

@@ -1,0 +1,105 @@
+header {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+
+  nav {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+
+    .center {
+      position: relative;
+      width: 60%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      .player-names {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        & > div {
+          width: 50%;
+          height: 100%;
+          padding: 15px;
+          background: var(--81A263);
+          border: 4px solid black;
+
+          &:first-child {
+            text-align: start;
+            border-bottom-left-radius: 25px;
+            border-top-left-radius: 4px;
+          }
+
+          &:last-child {
+            text-align: end;
+            border-bottom-right-radius: 25px;
+            border-top-right-radius: 4px;
+          }
+        }
+      }
+
+      .points {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+
+        & > div {
+          width: 30%;
+          height: 100%;
+          background: var(--81A263);
+          padding: 10px 20px;
+          border: 4px solid black;
+          border-top: none;
+
+          &:first-child {
+            text-align: start;
+            border-bottom-left-radius: 20px;
+            border-top-left-radius: 4px;
+          }
+
+          &:last-child {
+            text-align: end;
+            border-bottom-right-radius: 20px;
+            border-top-right-radius: 4px;
+          }
+        }
+      }
+
+      .step-dices {
+        position: absolute;
+        width: 200px;
+        height: 135px;
+        background: var(--FD9B63);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid black;
+        border-radius: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+
+        .dice {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    .right {
+    }
+  }
+}
