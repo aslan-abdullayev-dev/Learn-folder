@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'ttd-roll-dice-btn',
@@ -8,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './roll-dice-btn.component.scss'
 })
 export class RollDiceBtnComponent {
+  @Output() onRollTheDices = new EventEmitter<boolean>(false);
 
+  handleRollTheDices() {
+    this.onRollTheDices.emit(true)
+  };
 }

@@ -1,6 +1,9 @@
 <header>
   <nav>
-    <div class="left"></div>
+    <div class="left">
+      <ttd-roll-dice-btn (onRollTheDices)="handleClickRolDice()"/>
+
+    </div>
     <div class="center">
 
       <div class="player-names">
@@ -13,10 +16,10 @@
       </div>
       <div class="step-dices">
         <div class="dice">
-          <ttd-cube/>
+          <ttd-cube [CSSRotation]="cube1Rotation"/>
         </div>
         <div class="dice">
-          <ttd-cube/>
+          <ttd-cube [CSSRotation]="cube2Rotation"/>
         </div>
       </div>
 

@@ -12,11 +12,8 @@
   height: var(--cube-size);
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 6s;
+  transition: transform 2s;
 
-  &:hover {
-    cursor: pointer;
-  }
 
   div {
     background: #fff;
