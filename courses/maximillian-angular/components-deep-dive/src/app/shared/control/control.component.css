@@ -1,13 +1,13 @@
-.control label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: bold;
-  margin-bottom: 0.15rem;
-  color: #4f4b53;
+:host label {
+  /*display: block;*/
+  /*font-size: 0.8rem;*/
+  /*font-weight: bold;*/
+  /*margin-bottom: 0.15rem;*/
+  /*color: #4f4b53;*/
 }
 
-.control input,
-.control textarea {
+:host input,
+:host textarea {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
