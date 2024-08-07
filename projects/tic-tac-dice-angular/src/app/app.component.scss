@@ -1,4 +1,4 @@
-$header-height: 160px;
+$header-height: 145px;
 .header {
   height: $header-height;
 }
@@ -8,21 +8,14 @@ $header-height: 160px;
   width: 100%;
   height: calc(100% - $header-height);
 
-  .left-sidebar {
-    width: 200px;
-    flex-shrink: 0;
+  .sidebar {
+    width: 350px;
     height: 100%;
+    flex-shrink: 0;
   }
 
   .board {
     flex-grow: 1;
     height: 100%;
   }
-
-  .right-sidebar {
-    width: 200px;
-    flex-shrink: 0;
-    height: 100%;
-  }
-
 }

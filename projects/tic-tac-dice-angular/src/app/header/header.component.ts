@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { CubeComponent } from "../shared/components/cube/cube.component";
+import { CubeComponent } from "./cube/cube.component";
 import { RollDiceBtnComponent } from "../roll-dice-btn/roll-dice-btn.component";
-import { CubeService } from "../shared/components/cube/cube.service";
+import { CubeService } from "./cube/cube.service";
 
 @Component({
   selector: 'ttd-header',
