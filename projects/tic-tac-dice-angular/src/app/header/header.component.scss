@@ -9,7 +9,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
 
     .center {
       position: relative;
@@ -29,7 +28,7 @@ header {
         & > div {
           width: 50%;
           height: 100%;
-          padding: 15px;
+          padding: 10px 20px;
           background: var(--81A263);
           border: 4px solid black;
 
@@ -78,8 +77,8 @@ header {
 
       .step-dices {
         position: absolute;
-        width: 200px;
-        height: 135px;
+        width: 150px;
+        height: 110px;
         background: var(--FD9B63);
         top: 50%;
         left: 50%;
@@ -89,7 +88,7 @@ header {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 40px;
+        gap: 22px;
 
         .dice {
           display: flex;
@@ -97,9 +96,6 @@ header {
           justify-content: center;
         }
       }
-    }
-
-    .right {
     }
   }
 }

@@ -1,0 +1,24 @@
+<div class="buttons-wrapper">
+  <div class="top-buttons">
+    <div class="undo"></div>
+    <div class="redo"></div>
+  </div>
+  <div class="move-buttons">
+    @for (btn of piesArr; track $index) {
+      <div
+        class="hold"
+        [style.transform]="'rotate(' + btn.transformHold + 'deg)'"
+        [style.clip]="piesArr.length > 1 ? 'rect(0px, 300px, 300px, 150px)' : ''"
+      >
+        <div
+          class="pie"
+          [style.transform]="'rotate(' + btn.transformPie + 'deg)'"
+          [style.background]="btn.background"
+          [style.border]="'1px solid black'"
+          [style.clip]="piesArr.length > 1 ? 'rect(0px, 150px, 300px, 0px)' : ''"
+        ></div>
+      </div>
+    }
+  </div>
+  <div class="finish-button"></div>
+</div>

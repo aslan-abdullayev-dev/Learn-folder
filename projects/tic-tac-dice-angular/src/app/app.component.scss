@@ -1,4 +1,4 @@
-$header-height: 145px;
+$header-height: 115px;
 .header {
   height: $header-height;
 }
@@ -6,16 +6,20 @@ $header-height: 145px;
 .rest {
   display: flex;
   width: 100%;
+  align-items: center;
+  justify-content: flex-start;
   height: calc(100% - $header-height);
+  padding: 6px;
 
   .sidebar {
-    width: 350px;
+    width: 20%;
     height: 100%;
     flex-shrink: 0;
   }
 
   .board {
-    flex-grow: 1;
+    width: 60%;
+    flex-shrink: 0;
     height: 100%;
   }
 }
