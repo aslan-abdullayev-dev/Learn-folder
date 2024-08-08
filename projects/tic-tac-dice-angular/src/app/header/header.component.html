@@ -30,11 +30,21 @@
           <div class="settings-popup">
             <div class="tile-selection">
               <label>
-                <input type="radio" name="tile-size" value="3"
-                       [(ngModel)]="appService.gameSettings.tileSize"> 3x3
+                <input
+                  type="radio"
+                  name="tile-size"
+                  value="3"
+                  [(ngModel)]="appService.gameSettings.tileSize">
+                3x3
               </label>
               <label>
-                <input type="radio" name="tile-size" value="4"> 4x4
+                <input
+                  type="radio"
+                  name="tile-size"
+                  value="4"
+                  [(ngModel)]="appService.gameSettings.tileSize"
+                >
+                4x4
               </label>
             </div>
             <div class="checkbox-wrapper">
