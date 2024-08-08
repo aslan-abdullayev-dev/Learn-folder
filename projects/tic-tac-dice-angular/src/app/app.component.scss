@@ -6,8 +6,6 @@ $control-bar-height: 115px;
 }
 
 .board {
-  width: 60%;
-  flex-shrink: 0;
   height: calc(100% - $header-height - $control-bar-height);
 }
 

@@ -1,1 +1,9 @@
-<p>board works!</p>
+<main>
+  <div class="wrapper">
+    <div class="tiles">
+      @for (tile of tiles; track tile.id) {
+        <div class="tile">{{ tile.id }}</div>
+      }
+    </div>
+  </div>
+</main>
