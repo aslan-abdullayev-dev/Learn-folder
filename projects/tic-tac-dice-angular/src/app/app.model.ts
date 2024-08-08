@@ -9,15 +9,14 @@ export interface IAppService {
   prevStates: IAppService[];
 }
 
-interface IGameSettings {
-  tileSize: 3 | 4;
+export interface IGameSettings {
+  tileSize: "3" | "4";
   canDelete: boolean;
   canDoubleMove: boolean;
   canUndoRedo: boolean;
 }
 
 export interface ITile {
-  isEmpty: boolean;
   ownedBy: 1 | 2 | null;
   id: string;
 }

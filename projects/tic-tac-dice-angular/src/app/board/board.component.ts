@@ -1,17 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { AppService } from "../app.service";
+import { NgStyle } from "@angular/common";
 
 @Component({
   selector: 'ttd-board',
   standalone: true,
-  imports: [],
+  imports: [
+    NgStyle
+  ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  appService = inject(AppService);
+  private appService = inject(AppService);
 
   get tiles() {
     return this.appService.tiles;
+  }
+
+  get tileSize() {
+    return Number(this.appService.gameSettings.tileSize)
   }
 }

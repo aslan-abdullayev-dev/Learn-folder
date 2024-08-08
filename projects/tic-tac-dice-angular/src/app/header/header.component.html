@@ -1,4 +1,4 @@
-<header [style]="styleObj">
+<header>
   <nav>
     <div class="left">
     </div>
@@ -8,8 +8,8 @@
         <div><span>Player 2</span></div>
       </div>
       <div class="points">
-        <div><span>24 Points</span></div>
-        <div><span>11 Points</span></div>
+        <div><span>{{ player1Points }} Points</span></div>
+        <div><span>{{ player2Points }} Points</span></div>
       </div>
       <div class="step-dices">
         <div class="dice">
@@ -20,6 +20,42 @@
         </div>
       </div>
 
+    </div>
+    <div class="right">
+      <div class="settings">
+        <button class="settings-button" (click)="toggleSettingsPopup()">
+          <fa-icon [icon]="faGear"></fa-icon>
+        </button>
+        @if (showSettingsPopup) {
+          <div class="settings-popup">
+            <div class="tile-selection">
+              <label>
+                <input type="radio" name="tile-size" value="3"
+                       [(ngModel)]="appService.gameSettings.tileSize"> 3x3
+              </label>
+              <label>
+                <input type="radio" name="tile-size" value="4"> 4x4
+              </label>
+            </div>
+            <div class="checkbox-wrapper">
+              <label>
+                <input type="checkbox" name="can-delete"> Can Delete ?
+              </label>
+            </div>
+            <div class="checkbox-wrapper">
+              <label>
+                <input type="checkbox" name="combo-move" value="option1"> Combo Move
+              </label>
+            </div>
+            <div class="checkbox-wrapper">
+              <label>
+                <input type="checkbox" name="undo-redo" value="option1"> Undo Redo
+              </label>
+            </div>
+          </div>
+        }
+        <div></div>
+      </div>
     </div>
   </nav>
 </header>
