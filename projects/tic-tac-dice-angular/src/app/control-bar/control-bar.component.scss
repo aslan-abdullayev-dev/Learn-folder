@@ -1,0 +1,68 @@
+footer {
+  height: 100%;
+  width: 100%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .buttons-wrapper {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .next {
+      height: 85px;
+      width: 85px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .undo-redo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-right: -55px;
+
+      .undo, .redo {
+        padding: 15px 60px 15px 15px;
+        cursor: pointer;
+      }
+
+      .undo {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .redo {
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+    }
+
+    .move {
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+      margin-left: -40px;
+      padding: 25px 25px 25px 60px;
+      cursor: pointer;
+      display: flex;
+      gap: 12px;
+    }
+
+    .combo-move {
+      border-radius: 15px;
+      padding: 25px 25px 25px 25px;
+      cursor: pointer;
+      display: flex;
+      gap: 12px;
+    }
+  }
+}
