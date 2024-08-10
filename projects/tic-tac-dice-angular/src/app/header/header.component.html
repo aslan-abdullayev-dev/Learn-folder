@@ -42,24 +42,18 @@
                   type="radio"
                   name="tile-size"
                   value="4"
-                  [(ngModel)]="appService.gameState.gameSettings.tileSize"
-                >
+                  [(ngModel)]="appService.gameState.gameSettings.tileSize">
                 4x4
               </label>
             </div>
             <div class="checkbox-wrapper">
               <label>
-                <input type="checkbox" name="can-delete"> Can Delete ?
-              </label>
-            </div>
-            <div class="checkbox-wrapper">
-              <label>
-                <input type="checkbox" name="combo-move" value="option1"> Combo Move
-              </label>
-            </div>
-            <div class="checkbox-wrapper">
-              <label>
-                <input type="checkbox" name="undo-redo" value="option1"> Undo Redo
+                <input
+                  type="checkbox"
+                  name="undo-redo"
+                  [(ngModel)]="appService.gameState.gameSettings.canUndoRedo"
+                >
+                Undo Redo
               </label>
             </div>
           </div>

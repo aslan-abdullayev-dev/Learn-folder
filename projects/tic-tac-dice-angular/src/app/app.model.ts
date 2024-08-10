@@ -11,8 +11,6 @@ export interface IAppService {
 
 export interface IGameSettings {
   tileSize: "3" | "4";
-  canDelete: boolean;
-  canDoubleMove: boolean;
   canUndoRedo: boolean;
 }
 

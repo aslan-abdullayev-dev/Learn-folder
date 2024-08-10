@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faRotateBackward,
@@ -8,6 +8,7 @@ import {
   faO,
   faEraser
 } from '@fortawesome/free-solid-svg-icons';
+import { AppService } from "../app.service";
 
 @Component({
   selector: 'ttd-control-bar',
@@ -17,10 +18,19 @@ import {
   styleUrl: './control-bar.component.scss'
 })
 export class ControlBarComponent {
+  appService = inject(AppService);
   faRotateBackward = faRotateBackward;
   faRotateForward = faRotateForward;
   faFlagCheckered = faFlagCheckered;
   faX = faX;
   faO = faO;
   faEraser = faEraser;
+
+  get showUndoRedo () {
+    return this.appService.gameState.gameSettings.canUndoRedo
+  }
+
+  get buttonsWidth () {
+    return this.appService.gameState.gameSettings.canUndoRedo ?"20%" : 2
+  }
 }

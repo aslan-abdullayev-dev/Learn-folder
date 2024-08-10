@@ -14,8 +14,6 @@ export class AppService {
     player2Points: 19,
     gameSettings: {
       tileSize: "4",
-      canDelete: true,
-      canDoubleMove: true,
       canUndoRedo: true,
     },
     prevStates: []
