@@ -33,4 +33,6 @@ export class ControlBarComponent {
   get isDisabled() {
     return !this.appService.gameState.gameHasStarted
   }
+
+  protected readonly JSON = JSON;
 }

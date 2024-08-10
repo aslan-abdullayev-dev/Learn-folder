@@ -3,7 +3,7 @@
   <div class="tiles-wrapper">
     <div class="tiles">
       @for (tile of tiles; track tile.id) {
-        <button class="tile" [disabled]="!appService.gameState.moveHasStarted">
+        <button class="tile" [disabled]="!appService.gameState.currentMoveType">
           @if (tile.ownedBy === 1) {
             <span>X</span>
           }

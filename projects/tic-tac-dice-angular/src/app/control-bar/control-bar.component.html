@@ -3,7 +3,7 @@
     <button [disabled]="isDisabled" class="next">
       <fa-icon [icon]="faFlagCheckered"></fa-icon>
     </button>
-    @if(showUndoRedo){
+    @if (showUndoRedo) {
       <button [disabled]="isDisabled">
         <fa-icon [icon]="faRotateBackward"></fa-icon>
       </button>
@@ -11,7 +11,7 @@
         <fa-icon [icon]="faRotateForward"></fa-icon>
       </button>
     }
-    <button [disabled]="isDisabled">
+    <button [disabled]="!appService.canClickSingleMove">
       <fa-icon [icon]="faX"></fa-icon>
       <fa-icon [icon]="faO"></fa-icon>
     </button>
@@ -25,4 +25,6 @@
       <fa-icon [icon]="faEraser"></fa-icon>
     </button>
   </div>
+
 </footer>
+singleMoveState {{ JSON.stringify(appService.gameState) }}

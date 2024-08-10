@@ -16,8 +16,18 @@ export class AppService {
       tileSize: "4",
       canUndoRedo: true,
     },
-    moveHasStarted: false,
-    prevStates: []
+    currentMoveType: null,
+    prevStates: [],
+    singleMoveState: {
+      canStartMove: false,
+      moveHasStarted: false,
+      canFinishMove: false
+    }
+  }
+
+  ngOnInit() {
+    this.gameState.singleMoveState.canStartMove = this.canStartSingleMove;
+    this.gameState.singleMoveState.canFinishMove = this.canFinishSingleMove;
   }
 
   get tiles(): ITile[] {
@@ -36,5 +46,25 @@ export class AppService {
 
   startTheGame() {
     this.gameState.gameHasStarted = true;
+  }
+
+  onClickSingleMove() {
+  }
+
+  private get canStartSingleMove(): boolean {
+    if (!this.gameState.gameHasStarted) return false;
+    if (this.gameState.currentMoveType !== null) return false;
+
+    return true;
+  }
+
+  private get canFinishSingleMove(): boolean {
+    return true;
+  }
+
+  get canClickSingleMove() {
+    return this.gameState.gameHasStarted
+      && this.gameState.singleMoveState.canStartMove
+      && this.gameState.singleMoveState.canFinishMove;
   }
 }

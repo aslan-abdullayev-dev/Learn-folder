@@ -7,7 +7,8 @@ export interface IAppService {
   player2Points: number;
   gameSettings: IGameSettings;
   prevStates: Omit<IAppService, "prevStates">[];
-  moveHasStarted: boolean;
+  currentMoveType: "single" | "combo" | "delete" | null;
+  singleMoveState: ISingleMoveState;
 }
 
 export interface IGameSettings {
@@ -18,4 +19,10 @@ export interface IGameSettings {
 export interface ITile {
   ownedBy: 1 | 2 | null;
   id: string;
+}
+
+interface ISingleMoveState {
+  moveHasStarted: boolean;
+  canStartMove: boolean;
+  canFinishMove: boolean;
 }
