@@ -27,7 +27,7 @@ export class HeaderComponent {
   faGear = faGear;
   cube1Rotation = ""
   cube2Rotation = ""
-  showSettingsPopup = true;
+  showSettingsPopup = false;
 
   handleClickRolDice = () => {
     this.cube1Rotation = this.cubeService.rollTheDice().CSSRotation
@@ -39,10 +39,10 @@ export class HeaderComponent {
   }
 
   get player1Points() {
-    return this.appService.player1Points
+    return this.appService.gameState.player1Points
   }
 
   get player2Points() {
-    return this.appService.player2Points
+    return this.appService.gameState.player2Points
   }
 }

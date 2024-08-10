@@ -19,6 +19,6 @@ export class BoardComponent {
   }
 
   get tileSize() {
-    return Number(this.appService.gameSettings.tileSize)
+    return Number(this.appService.gameState.gameSettings.tileSize)
   }
 }
