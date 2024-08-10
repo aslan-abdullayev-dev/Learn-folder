@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 type TServerStatus = "online" | "offline" | "unknown"
 
@@ -9,14 +9,14 @@ type TServerStatus = "online" | "offline" | "unknown"
   templateUrl: './server-status.component.html',
   styleUrl: './server-status.component.css'
 })
-export class ServerStatusComponent {
+export class ServerStatusComponent implements OnInit {
   currentStatus: TServerStatus = 'unknown';
 
-  constructor() {
+  ngOnInit() {
     setInterval(() => {
       const serverStatusOptions: TServerStatus[] = ["online", "offline", "unknown"];
       const randomIdx = Math.floor(Math.random() * serverStatusOptions.length);
       this.currentStatus = serverStatusOptions[randomIdx]
-    }, 5000)
+    }, 1000)
   }
 }
