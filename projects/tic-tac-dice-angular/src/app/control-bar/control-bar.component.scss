@@ -7,62 +7,31 @@ footer {
   justify-content: center;
 
   .buttons-wrapper {
-    width: 60%;
-    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    width: 60%;
 
-    .next {
-      height: 85px;
-      width: 85px;
-      border-radius: 50%;
+    button {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
+      padding-block: 15px;
       cursor: pointer;
-      z-index: 1;
-    }
+      width: 20%;
 
-    .undo-redo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      margin-right: -55px;
-
-      .undo, .redo {
-        padding: 15px 60px 15px 15px;
-        cursor: pointer;
+      &:nth-child(2) {
+        margin-left: -10px;
       }
 
-      .undo {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
+      &.next {
+        flex-shrink: 0;
+        height: 90px;
+        width: 90px;
+        border-radius: 50%;
+        z-index: 1;
       }
-
-      .redo {
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-      }
-    }
-
-    .move {
-      border-top-right-radius: 15px;
-      border-bottom-right-radius: 15px;
-      margin-left: -40px;
-      padding: 25px 25px 25px 60px;
-      cursor: pointer;
-      display: flex;
-      gap: 12px;
-    }
-
-    .combo-move {
-      border-radius: 15px;
-      padding: 25px 25px 25px 25px;
-      cursor: pointer;
-      display: flex;
-      gap: 12px;
     }
   }
 }
