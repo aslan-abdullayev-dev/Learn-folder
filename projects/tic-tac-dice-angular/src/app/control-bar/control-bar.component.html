@@ -1,27 +1,27 @@
-<footer [style.--buttons-width]="">
+<footer>
   <div class="buttons-wrapper">
-    <button class="next">
+    <button [disabled]="isDisabled" class="next">
       <fa-icon [icon]="faFlagCheckered"></fa-icon>
     </button>
     @if(showUndoRedo){
-      <button>
+      <button [disabled]="isDisabled">
         <fa-icon [icon]="faRotateBackward"></fa-icon>
       </button>
-      <button>
+      <button [disabled]="isDisabled">
         <fa-icon [icon]="faRotateForward"></fa-icon>
       </button>
     }
-    <button>
+    <button [disabled]="isDisabled">
       <fa-icon [icon]="faX"></fa-icon>
       <fa-icon [icon]="faO"></fa-icon>
     </button>
-    <button>
+    <button [disabled]="isDisabled">
       <fa-icon [icon]="faX"></fa-icon>
       <fa-icon [icon]="faX"></fa-icon>
       <fa-icon [icon]="faO"></fa-icon>
       <fa-icon [icon]="faO"></fa-icon>
     </button>
-    <button>
+    <button [disabled]="isDisabled">
       <fa-icon [icon]="faEraser"></fa-icon>
     </button>
   </div>

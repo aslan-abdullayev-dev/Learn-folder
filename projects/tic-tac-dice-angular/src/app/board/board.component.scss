@@ -14,7 +14,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--365E32);
 
     .tiles {
       display: grid;
@@ -32,6 +31,12 @@ main {
         height: 100%;
         width: 100%;
         color: #fff;
+        background: var(--365E32);
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
       }
     }
   }
@@ -41,5 +46,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
   }
 }

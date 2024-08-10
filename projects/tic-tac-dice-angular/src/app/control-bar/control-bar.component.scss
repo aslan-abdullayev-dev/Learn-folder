@@ -25,6 +25,11 @@ footer {
         margin-left: -10px;
       }
 
+      &:disabled {
+        background: white;
+        cursor: not-allowed;
+      }
+
       &.next {
         flex-shrink: 0;
         height: 90px;

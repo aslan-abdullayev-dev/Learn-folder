@@ -26,11 +26,11 @@ export class ControlBarComponent {
   faO = faO;
   faEraser = faEraser;
 
-  get showUndoRedo () {
+  get showUndoRedo() {
     return this.appService.gameState.gameSettings.canUndoRedo
   }
 
-  get buttonsWidth () {
-    return this.appService.gameState.gameSettings.canUndoRedo ?"20%" : 2
+  get isDisabled() {
+    return !this.appService.gameState.gameHasStarted
   }
 }

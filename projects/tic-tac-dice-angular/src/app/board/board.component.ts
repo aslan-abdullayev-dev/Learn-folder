@@ -1,4 +1,4 @@
-import { Component,  inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AppService } from "../app.service";
 import { NgStyle } from "@angular/common";
 
@@ -23,6 +23,6 @@ export class BoardComponent {
   }
 
   get message() {
-    return this.appService.gameState.gameHasStarted ? "" : "Click on the board to start the game";
+    return this.appService.gameState.gameHasStarted ? "" : "Click here to start the game";
   }
 }

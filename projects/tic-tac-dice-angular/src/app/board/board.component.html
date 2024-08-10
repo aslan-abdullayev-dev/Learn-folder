@@ -1,18 +1,18 @@
 <main [style.--tile-size]="tileSize">
-  <div class="message">{{ message }}</div>
-  <div class="tiles-wrapper" (click)="appService.startTheGame()">
+  <div class="message" (click)="appService.startTheGame()">{{ message }}</div>
+  <div class="tiles-wrapper">
     <div class="tiles">
       @for (tile of tiles; track tile.id) {
-        <div class="tile">
+        <button class="tile" [disabled]="!appService.gameState.moveHasStarted">
           @if (tile.ownedBy === 1) {
             <span>X</span>
           }
           @if (tile.ownedBy === 2) {
             <span>O</span>
           }
-        </div>
+        </button>
       }
     </div>
   </div>
-  <div class="message">{{ message }}</div>
+  <div class="message" (click)="appService.startTheGame()">{{ message }}</div>
 </main>

@@ -16,6 +16,7 @@ export class AppService {
       tileSize: "4",
       canUndoRedo: true,
     },
+    moveHasStarted: false,
     prevStates: []
   }
 

@@ -6,7 +6,8 @@ export interface IAppService {
   player1Points: number;
   player2Points: number;
   gameSettings: IGameSettings;
-  prevStates: IAppService[];
+  prevStates: Omit<IAppService, "prevStates">[];
+  moveHasStarted: boolean;
 }
 
 export interface IGameSettings {
