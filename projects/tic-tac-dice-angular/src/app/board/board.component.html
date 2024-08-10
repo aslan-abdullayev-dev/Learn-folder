@@ -1,5 +1,6 @@
 <main [style.--tile-size]="tileSize">
-  <div class="wrapper">
+  <div class="message">{{ message }}</div>
+  <div class="tiles-wrapper" (click)="appService.startTheGame()">
     <div class="tiles">
       @for (tile of tiles; track tile.id) {
         <div class="tile">
@@ -13,4 +14,5 @@
       }
     </div>
   </div>
+  <div class="message">{{ message }}</div>
 </main>

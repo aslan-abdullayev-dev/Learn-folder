@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component,  inject } from '@angular/core';
 import { AppService } from "../app.service";
 import { NgStyle } from "@angular/common";
 
@@ -12,7 +12,7 @@ import { NgStyle } from "@angular/common";
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  private appService = inject(AppService);
+  appService = inject(AppService);
 
   get tiles() {
     return this.appService.tiles;
@@ -20,5 +20,9 @@ export class BoardComponent {
 
   get tileSize() {
     return Number(this.appService.gameState.gameSettings.tileSize)
+  }
+
+  get message() {
+    return this.appService.gameState.gameHasStarted ? "" : "Click on the board to start the game";
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IAppService, IGameSettings, ITile } from "./app.model";
+import { IAppService, ITile } from "./app.model";
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +31,9 @@ export class AppService {
       }
     }
     return newTiles;
+  }
+
+  startTheGame() {
+    this.gameState.gameHasStarted = true;
   }
 }

@@ -23,7 +23,10 @@
     </div>
     <div class="right">
       <div class="settings">
-        <button class="settings-button" (click)="toggleSettingsPopup()">
+        <button
+          [disabled]="appService.gameState.gameHasStarted"
+          class="settings-button"
+          (click)="toggleSettingsPopup()">
           <fa-icon [icon]="faGear"></fa-icon>
         </button>
         @if (showSettingsPopup) {
