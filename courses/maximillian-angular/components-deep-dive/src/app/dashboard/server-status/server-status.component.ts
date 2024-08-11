@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 
 type TServerStatus = "online" | "offline" | "unknown"
 
@@ -11,12 +11,17 @@ type TServerStatus = "online" | "offline" | "unknown"
 })
 export class ServerStatusComponent implements OnInit {
   currentStatus: TServerStatus = 'unknown';
+  destroyRef = inject(DestroyRef)
 
   ngOnInit() {
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       const serverStatusOptions: TServerStatus[] = ["online", "offline", "unknown"];
       const randomIdx = Math.floor(Math.random() * serverStatusOptions.length);
       this.currentStatus = serverStatusOptions[randomIdx]
-    }, 1000)
+    }, 3000)
+
+    this.destroyRef.onDestroy(() => {
+      clearInterval(intervalId)
+    })
   }
 }
