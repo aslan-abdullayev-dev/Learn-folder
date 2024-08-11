@@ -1,16 +1,9 @@
 import {
-  Component,
-  Input,
-  OnInit,
-  OnChanges,
-  DoCheck,
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewInit,
-  AfterViewChecked,
-  OnDestroy,
-  SimpleChanges,
-} from '@angular/core';
+  AfterContentChecked, AfterContentInit,
+  AfterViewChecked, AfterViewInit, Component,
+  DoCheck, OnChanges, OnDestroy, OnInit,
+  SimpleChanges, Input,
+} from "@angular/core";
 
 @Component({
   selector: 'app-lifecycle',
@@ -20,16 +13,14 @@ import {
   styleUrl: './lifecycle.component.css',
 })
 export class LifecycleComponent
-  implements
-    OnInit,
+  implements OnInit,
     OnChanges,
     DoCheck,
     AfterContentInit,
     AfterContentChecked,
     AfterViewInit,
     AfterViewChecked,
-    OnDestroy
-{
+    OnDestroy {
   @Input() text?: string;
 
   constructor() {
