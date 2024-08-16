@@ -1,4 +1,11 @@
-import { Component, ElementRef, inject, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  ElementRef,
+  inject,
+  Input,
+  ViewEncapsulation
+} from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -9,17 +16,20 @@ import { Component, ElementRef, inject, Input, ViewEncapsulation } from '@angula
   encapsulation: ViewEncapsulation.None,
   host: {
     "[class.control]": "addControlClass",
-    // "(click)":"onClick()"
+    "(click)": "onClick()"
   }
 })
 export class ControlComponent {
   @Input({ required: true }) label!: string;
+  @ContentChild("input") private control?: ElementRef<HTMLInputElement | HTMLTextAreaElement>;
   private el = inject(ElementRef)
 
   get addControlClass() {
     return true
   }
-  // onClick() {
-  //   console.dir(this.el)
-  // }
+
+  onClick() {
+    console.log(this.el.nativeElement)
+    console.log(this.control?.nativeElement)
+  }
 }
