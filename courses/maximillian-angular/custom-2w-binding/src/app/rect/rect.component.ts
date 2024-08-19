@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, model } from '@angular/core';
 
 @Component({
   selector: 'app-rect',
@@ -8,12 +8,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './rect.component.css',
 })
 export class RectComponent {
-  // Todo: Implement custom two-way binding
-  @Input({ required: true }) size!: { width: string; height: string };
-  @Output() sizeChange = new EventEmitter<{ width: string; height: string }>();
+  size = model.required<{ width: string; height: string }>()
 
   onReset() {
-    this.sizeChange.emit({
+    this.size.set({
       width: "100",
       height: "100",
     })
