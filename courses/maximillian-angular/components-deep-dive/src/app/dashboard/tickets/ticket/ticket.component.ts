@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ITicket } from "../tickets.model";
 
 @Component({
   selector: 'app-ticket',
@@ -8,5 +9,15 @@ import { Component } from '@angular/core';
   styleUrl: './ticket.component.css'
 })
 export class TicketComponent {
+  @Input({ required: true }) data!: ITicket;
+  @Output() complete = new EventEmitter<string>();
+  detailsVisible: boolean = false;
 
+  onToggleDetails() {
+    this.detailsVisible = !this.detailsVisible;
+  }
+
+  onComplete() {
+    this.complete.emit(this.data.id)
+  }
 }

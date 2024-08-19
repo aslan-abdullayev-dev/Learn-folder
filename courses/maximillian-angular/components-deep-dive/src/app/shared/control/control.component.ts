@@ -29,7 +29,5 @@ export class ControlComponent {
   }
 
   onClick() {
-    console.log(this.el.nativeElement)
-    console.log(this.control?.nativeElement)
   }
 }
