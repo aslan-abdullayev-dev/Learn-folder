@@ -20,4 +20,8 @@ export class TicketComponent {
   onComplete() {
     this.complete.emit(this.data.id)
   }
+
+  get isComplete() {
+    return this.data.status === "closed"
+  }
 }

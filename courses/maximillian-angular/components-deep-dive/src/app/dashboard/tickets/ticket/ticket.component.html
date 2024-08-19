@@ -1,7 +1,7 @@
 <article>
   <h3>
     <div
-      [class]="{'ticket-open': data.status === 'open','ticket-closed': data.status === 'closed'}"></div>
+      [class]="{'ticket-open': !isComplete,'ticket-closed': isComplete}"></div>
     <button (click)="onToggleDetails()">
       <span class="text">{{ data.title }}</span>
       <span>
