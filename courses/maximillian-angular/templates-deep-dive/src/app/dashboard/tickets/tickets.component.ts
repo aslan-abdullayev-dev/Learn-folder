@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { NewTicketComponent } from "./new-ticket/new-ticket.component";
 
 @Component({
