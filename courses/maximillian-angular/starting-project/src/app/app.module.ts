@@ -11,8 +11,8 @@ import { TasksModule } from "./tasks/tasks.module";
     declarations: [
         AppComponent,
         HeaderComponent,
-        UserComponent,
-    ], //* register all the components and directives
+        UserComponent
+    ], //* register all the components, pipes and directives
     bootstrap: [AppComponent], //* start application bootstrap from this component
     imports: [
         BrowserModule, //* brings angular common module
