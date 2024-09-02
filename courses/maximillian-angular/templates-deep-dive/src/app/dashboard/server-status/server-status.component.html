@@ -1,7 +1,24 @@
-<div [class]="currentStatus">
-  <!-- [class]="myClassNameProperty" -->
-  <!-- [class]="{'myClassName': boolean}" -->
-  <!-- [class.myClassName]="boolean" -->
+<!--
+  class="myClassName"
+  [class]="myClassNameProperty"
+  [class]="{'myClassName': boolean}"
+  [class.myClassName]="boolean"
+-->
+
+<!--
+  style="background: red; height: 400px"
+  [style]="'background-color: red; height: 400px'"
+  [style]="{'background-color': 'red', height: '400px'}"
+  [style]="{backgroundColor: 'red', height: '400px'}"
+  [style.background-color]="'red'"
+-->
+
+<div [class]="{
+  status: true,
+  'status-online': currentStatus === 'online',
+  'status-offline': currentStatus === 'offline',
+  'status-unknown': currentStatus === 'unknown',
+}">
   @if (currentStatus === 'online') {
     <p>Servers are online</p>
     <p>All systems are operational.</p>
