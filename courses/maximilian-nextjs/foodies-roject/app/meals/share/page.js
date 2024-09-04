@@ -1,9 +1,9 @@
-const SharedMealPage = () => {
+const ShareMealPage = () => {
   return (
     <main>
-      <h1>Shared Meal</h1>
+      <h1>Share Meal</h1>
     </main>
   )
 }
 
-export default SharedMealPage;
+export default ShareMealPage;

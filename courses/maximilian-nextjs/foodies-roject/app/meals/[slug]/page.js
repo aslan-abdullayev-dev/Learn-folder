@@ -1,4 +1,4 @@
-const MealPage = ({ params }) => {
+const MealDetailPage = ({ params }) => {
   return (
     <main>
       <h1>{params.slug} Page</h1>
@@ -6,4 +6,4 @@ const MealPage = ({ params }) => {
   )
 }
 
-export default MealPage;
+export default MealDetailPage;
