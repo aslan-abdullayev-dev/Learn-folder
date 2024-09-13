@@ -1,15 +1,19 @@
 import classes from './main-header.module.css';
 
 import Link from "next/link";
+import Image from "next/image";
 
 import logoImg from "@/assets/logo.png";
-
 
 const MainHeader = () => {
   return (
     <header className={classes.header}>
       <Link className={classes.logo} href="/">
-        <img src={logoImg.src} alt="A plate with food on it"/>
+        <Image
+          src={logoImg} //* no need to access image by .src
+          priority //* disables lazy loading
+          alt="A plate with food on it"
+        />
         NextLevel Food
       </Link>
 
@@ -19,7 +23,7 @@ const MainHeader = () => {
             <Link href="/meals">Browse Meals</Link>
           </li>
           <li>
-            <Link href="/community">Browse Meals</Link>
+            <Link href="/community">Community</Link>
           </li>
         </ul>
       </nav>
