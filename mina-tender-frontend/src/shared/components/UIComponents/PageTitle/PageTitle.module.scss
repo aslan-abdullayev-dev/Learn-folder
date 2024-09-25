@@ -1,0 +1,23 @@
+@import "../../../styles/variables";
+.Wrapper {
+  padding-block: 15px;
+}
+
+.Title {
+  color: var(--text-color-black);
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 5px;
+}
+
+.Description {
+  color: var(--text-color-black);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

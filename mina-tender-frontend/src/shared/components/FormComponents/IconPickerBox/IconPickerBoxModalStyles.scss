@@ -1,0 +1,37 @@
+@import "../../../styles/globalmixins";
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.icons-wrapper {
+  height: 400px;
+  width: 100%;
+  padding-right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
+  gap: 16px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F1F7FF;
+    height: 55px;
+    aspect-ratio: 1;
+    border: 0;
+    color: #212656;
+    svg {
+      height: 20px;
+      width: 20px;
+    }
+    &.active {
+      background-color: var(--main);
+      color: white;
+    }
+  }
+}

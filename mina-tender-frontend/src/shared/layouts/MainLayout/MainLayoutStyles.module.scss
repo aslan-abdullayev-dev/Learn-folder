@@ -1,0 +1,106 @@
+@import "../../styles/globalmixins";
+
+.mainLayout {
+  background: var(--main-background);
+  height: 100vh;
+
+  .header {
+    background: var(--white);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .left {
+      svg {
+        height: 40px;
+        width: 140px;
+      }
+    }
+
+    .right {
+      display: flex;
+      gap: 40px;
+
+      .lang {
+      }
+
+      .nameGroup {
+        display: flex;
+        gap: 20px;
+
+        .name {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .userIcon {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #F1F7FF;
+        }
+      }
+    }
+
+    &Wrapper {
+      background: red;
+    }
+  }
+
+  .bottom {
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: calc(100% - 100px);
+    width: 100%;
+    gap: 10px;
+
+    .aside {
+      width: 100%;
+      background: var(--white);
+      padding: 10px 20px;
+      border-radius: 10px;
+      height: 100%;
+      flex-shrink: 0;
+
+      .title {
+        color: var(--text-color-black);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      .menuWrapper {
+        width: 100%;
+        height: calc(100% - 41px);
+        overflow-y: auto;
+        padding-bottom: 40px;
+        @include custom-scrollbar;
+      }
+
+      &Wrapper {
+        height: 100%;
+        flex-shrink: 0;
+        width: 280px;
+        overflow-y: auto;
+      }
+    }
+
+    .bodyWrapper {
+      flex-grow: 1;
+      height: 100%;
+      overflow-y: auto;
+      @include custom-scrollbar;
+      background: var(--white);
+      border-radius: 10px;
+      padding: 0 15px 30px 15px;
+    }
+  }
+}
+

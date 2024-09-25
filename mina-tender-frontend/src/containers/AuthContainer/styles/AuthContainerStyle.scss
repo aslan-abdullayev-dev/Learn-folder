@@ -1,0 +1,26 @@
+@import "../../../shared/styles/variables";
+
+.auth-container {
+
+  &__title {
+    color: var(--text-color-black);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 5px;
+  }
+
+  &__form {
+    background: var(--main-background);
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  &__submit {
+    margin-top: 10px;
+  }
+
+}

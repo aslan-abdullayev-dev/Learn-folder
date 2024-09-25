@@ -1,0 +1,52 @@
+// Font Family mixin
+
+@mixin font-face(
+  $font-family,
+  $file-path,
+  $weight: normal,
+  $style: normal,
+  $asset-pipeline: false
+) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    src: url("#{$file-path}.eot");
+    src: url("#{$file-path}.eot?#iefix") format("embedded-opentype"),
+    url("#{$file-path}.woff") format("woff"),
+    url("#{$file-path}.ttf") format("truetype");
+
+  }
+}
+
+//  ! ==================== scrollbar styles ==================== //
+@mixin custom-scrollbar {
+  //? width
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  //? Track
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #B5B9DB;
+    border-radius: 10px;
+  }
+  //? Handle
+  &::-webkit-scrollbar-thumb {
+    background: var(--main);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+//  ! ==================== scrollbar styles ==================== //
+
+//  ! ==================== line clamp styles ==================== //
+@mixin custom-line-clamp($lineCount) {
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+//  ! ==================== line clamp styles ==================== //

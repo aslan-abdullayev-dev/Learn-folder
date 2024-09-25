@@ -1,0 +1,7 @@
+.switch-el {
+  button[aria-checked="true"] {
+    .ant-switch-inner {
+      background-color: var(--main);
+    }
+  }
+}

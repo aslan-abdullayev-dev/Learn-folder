@@ -1,0 +1,54 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 10px;
+  background: transparent;
+  border-radius: 6px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 40px;
+  min-height: 40px;
+
+  position: relative;
+
+  &.default {
+    display: inline;
+    font-size: 16px;
+    line-height: 22px;
+    width: unset;
+    padding-inline: 8px;
+    background: transparent;
+    border: 1px solid var(--input-border-color);
+  }
+
+  &.formSubmit {
+    background: var(--main);
+    color: var(--white);
+    border: none;
+  }
+
+  &.formCancel {
+    background: #e3ebf6;
+    color: var(--text-color-black);
+    border: none;
+  }
+
+  &.authSubmit {
+    display: flex;
+    padding: 15px 63px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    border:none;
+    background: #252525;
+    color: var(--white);
+    width: 100%;
+  }
+}
