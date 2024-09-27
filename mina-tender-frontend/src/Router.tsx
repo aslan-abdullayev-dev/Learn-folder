@@ -4,7 +4,7 @@ import { siteUrls } from "./shared/constants/siteUrls.ts";
 
 import MainLayout from "./shared/layouts/MainLayout/MainLayout.tsx";
 import AuthLayout from "./shared/layouts/AuthLayout/AuthLayout.tsx";
-import LoginPage from "./containers/AuthContainer/pages/LoginPage.tsx";
+// import LoginPage from "./containers/AuthContainer/pages/LoginPage.tsx";
 import Hero from "./containers/HomeContainer/pages/Hero.tsx";
 
 const Router = createBrowserRouter([
@@ -24,7 +24,8 @@ const Router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <LoginPage/>,
+        // element: <LoginPage/>,
+        element: <div>Login</div>,
       },
     ],
   },
