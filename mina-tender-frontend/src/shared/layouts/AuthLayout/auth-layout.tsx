@@ -1,4 +1,4 @@
-import "./AuthLayout.scss";
+import "./auth-layout.scss";
 
 import { Outlet } from "react-router-dom";
 // import SvgLogo from "../../components/Icons/Logo.tsx";

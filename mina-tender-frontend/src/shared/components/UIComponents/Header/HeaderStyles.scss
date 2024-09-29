@@ -1,0 +1,45 @@
+.header {
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &-left {
+    svg {
+      width: 160px;
+      height: 35px;
+    }
+  }
+
+  &-right {
+    //.authorized {
+    //}
+
+    .unauthorized {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+
+      .register {
+        padding: 12px 32px;
+        color: var(--main);
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 3px;
+        border: 1px solid var(--main);
+        background: var(--white);
+      }
+
+      .login {
+        padding: 12px 32px;
+        color: var(--white);
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 3px;
+        border: 1px solid var(--main);
+        background: var(--main);
+      }
+    }
+  }
+}

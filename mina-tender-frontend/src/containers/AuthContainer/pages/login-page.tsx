@@ -13,7 +13,7 @@ const LoginPage = () => {
     <div className="auth-container">
       <p className="auth-links">
         <span className="name">Hesabın yoxdur?</span>
-        <Link to="/" className='link'>Qeydiyyatdan keç</Link>
+        <Link to="/auth/register" className='link'>Qeydiyyatdan keç</Link>
       </p>
 
       <div className="titles">
@@ -27,15 +27,17 @@ const LoginPage = () => {
       <form className="form">
         <div className="form-column">
           <InputBox
-            value="asd"
+            value=""
             onChange={() => {
             }}
+            label="İstifadəçi adı"
           />
           <InputBox
-            value="asd"
+            value=""
             onChange={() => {
             }}
             type="password"
+            label="Şifrə"
           />
           <ButtonEl buttonType="formSubmit" text="Daxil olun" style={{ width: '100%' }}/>
         </div>

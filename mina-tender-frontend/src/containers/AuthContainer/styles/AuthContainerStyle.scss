@@ -49,13 +49,13 @@
   .form {
     margin-top: 75px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
+    gap: 18px;
 
     &-column {
-      width: 50%;
       flex-grow: 1;
-      max-width: 460px;
+      max-width: 400px;
     }
   }
 

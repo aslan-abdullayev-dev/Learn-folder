@@ -1,0 +1,20 @@
+.all-tenders {
+  padding: 0 40px;
+
+  .subheader {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    .menu-button {
+      display: flex;
+      gap: 8px;
+    }
+
+    .title {
+      color: var(--text-color-black);
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+}

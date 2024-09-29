@@ -1,4 +1,4 @@
-import styles from "./MainLayoutStyles.module.scss";
+import styles from "./main-layout-styles.scss";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";

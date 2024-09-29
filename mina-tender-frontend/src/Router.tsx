@@ -1,11 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { siteUrls } from "./shared/constants/siteUrls.ts";
-
-import LoginPage from "./containers/AuthContainer/pages/LoginPage.tsx";
-import MainLayout from "./shared/layouts/MainLayout/MainLayout.tsx";
-import AuthLayout from "./shared/layouts/AuthLayout/AuthLayout.tsx";
-import Hero from "./containers/HomeContainer/pages/Hero.tsx";
+import LoginPage from "./containers/AuthContainer/pages/login-page.tsx";
+import MainLayout from "./shared/layouts/MainLayout/main-layout.tsx";
+import AuthLayout from "./shared/layouts/AuthLayout/auth-layout.tsx";
+import RegisterPage from "./containers/AuthContainer/pages/register-page.tsx";
+import AllTenders from "./containers/HomeContainer/pages/all-tenders.tsx";
 
 const Router = createBrowserRouter([
   {
@@ -13,8 +12,9 @@ const Router = createBrowserRouter([
     element: <MainLayout/>,
     children: [
       {
-        element: <Hero/>,
-        path: siteUrls.home + "/" + siteUrls.hero,
+        // path: "/all-tenders",
+        index:true,
+        element: <AllTenders/>
       },
     ],
   },
@@ -25,6 +25,10 @@ const Router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage/>,
+      },
+      {
+        path: "register",
+        element: <RegisterPage/>,
       },
     ],
   },

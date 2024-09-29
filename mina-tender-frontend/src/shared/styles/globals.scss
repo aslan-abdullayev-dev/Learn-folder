@@ -7,72 +7,6 @@
   font-family: Poppins;
 }
 
-.aside-menu {
-  background-color: transparent !important;
-  color: #000 !important;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 22px;
-  border-inline-end: unset !important;
-
-  svg {
-    font-size: 18px !important;
-    margin-right: 10px;
-  }
-
-  &-inline-collapsed {
-    width: 40px;
-  }
-
-  .ant-menu-sub {
-    background-color: transparent !important;
-  }
-
-  .ant-menu-item {
-    margin-block: 0;
-    padding-left: unset !important;
-    padding-inline: unset !important;
-
-    &-selected,
-    &-active,
-    &:hover {
-      background-color: transparent !important;
-      color: var(--main) !important;
-    }
-  }
-
-  .ant-menu-submenu {
-    &:has(.ant-menu-submenu) .ant-menu-submenu {
-      padding-left: 16px;
-    }
-
-    .ant-menu-item {
-      padding-left: 16px !important;
-      margin-block: 0;
-    }
-
-    &-selected,
-    &-active,
-    &-title:hover,
-    &:hover {
-      background-color: transparent !important;
-      color: var(--main) !important;
-    }
-
-    &-title {
-      padding-left: unset !important;
-      padding-inline: unset !important;
-    }
-
-    &-selected {
-      .ant-menu-submenu-title {
-        color: unset !important;
-      }
-    }
-  }
-}
-
 .input-box {
   width: 100%;
   margin-block: 6px;
@@ -209,42 +143,6 @@
   }
 }
 
-.navbar-searchbar {
-  .ant-input {
-    color: var(--text-color-black);
-    border-start-start-radius: 2px !important;
-    border-end-start-radius: 2px !important;
-    border: 1px solid var(--input-border-color) !important;
-    background-color: transparent;
-    line-height: 1.5;
-  }
-
-  .ant-input-group-addon {
-    background-color: transparent;
-
-    .ant-input-search-button {
-      background-color: transparent;
-      border: 1px solid var(--input-border-color) !important;
-      border-start-end-radius: 2px !important;
-      border-end-end-radius: 2px !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: none;
-
-      &:hover {
-        background-color: transparent;
-      }
-
-      svg {
-        font-size: 18px;
-        color: var(--text-color-black);
-        font-weight: 600;
-      }
-    }
-  }
-}
-
 .ant-modal {
   &-content {
     background-color: var(--white) !important;
@@ -282,4 +180,8 @@
       margin-top: 30px;
     }
   }
+}
+
+.menu-drawer {
+
 }
