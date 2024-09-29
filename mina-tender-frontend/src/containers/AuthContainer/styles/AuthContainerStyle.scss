@@ -1,26 +1,91 @@
 @import "../../../shared/styles/variables";
 
 .auth-container {
+  position: relative;
+  height: 100%;
 
-  &__title {
-    color: var(--text-color-black);
-    text-align: center;
-    font-family: Poppins;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    padding: 5px;
+  .auth-links {
+    display: flex;
+    gap: 16px;
+
+    .name {
+      color: #A0A0A0;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px; /* 137.5% */
+    }
+
+    .link {
+      color: #000;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 22px; /* 137.5% */
+      text-decoration-line: underline;
+    }
   }
 
-  &__form {
-    background: var(--main-background);
-    padding: 20px;
-    border-radius: 10px;
+  .titles {
+    margin-top: 56px;
+
+    .title {
+      color: #000;
+      font-size: 44px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 50px;
+    }
+
+    .subtitle {
+      color: #696969;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+    }
   }
 
-  &__submit {
-    margin-top: 10px;
+  .form {
+    margin-top: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    &-column {
+      width: 50%;
+      flex-grow: 1;
+      max-width: 460px;
+    }
   }
 
+  .legal {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 14px;
+      width: 14px;
+
+      svg {
+        color: #A5A5A5;
+      }
+    }
+
+    .text {
+      color: #A5A5A5;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+    }
+  }
 }

@@ -1,10 +1,24 @@
 .auth-layout {
   height: 100vh;
-  //display: flex;
-  //align-items: center;
-  //justify-content: center;
-  //background: linear-gradient(rgba(250, 250, 250, 1) 0%, rgba(250, 250, 250, 0.9) 80%), url("../../assets/images/auth-background.png") lightgray -226.333px -307.801px / 133.518% 146.099% no-repeat;
-  //mix-blend-mode: color-burn;
-  background-image: url("../../assets/images/auth-background.png");
-  //background: red;
+  width: 100%;
+  display: flex;
+
+  &__left {
+    flex-grow: 1;
+    min-width: 50%;
+    padding: 20px;
+  }
+
+  &__right {
+    width: 50%;
+    padding: 20px;
+
+    .right-background {
+      background-image: url("../../assets/images/auth-background.png");
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+      border-radius: 10px;
+    }
+  }
 }

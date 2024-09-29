@@ -8,10 +8,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "svgr": "npx @svgr/cli src/shared/assets/icons -d src/shared/components/Icons --icon --typescript --replace-attr-values \"#212656=currentColor,#000=currentColor,#fff=currentColor,#54BB6D=currentColor,#AF6BAC=currentColor\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "@svgr/cli": "^8.1.0",
     "antd": "^5.21.0",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
