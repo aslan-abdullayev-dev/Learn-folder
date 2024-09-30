@@ -1,4 +1,4 @@
-import "../styles/AuthContainerStyle.scss";
+import "../styles/auth-container-styles.scss";
 
 import { useHtmlTitle } from "../../../shared/hooks/useHtmlTitle.ts";
 import { Link } from "react-router-dom";

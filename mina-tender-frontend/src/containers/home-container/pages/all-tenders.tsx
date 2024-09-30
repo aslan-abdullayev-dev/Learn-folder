@@ -6,6 +6,7 @@ import { useState } from "react";
 import ButtonEl from "../../../shared/components/ButtonEl/ButtonEl.tsx";
 import { Drawer } from "antd";
 import SvgLogo from "../../../shared/components/Icons/Logo.tsx";
+import MenuItems from "../components/menu-items/menu-items.tsx";
 
 const AllTenders = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -28,9 +29,7 @@ const AllTenders = () => {
         placement="left"
         rootClassName="menu-drawer"
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <MenuItems/>
       </Drawer>
     </main>
   )

@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import LoginPage from "./containers/AuthContainer/pages/login-page.tsx";
+import { siteUrls } from "./shared/constants/siteUrls.ts";
 import MainLayout from "./shared/layouts/MainLayout/main-layout.tsx";
 import AuthLayout from "./shared/layouts/AuthLayout/auth-layout.tsx";
-import RegisterPage from "./containers/AuthContainer/pages/register-page.tsx";
-import AllTenders from "./containers/HomeContainer/pages/all-tenders.tsx";
+import AllTenders from "./containers/home-container/pages/all-tenders.tsx";
+import LoginPage from "./containers/auth-container/pages/login-page.tsx";
+import RegisterPage from "./containers/auth-container/pages/register-page.tsx";
 
 const Router = createBrowserRouter([
   {
@@ -12,8 +13,8 @@ const Router = createBrowserRouter([
     element: <MainLayout/>,
     children: [
       {
-        // path: "/all-tenders",
-        index:true,
+        path: siteUrls.main.allTenders,
+        index: true,
         element: <AllTenders/>
       },
     ],
@@ -23,11 +24,11 @@ const Router = createBrowserRouter([
     element: <AuthLayout/>,
     children: [
       {
-        path: "login",
+        path: siteUrls.auth.login,
         element: <LoginPage/>,
       },
       {
-        path: "register",
+        path: siteUrls.auth.register,
         element: <RegisterPage/>,
       },
     ],
