@@ -3,11 +3,10 @@ import "./menu-items.scss"
 import { useLocation, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import {
-  HomeOutlined,
-} from "@ant-design/icons";
 
 import { siteUrls } from "../../../../shared/constants/siteUrls.ts";
+import SvgMenuAllTenders from "../../../../shared/components/Icons/MenuAllTenders.tsx";
+import SvgMenuFavourites from "../../../../shared/components/Icons/MenuFavourites.tsx";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -30,19 +29,18 @@ const MenuItems = () => {
 
   const items: MenuItem[] = [
     {
-      label: "Home",
-      key: siteUrls.auth.login,
-      icon: <HomeOutlined/>,
-      // children: [
-      // {
-      //   label: "Our History",
-      //   key: siteUrls.home + "/" + siteUrls.ourHistory,
-      // },
-      // ],
+      label: "Bütün müsabiqələr",
+      key: siteUrls.main.allTenders,
+      icon: <SvgMenuAllTenders/>,
+    },
+    {
+      label: "Seçilmişlər",
+      key: siteUrls.main.favourites,
+      icon: <SvgMenuFavourites/>,
     },
   ];
 
-  const onClick: MenuProps["onClick"] = (e) => navigate(e.key);
+  const onClick: MenuProps["onClick"] = (e) => navigate("/" + e.key);
 
   return (
     <div>

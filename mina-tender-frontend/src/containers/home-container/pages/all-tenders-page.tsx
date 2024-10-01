@@ -8,7 +8,7 @@ import { Drawer } from "antd";
 import SvgLogo from "../../../shared/components/Icons/Logo.tsx";
 import MenuItems from "../components/menu-items/menu-items.tsx";
 
-const AllTenders = () => {
+const AllTendersPage = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
@@ -35,4 +35,4 @@ const AllTenders = () => {
   )
 }
 
-export default AllTenders;
+export default AllTendersPage;

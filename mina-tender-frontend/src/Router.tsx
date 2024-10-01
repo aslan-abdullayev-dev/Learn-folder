@@ -3,9 +3,10 @@ import { createBrowserRouter } from "react-router-dom";
 import { siteUrls } from "./shared/constants/siteUrls.ts";
 import MainLayout from "./shared/layouts/MainLayout/main-layout.tsx";
 import AuthLayout from "./shared/layouts/AuthLayout/auth-layout.tsx";
-import AllTenders from "./containers/home-container/pages/all-tenders.tsx";
+import AllTendersPage from "./containers/home-container/pages/all-tenders-page.tsx";
 import LoginPage from "./containers/auth-container/pages/login-page.tsx";
 import RegisterPage from "./containers/auth-container/pages/register-page.tsx";
+import FavouritesPage from "./containers/home-container/pages/favourites-page.tsx";
 
 const Router = createBrowserRouter([
   {
@@ -15,7 +16,11 @@ const Router = createBrowserRouter([
       {
         path: siteUrls.main.allTenders,
         index: true,
-        element: <AllTenders/>
+        element: <AllTendersPage/>
+      },
+      {
+        path: siteUrls.main.favourites,
+        element: <FavouritesPage/>
       },
     ],
   },
