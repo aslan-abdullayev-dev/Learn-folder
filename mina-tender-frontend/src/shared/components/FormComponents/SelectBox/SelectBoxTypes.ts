@@ -5,7 +5,7 @@ import { CSSProperties, FocusEventHandler } from "react";
 type OptionsSelectBoxProps = {
   type: "static-options",
   options: SelectProps["options"] | any[];
-  loadOptions:undefined;
+  loadOptions: undefined;
 }
 
 type LoadOptionsSelectBoxProps = {
@@ -24,7 +24,7 @@ export type SelectBoxProps = {
   onBlur?: FocusEventHandler<HTMLElement> | undefined;
   label: string;
   name: string;
-  value: string | string[] | number | null | boolean;
+  value: string | string[] | number | number[] | null | boolean;
   mode?: "multiple" | "tags";
   style?: CSSProperties;
   placeholder?: string;
