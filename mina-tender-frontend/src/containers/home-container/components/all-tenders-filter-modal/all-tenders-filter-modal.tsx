@@ -1,31 +1,37 @@
 import { useFormik } from "formik";
 import { Col, Modal, Row } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import ButtonEl from "../../../../shared/components/ButtonEl/ButtonEl.tsx";
+import SelectBox from "../../../../shared/components/FormComponents/SelectBox/SelectBox.tsx";
 import InputBox from "../../../../shared/components/FormComponents/InputBox/InputBox.tsx";
+import ButtonEl from "../../../../shared/components/ButtonEl/ButtonEl.tsx";
+import { apiUrls } from "../../../../shared/constants/apiUrls.ts";
+import DatePickerBox
+  from "../../../../shared/components/FormComponents/DatePickerBox/DatePickerBox.tsx";
 import {
   ITenderFilterModal,
   ITenderFilterModalForm
 } from "../../types/all-tenders-filter-modal-props.ts";
-import SelectBox from "../../../../shared/components/FormComponents/SelectBox/SelectBox.tsx";
 
-const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
+const AllTendersFilterModal = ({
+  isOpen,
+  setIsOpen,
+  createObjectFromQuery,
+  createQueryFromObject
+}: ITenderFilterModal) => {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const initParams = new URLSearchParams(location.search);
 
   const tenderFilterFormik = useFormik<ITenderFilterModalForm>(
     {
-      initialValues: {
-        eventStatus: 1,
-        buyerOrganizationIds: [],
-        eventNumber: "",
-        fromPublishDate: "", //"2024-08-27"
-        toPublishDate: "", //"2024-10-27"
-        categoryCodeIds: [],
-        eventName: "",
-        awardedParticipantName: "",
-        awardedParticipantVoen: ""
-      },
-      onSubmit: () => {
+      initialValues: createObjectFromQuery(initParams),
+      onSubmit: (values) => {
+        const searchQuery = createQueryFromObject(new URLSearchParams(), values)
+        navigate(`${location.pathname}?${searchQuery}`);
+        onClose()
       }
     }
   )
@@ -34,7 +40,8 @@ const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
     values,
     handleBlur,
     setFieldValue,
-    getFieldProps
+    getFieldProps,
+    handleSubmit
   } = tenderFilterFormik;
 
   function onClose() {
@@ -60,7 +67,7 @@ const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
           key={2}
           buttonType="formSubmit"
           text="Submit"
-          onClick={onClose}
+          onClick={handleSubmit}
         />,
       ]}
     >
@@ -70,6 +77,7 @@ const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
             value={values.eventStatus}
             onChange={(val) => setFieldValue("eventStatus", val)}
             onBlur={handleBlur("eventStatus")}
+            disabled
             options={[
               {
                 value: 1, label: "Tamamlanmış"
@@ -89,19 +97,22 @@ const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
         </Col>
         <Col span={8}>
           <SelectBox
+            label="Satınalan təşkilatın adı"
             value={values.buyerOrganizationIds}
             onChange={(val) => setFieldValue("buyerOrganizationIds", val)}
-            onBlur={handleBlur("eventStatus")}
-            options={[
-              {
-                value: 1, label: "neyse  ne"
-              },
-            ]}
-            loadOptions={undefined}
-            label="Satınalan təşkilatın adı"
-            type="static-options"
+            onBlur={handleBlur("buyerOrganizationIds")}
+            options={undefined}
+            loadOptions={{
+              url: apiUrls.buyerOrganisation.getAll,
+              getOptionSettings: {
+                value: "id",
+                label: "name"
+              }
+            }}
+            type="load-options"
             name="eventStatus"
             mode="multiple"
+            showSearch
           />
         </Col>
         <Col span={8}>
@@ -109,6 +120,48 @@ const AllTendersFilterModal = ({ isOpen, setIsOpen }: ITenderFilterModal) => {
             {...getFieldProps("eventNumber")}
             label="Müsabiqənin nömrəsi"
             type="number"
+          />
+        </Col>
+        <Col span={8}>
+          <DatePickerBox
+            label="Dərc edilmə balanğıc tarix"
+            value={values.fromPublishDate}
+            onChange={(val) => setFieldValue("fromPublishDate", val)}
+            onBlur={handleBlur("fromPublishDate")}
+          />
+        </Col>
+        <Col span={8}>
+          <DatePickerBox
+            label="Dərc edilmə son tarix"
+            value={values.toPublishDate}
+            onChange={(val) => setFieldValue("toPublishDate", val)}
+            onBlur={handleBlur("toPublishDate")}
+          />
+        </Col>
+        <Col span={8}>
+          <SelectBox
+            value={values.categoryCodeIds}
+            onChange={(val) => setFieldValue("categoryCodeIds", val)}
+            onBlur={handleBlur("categoryCodeIds")}
+            options={undefined}
+            loadOptions={{
+              url: apiUrls.categoryCodes.getAll,
+              getOptionSettings: {
+                value: "id",
+                label: "code"
+              }
+            }}
+            label="Kateqoriya"
+            type="load-options"
+            name="eventStatus"
+            mode="multiple"
+            showSearch
+          />
+        </Col>
+        <Col span={8}>
+          <InputBox
+            {...getFieldProps("eventName")}
+            label="Satınalma predmeti"
           />
         </Col>
       </Row>

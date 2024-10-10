@@ -1,15 +1,17 @@
 import "../styles/all-tenders-styles.scss"
 
 import { MenuOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Divider, Drawer, Input } from "antd";
+import { ColumnsType } from "antd/es/table/interface";
 import { useState } from "react";
 
+import TableEl from "../../../shared/components/UIComponents/TableEl/TableEl.tsx";
 import ButtonEl from "../../../shared/components/ButtonEl/ButtonEl.tsx";
-import { Button, Divider, Drawer, Input } from "antd";
+import SvgFilter from "../../../shared/components/Icons/Filter.tsx";
+import useTenderDataFilter from "../hooks/use-tender-data-filter.ts";
 import SvgLogo from "../../../shared/components/Icons/Logo.tsx";
 import MenuItems from "../components/menu-items/menu-items.tsx";
-import SvgFilter from "../../../shared/components/Icons/Filter.tsx";
-import TableEl from "../../../shared/components/UIComponents/TableEl/TableEl.tsx";
-import { ColumnsType } from "antd/es/table/interface";
+import { ITender } from "../types/tender-type.ts";
 import AllTendersFilterModal
   from "../components/all-tenders-filter-modal/all-tenders-filter-modal.tsx";
 
@@ -17,7 +19,7 @@ const AllTendersPage = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showFilterTendersModal, setShowTendersModal] = useState(false);
 
-  const tenderTableColumns: ColumnsType<any> = [
+  const tenderTableColumns: ColumnsType<ITender> = [
     {
       title: "Satınalan təşkilatın adı",
       dataIndex: "buyerOrganizationName",
@@ -43,13 +45,6 @@ const AllTendersPage = () => {
       width: 170
     },
     {
-      title: "Təsnifat kodu",
-      dataIndex: "categoryCodes",
-      key: "categoryCodes",
-      render: () => <span>kodlar</span>,
-      width: 130
-    },
-    {
       title: "İştirak haqqı",
       dataIndex: "participationFee",
       key: "participationFee",
@@ -62,40 +57,14 @@ const AllTendersPage = () => {
       width: 170
     }
   ]
-
-  const tableData = [
-    {
-      id: 1,
-      buyerOrganizationName: "BAKI ŞƏHƏR MƏNZİL-KOMMUNAL TƏSƏRRÜFATI DEPARTAMENTİNİN SANİTARİYA VƏ TEXNİKİ TƏMİZLİK İDARƏSİ",
-      eventName: "“Maşın və avadanlıqların, təsərrufat malları və təsərrüfat alətlərinin satın alınması”",
-      publishDate: "2024-09-19T14:06:51",
-      endDate: "2024-09-19T14:06:51",
-      categoryCodes: [
-        {
-          id: 1081,
-          code: "23211000 Elektron montaj maşınları və köməkçi avadanlıqlar"
-        },
-        {
-          id: 1203,
-          code: "25191700 Avtomobilə texniki xidmət avadanlığı"
-        },
-        {
-          id: 1551,
-          code: "26111600 Elektrik generatorları"
-        },
-        {
-          id: 507,
-          code: "40151500 Nasoslar"
-        },
-        {
-          id: 1046,
-          code: "72154200 Alətlərin quraşdırılması və təmiri işləri"
-        }
-      ],
-      participationFee: null,
-      viewFee: null
-    }
-  ]
+  const {
+    tendersData,
+    setTendersData,
+    tablePaginationConfigs,
+    getTenderFilteredData,
+    createQueryFromObject,
+    createObjectFromQuery
+  } = useTenderDataFilter()
 
   return (
     <>
@@ -113,6 +82,9 @@ const AllTendersPage = () => {
             <AllTendersFilterModal
               isOpen={showFilterTendersModal}
               setIsOpen={setShowTendersModal}
+              setTendersData={setTendersData}
+              createQueryFromObject={createQueryFromObject}
+              createObjectFromQuery={createObjectFromQuery}
             />}
           <Input.Group compact>
             <Button
@@ -140,7 +112,12 @@ const AllTendersPage = () => {
         </div>
         <Divider/>
         <div className="tenders-table">
-          <TableEl columns={tenderTableColumns} tableData={tableData}/>
+          <TableEl
+            columns={tenderTableColumns}
+            tableData={tendersData}
+            pagination={tablePaginationConfigs}
+            onChange={getTenderFilteredData}
+          />
         </div>
       </main>
       <Drawer
