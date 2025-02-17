@@ -1,16 +1,17 @@
 {
-  "name": "big_o",
+  "name": "andrei-nagoi-dsa",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lite-server"
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "lite-server": "^2.6.1"
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
