@@ -16,4 +16,6 @@ import {section_8} from "./modules/section_8/index.js";
 // section_7.l_84_implementing_hash_table()
 // section_7.l_90_first_recurring_character()
 
-section_8.l_100_first_linked_list()
+// section_8.l_100_first_linked_list()
+section_8.l_100_my_linked_list()
+// section_8.l_109_doubly_linked_list()

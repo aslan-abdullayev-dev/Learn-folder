@@ -16,7 +16,7 @@ export const l_100_first_linked_list = () => {
     };
   */
 
-  class Node {``
+  class Node {
     constructor(value, next = null) {
       this.value = value;
       this.next = next;
@@ -42,16 +42,72 @@ export const l_100_first_linked_list = () => {
       this.length++;
       return this;
     }
+
+    printList() {
+      let currHead = this.head
+      const valuesList = []
+      while (currHead) {
+        valuesList.push(currHead.value)
+        currHead = currHead.next;
+      }
+      console.log(valuesList);
+      return this
+    }
+
+    insert(index, value) {
+      if (index === 0) {
+        return this.prepend(value);
+      }
+
+      if (index >= this.length) {
+        return this.append(value);
+      }
+
+      let currHead = this.head;
+      let pointer = 0;
+      while (currHead) {
+        if (pointer + 1 === index) {
+          currHead.next = new Node(value, currHead.next);
+          return this
+        } else {
+          currHead = currHead.next;
+        }
+        pointer++
+      }
+    }
+
+    remove(index) {
+      if (index === 0) {
+        currHead.next = currHead.next?.next ?? null
+        // return this.prepend(value);
+      }
+
+      if (index >= this.length) {
+        return this.append(value);
+      }
+
+      let currHead = this.head;
+      let pointer = 0;
+      while (currHead) {
+        if (pointer + 1 === index) {
+          console.log(currHead.value);
+          currHead.next = currHead.next?.next ?? null
+        } else {
+          currHead = currHead.next;
+        }
+        pointer++
+      }
+      return this
+    }
   }
 
-  const myLinkedList = new LinkedList(5)
+  new LinkedList(5)
     .append(16)
     .prepend(10)
+    .insert(99, 99)
+    .insert(0, 0)
+    .insert(1, 1)
+    .remove(2)
+    .printList()
 
-  let head = myLinkedList.head
-
-  while (head) {
-    console.log(head.value)
-    head = head.next;
-  }
 }
