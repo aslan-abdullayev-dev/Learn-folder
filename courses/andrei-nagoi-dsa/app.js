@@ -1,7 +1,5 @@
 // import {section_3} from "./modules/section_3/index.js";
-import {section_6} from "./modules/section_6/index.js";
-import {section_7} from "./modules/section_7/index.js";
-import {section_8} from "./modules/section_8/index.js";
+import {section_9} from "./modules/section_9/index.js";
 
 // section_3.l_35_constant_time()
 // section_3.l_32_findNemo1()
@@ -17,5 +15,8 @@ import {section_8} from "./modules/section_8/index.js";
 // section_7.l_90_first_recurring_character()
 
 // section_8.l_100_first_linked_list()
-section_8.l_100_my_linked_list()
+// section_8.l_100_my_linked_list()
 // section_8.l_109_doubly_linked_list()
+
+// section_9.l_122_stack_linked_list()
+section_9.l_126_queue_linked_list()
