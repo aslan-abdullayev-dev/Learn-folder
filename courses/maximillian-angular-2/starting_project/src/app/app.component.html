@@ -13,7 +13,10 @@
   </ul>
 
   @if (selectedUser) {
-    <app-tasks [name]="selectedUser.name"></app-tasks>
+    <app-tasks
+      [name]="selectedUser.name"
+      [userId]="selectedUserId"
+    ></app-tasks>
   } @else {
     <p id="fallback">Select a user to see their tasks!</p>
   }
