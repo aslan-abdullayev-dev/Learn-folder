@@ -13,7 +13,7 @@
     }
   </ul>
 
-  @if (selectedUser) {
+  @if (selectedUser && selectedUserId) {
     <app-tasks
       [name]="selectedUser.name"
       [userId]="selectedUserId"

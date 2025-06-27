@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Task } from "./task/task.model";
 import { TaskComponent } from "./task/task.component";
 import { NewTaskComponent } from "./new-task/new-task.component";
+import { type NewTask } from "./new-task/new-task.model";
 
 const tasksArr: Task[] = [
   {
@@ -42,8 +43,8 @@ const tasksArr: Task[] = [
 })
 
 export class TasksComponent {
-  @Input({required: true}) name?: string;
-  @Input({required: true}) userId?: string;
+  @Input({required: true}) name!: string;
+  @Input({required: true}) userId!: string;
 
   isAddingTask = false;
   tasks: Task[] = tasksArr
@@ -61,6 +62,17 @@ export class TasksComponent {
   }
 
   onCancelAddTask() {
+    this.isAddingTask = false;
+  }
+
+  onAddTask(task: NewTask) {
+    this.tasks.push({
+      id: new Date().getTime().toString(),
+      title: task.title,
+      dueDate: task.date,
+      summary: task.summary,
+      userId: this.userId
+    })
     this.isAddingTask = false;
   }
 }
