@@ -1,28 +1,22 @@
 import classNames from "classnames";
-import { useMemo } from "react";
-
-import "./styles.scss"
-
-import type { TileProps } from "./types";
 import Piece from "../Piece/Piece";
+import type { TileProps } from "./types";
+import "./styles.scss";
 
 const Tile = ({tile}: { tile: TileProps }) => {
-  const {color, piece} = tile
+  const {color, piece, name} = tile;
 
-  const tileClassName = useMemo(() => classNames(
-    "tile",
-    {
-      "bg--dark": color === "DARK",
-      "bg--light": color === "LIGHT"
-    }
-  ), [color])
-
+  const tileClassName = classNames("tile", {
+    "bg--dark": color === "DARK",
+    "bg--light": color === "LIGHT",
+  });
 
   return (
     <div className={tileClassName}>
+      {!piece && name}
       <Piece piece={piece}/>
     </div>
-  )
-}
+  );
+};
 
-export default Tile
+export default Tile;

@@ -1,22 +1,12 @@
-import "./styles.scss"
-
+import type { PieceNameType } from "./types";
 import { pieceImageMap } from "./constants";
-import type { TileProps } from "../Tile/types";
+import "./styles.scss";
 
-type PieceProps = {
-  piece: TileProps["piece"]
-}
+type PieceProps = { piece: PieceNameType | null };
 
-const Piece = ({piece}: PieceProps) => {
-  return (
-    <div>
-      {piece && <img
-        className="piece"
-        src={pieceImageMap[piece]}
-        alt={piece}
-      />}
-    </div>
-  )
-}
+const Piece = ({ piece }: PieceProps) => {
+  if (!piece) return null;
+  return <img className="piece" src={pieceImageMap[piece]} alt={piece} />;
+};
 
-export default Piece
+export default Piece;
