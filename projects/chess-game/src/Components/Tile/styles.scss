@@ -1,0 +1,17 @@
+@use "../../Assets/Styles/variables" as *;
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.bg--dark {
+  background: $tile-color-dark;
+}
+
+.bg--light {
+  background: $tile-color-light;
+}

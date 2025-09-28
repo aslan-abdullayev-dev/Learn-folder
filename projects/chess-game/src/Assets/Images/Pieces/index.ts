@@ -1,0 +1,12 @@
+export { default as BishopBlack } from "./bishop-black.png";
+export { default as BishopWhite } from "./bishop-white.png";
+export { default as KingBlack } from "./king-black.png";
+export { default as KingWhite } from "./king-white.png";
+export { default as KnightBlack } from "./knight-black.png";
+export { default as KnightWhite } from "./knight-white.png";
+export { default as PawnBlack } from "./pawn-black.png";
+export { default as PawnWhite } from "./pawn-white.png";
+export { default as QueenBlack } from "./queen-black.png";
+export { default as QueenWhite } from "./queen-white.png";
+export { default as RookBlack } from "./rook-black.png";
+export { default as RookWhite } from "./rook-white.png";
