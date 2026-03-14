@@ -1,8 +1,8 @@
 import {
+  CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,8 +20,8 @@ export class ResponseInterceptor<T> implements NestInterceptor<
     return next.handle().pipe(
       map((response: ApiResponse<T>) => ({
         success: true,
-        message: response.message,
-        data: response.data,
+        message: response?.message ?? 'Success',
+        data: response?.data ?? null,
       })),
     );
   }

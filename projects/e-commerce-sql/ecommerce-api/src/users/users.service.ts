@@ -1,8 +1,8 @@
 import {
+  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
-  ConflictException,
-  BadRequestException,
 } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import * as bcrypt from 'bcrypt';
@@ -10,6 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseSync } from 'node:sqlite';
 import { ApiResponse } from '../common/responses/api-response';
+import {
+  RawUserWithPassword,
+  UserWithPassword,
+} from '../auth/types/auth.types';
 
 @Injectable()
 export class UsersService {
@@ -128,11 +132,70 @@ export class UsersService {
     return new ApiResponse('User deleted successfully');
   }
 
-  // ─── PRIVATE HELPERS ──────────────────────────────────────
-
-  private findByEmail(email: string) {
+  findByEmail(email: string) {
     return this.db
-      .prepare('SELECT id FROM users WHERE email = ? AND is_deleted = 0')
+      .prepare(
+        `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0`,
+      )
       .get(email);
+  }
+
+  private mapToUserWithPassword(raw: RawUserWithPassword): UserWithPassword {
+    return {
+      id: raw.id,
+      email: raw.email,
+      password_hash: raw.password_hash,
+      status: raw.status,
+      permissions: raw.permissions ? raw.permissions.split(',') : [],
+    };
+  }
+
+  findUserForLogin(email: string): UserWithPassword | undefined {
+    const raw = this.db
+      .prepare(
+        `SELECT
+        u.id,
+        u.email,
+        u.password_hash,
+        u.status,
+        GROUP_CONCAT(p.name) AS permissions
+       FROM users u
+       LEFT JOIN user_roles ur ON u.id = ur.user_id
+       LEFT JOIN roles r ON ur.role_id = r.id
+       LEFT JOIN role_permissions rp ON r.id = rp.role_id
+       LEFT JOIN permissions p ON rp.permission_id = p.id
+       WHERE u.email = ?
+         AND u.is_deleted = 0
+       GROUP BY u.id, u.email, u.password_hash, u.status`,
+      )
+      .get(email) as RawUserWithPassword | undefined;
+
+    if (!raw) return undefined;
+
+    return this.mapToUserWithPassword(raw);
+  }
+
+  saveRefreshToken(data: {
+    id: string;
+    userId: string;
+    token: string;
+    expiresAt: string;
+    deviceType: string | null;
+    userAgent: string | null;
+  }): void {
+    this.db
+      .prepare(
+        `INSERT INTO refresh_tokens (id, user_id, token, expires_at, device_type, user_agent, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(
+        data.id,
+        data.userId,
+        data.token,
+        data.expiresAt,
+        data.deviceType,
+        data.userAgent,
+        new Date().toISOString(),
+      );
   }
 }
