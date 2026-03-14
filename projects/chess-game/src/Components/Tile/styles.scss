@@ -1,0 +1,19 @@
+@use "../../Assets/Styles/variables" as *;
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg--dark {
+  background: $tile-color-dark;
+}
+
+.bg--light {
+  background: $tile-color-light;
+}
+
+.tile--over {
+  outline: 2px solid yellow;
+}

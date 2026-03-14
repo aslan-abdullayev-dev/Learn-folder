@@ -1,0 +1,16 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 600px;
+}
+
+.board__row {
+  display: flex;
+  flex: 1;
+
+  & > * {
+    flex: 1;
+  }
+}
