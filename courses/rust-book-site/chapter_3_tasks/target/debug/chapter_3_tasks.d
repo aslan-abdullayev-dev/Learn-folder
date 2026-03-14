@@ -1,1 +1,0 @@
-C:\Users\Aslan\Desktop\code\Learn-folder\courses\rust-book-site\chapter_3_tasks\target\debug\chapter_3_tasks.exe: C:\Users\Aslan\Desktop\code\Learn-folder\courses\rust-book-site\chapter_3_tasks\src\main.rs

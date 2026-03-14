@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["ask_for_guess","main"]};
