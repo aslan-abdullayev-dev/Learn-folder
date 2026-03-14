@@ -2,15 +2,17 @@
   "name": "validation_lib",
   "version": "1.0.0",
   "description": "",
-  "main": "validation_lib.js",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lite-server"
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lite-server": "^2.6.1"
+    "nodemon": "^3.1.10",
+    "yup": "^1.6.1"
   }
 }
