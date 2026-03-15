@@ -22,9 +22,8 @@ export class TokenService {
   ): { accessToken: string; refreshToken: string } {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken();
-    const deviceType = this.getDeviceType(userAgent);
 
-    this.storeRefreshToken(user.id, refreshToken, deviceType, userAgent);
+    this.storeRefreshToken(user.id, refreshToken, userAgent);
 
     return { accessToken, refreshToken };
   }
@@ -47,7 +46,6 @@ export class TokenService {
   private storeRefreshToken(
     userId: string,
     token: string,
-    deviceType: string | null,
     userAgent: string | null,
   ): void {
     const expiresAt = new Date(
@@ -59,7 +57,7 @@ export class TokenService {
       userId,
       token,
       expiresAt,
-      deviceType,
+      deviceType: this.getDeviceType(userAgent),
       userAgent,
     });
   }

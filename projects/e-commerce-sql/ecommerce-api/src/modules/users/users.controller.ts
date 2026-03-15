@@ -6,39 +6,37 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   SetMetadata,
-  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RegisterUserDto } from './dto/register-user.dto';
 import { USERS_PERMISSIONS } from './permissions/users.permissions';
 import { IsPublic } from '../../common/decorators/public.decorator';
+import { JwtPayload } from '../auth/jwt.strategy';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @IsPublic
+  @IsPublic()
   @Post('register')
-  async register(@Body() body: CreateUserDto) {
-    return this.usersService.createUser(
-      body.email,
-      body.password,
-      body.createdBy,
-    );
+  async register(@Body() body: RegisterUserDto) {
+    return this.usersService.createUser(body.email, body.password);
   }
 
   @Post('register-staff')
   @SetMetadata('permission', USERS_PERMISSIONS.CREATE)
-  async registerStaff(@Body() body: CreateUserDto) {
+  async registerStaff(
+    @Body() body: CreateUserDto,
+    @Req() req: { user: JwtPayload },
+  ) {
     return this.usersService.createUser(
       body.email,
       body.password,
-      body.createdBy,
+      req.user.sub,
     );
   }
 
