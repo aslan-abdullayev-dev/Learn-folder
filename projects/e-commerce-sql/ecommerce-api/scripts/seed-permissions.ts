@@ -6,7 +6,12 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const DB_PATH = path.resolve(__dirname, '../database/db');
+const DB_NAME = process.env.DB_NAME;
+if (!DB_NAME) {
+  throw new Error('DB_NAME is not defined in .env');
+}
+
+const DB_PATH = path.resolve(__dirname, '../database', DB_NAME);
 
 const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL;
 

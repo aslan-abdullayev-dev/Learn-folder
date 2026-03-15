@@ -7,7 +7,11 @@ export class DatabaseService {
   private readonly db: DatabaseSync;
 
   constructor() {
-    const dbPath = path.join(process.cwd(), 'database', 'db');
+    const dbName = process.env.DB_NAME;
+    if (!dbName) {
+      throw new Error('DB_NAME is not defined');
+    }
+    const dbPath = path.join(process.cwd(), 'database', dbName);
     this.db = new DatabaseSync(dbPath);
     this.db.exec('PRAGMA foreign_keys = ON;');
   }

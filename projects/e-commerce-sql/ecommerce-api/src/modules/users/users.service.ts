@@ -160,7 +160,7 @@ export class UsersService {
         u.email,
         u.password_hash,
         u.status,
-        GROUP_CONCAT(p.name) AS permissions
+        GROUP_CONCAT(DISTINCT p.name) AS permissions
        FROM users u
        LEFT JOIN user_roles ur ON u.id = ur.user_id
        LEFT JOIN roles r ON ur.role_id = r.id
