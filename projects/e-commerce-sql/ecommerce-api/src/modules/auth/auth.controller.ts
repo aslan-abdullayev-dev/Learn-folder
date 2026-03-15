@@ -3,7 +3,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { IsPublic } from '../common/decorators/public.decorator';
+import { IsPublic } from '../../common/decorators/public.decorator';
 
 @Controller('auth')
 @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -15,7 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { USERS_PERMISSIONS } from './permissions/users.permissions';
-import { IsPublic } from '../common/decorators/public.decorator';
+import { IsPublic } from '../../common/decorators/public.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, PermissionsGuard)

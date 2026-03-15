@@ -5,12 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
-import { DatabaseModule } from '../../database/database.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { ACCESS_TOKEN_EXPIRY } from './modules/token/token.constants';
 import { TokenService } from './modules/token/token.service';
+import { DatabaseModule } from '../../../database/database.module';
 
 @Module({
   imports: [

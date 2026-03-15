@@ -4,16 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { DatabaseService } from '../../database/database.service';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseSync } from 'node:sqlite';
-import { ApiResponse } from '../common/responses/api-response';
+import { ApiResponse } from '../../common/responses/api-response';
 import {
   RawUserWithPassword,
   UserWithPassword,
 } from '../auth/types/auth.types';
+import { DatabaseService } from '../../../database/database.service';
 
 @Injectable()
 export class UsersService {
