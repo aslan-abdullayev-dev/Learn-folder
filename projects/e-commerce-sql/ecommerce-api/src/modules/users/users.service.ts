@@ -27,7 +27,8 @@ export class UsersService {
   // ─── CREATE ───────────────────────────────────────────────
 
   async createUser(email: string, password: string, createdBy?: string) {
-    const existing = this.findByEmail(email);
+    const normalizedEmail = email.toLowerCase();
+    const existing = this.findByEmail(normalizedEmail);
 
     if (existing) {
       throw new ConflictException('Email already in use');
@@ -40,15 +41,15 @@ export class UsersService {
     this.db
       .prepare(
         `
-      INSERT INTO users (id, email, password_hash, status, is_deleted, created_by, created_at)
-      VALUES (?, ?, ?, 'active', 0, ?, ?)
-    `,
+  INSERT INTO users (id, email, password_hash, status, is_deleted, created_by, created_at)
+  VALUES (?, ?, ?, 'active', 0, ?, ?)
+`,
       )
-      .run(id, email, passwordHash, createdBy ?? null, now);
+      .run(id, normalizedEmail, passwordHash, createdBy ?? null, now);
 
     return new ApiResponse('User created successfully', {
       id,
-      email,
+      email: normalizedEmail,
       status: 'active',
       created_at: now,
     });
@@ -90,11 +91,12 @@ export class UsersService {
     const values: (string | number)[] = [];
 
     if (dto.email) {
-      if (this.findByEmail(dto.email, id)) {
+      const normalizedEmail = dto.email.toLowerCase();
+      if (this.findByEmail(normalizedEmail, id)) {
         throw new ConflictException('Email already in use');
       }
       fields.push('email = ?');
-      values.push(dto.email);
+      values.push(normalizedEmail);
     }
 
     if (dto.status) {

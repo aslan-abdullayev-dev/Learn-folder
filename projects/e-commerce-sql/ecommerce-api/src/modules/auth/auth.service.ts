@@ -18,7 +18,7 @@ export class AuthService {
     password: string,
     userAgent: string | null,
   ): Promise<ApiResponse<{ accessToken: string; refreshToken: string }>> {
-    const user = this.usersService.findUserForLogin(email);
+    const user = this.usersService.findUserForLogin(email.toLowerCase());
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
