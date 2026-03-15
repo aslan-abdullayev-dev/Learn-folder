@@ -90,7 +90,7 @@ export class UsersService {
     const values: (string | number)[] = [];
 
     if (dto.email) {
-      if (this.findByEmail(dto.email)) {
+      if (this.findByEmail(dto.email, id)) {
         throw new ConflictException('Email already in use');
       }
       fields.push('email = ?');
@@ -132,12 +132,14 @@ export class UsersService {
     return new ApiResponse('User deleted successfully');
   }
 
-  findByEmail(email: string) {
-    return this.db
-      .prepare(
-        `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0`,
-      )
-      .get(email);
+  findByEmail(email: string, excludeId?: string) {
+    const query = excludeId
+      ? `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0 AND id != ?`
+      : `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0`;
+
+    const params: string[] = excludeId ? [email, excludeId] : [email];
+
+    return this.db.prepare(query).get(...params);
   }
 
   private mapToUserWithPassword(raw: RawUserWithPassword): UserWithPassword {
