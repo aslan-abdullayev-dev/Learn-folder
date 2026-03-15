@@ -176,28 +176,4 @@ export class UsersService {
 
     return this.mapToUserWithPassword(raw);
   }
-
-  saveRefreshToken(data: {
-    id: string;
-    userId: string;
-    token: string;
-    expiresAt: string;
-    deviceType: string | null;
-    userAgent: string | null;
-  }): void {
-    this.db
-      .prepare(
-        `INSERT INTO refresh_tokens (id, user_id, token, expires_at, device_type, user_agent, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      )
-      .run(
-        data.id,
-        data.userId,
-        data.token,
-        data.expiresAt,
-        data.deviceType,
-        data.userAgent,
-        new Date().toISOString(),
-      );
-  }
 }
