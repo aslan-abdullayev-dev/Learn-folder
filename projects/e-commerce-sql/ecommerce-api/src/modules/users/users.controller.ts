@@ -14,7 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { USERS_PERMISSIONS } from './permissions/users.permissions';
-import { IsPublic } from '../../common/decorators/public.decorator';
+import { IsPublic } from '../../core/decorators/public.decorator';
 import { JwtPayload } from '../auth/jwt.strategy';
 
 @Controller('users')

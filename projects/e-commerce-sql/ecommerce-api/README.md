@@ -1,98 +1,73 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛒 E-commerce Platform — Business Logic
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 👥 People & Access
+* Customers can register, login, and manage their profile
+* Staff have different roles (admin, warehouse, support, finance)
+* Each role has specific permissions (e.g. warehouse can't see payments)
+* Admins can activate/deactivate any account
+* All login attempts are logged (success & failure)
+* Sessions expire after inactivity
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📦 Products & Inventory
+* Products belong to categories (can be nested, e.g. Electronics → Phones)
+* Each product has variants (size, color, etc.)
+* Every variant tracks its own stock level
+* Low stock triggers a restock alert
+* Products can be drafted, published, or archived (never hard deleted)
+* Product price history is kept for reporting
 
-## Description
+## 🛍️ Shopping & Orders
+* Customers build a cart before checkout
+* Cart items are reserved temporarily during checkout
+* Orders go through statuses: `pending → confirmed → processing → shipped → delivered → closed`
+* Orders can be cancelled (with a reason) at certain stages only
+* Each order captures the price at time of purchase (even if product price changes later)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 💳 Payments
+* An order can have one or more payment attempts
+* Payment statuses: `pending → success / failed / refunded`
+* Failed payments allow retry
+* Refunds are tracked separately with a reason and approver
+* Finance team can run reports on daily/monthly revenue
 
-## Project setup
+## 🚚 Shipping & Delivery
+* Each order gets a shipment record with a tracking number
+* Shipment statuses: `preparing → dispatched → in transit → delivered / returned`
+* Customers can report delivery issues
+* Returns generate a return request that staff must approve
 
-```bash
-$ npm install
-```
+## ⭐ Reviews & Feedback
+* Customers can review a product only after purchase
+* Reviews can be flagged by staff as inappropriate
+* Flagged reviews are hidden pending moderation
 
-## Compile and run the project
+## 🔔 Notifications
+* Customers get notified on: order confirmed, shipped, delivered, refund processed
+* Staff get notified on: low stock, new return request, flagged review
+* Notifications track read/unread status
 
-```bash
-# development
-$ npm run start
+## 📋 Audit & Compliance
+* Every data change on sensitive tables is logged (old value → new value)
+* Logs record: who made the change, from what IP, and when
+* Customers can request account deletion (data anonymized, not deleted)
+* Deleted accounts are soft deleted — orders and history are preserved
 
-# watch mode
-$ npm run start:dev
+## 📊 Reporting (for later advanced SQL practice)
+* Sales by product / category / date range
+* Top customers by spend
+* Most returned products
+* Staff activity reports
+* Failed payment trends
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Suggested Build Order
+1. 🔐 Auth & Access Management
+2. 👤 Customer Profiles
+3. 🏷️ Products & Categories
+4. 📦 Inventory
+5. 🛒 Cart & Orders
+6. 💳 Payments
+7. 🚚 Shipping & Returns
+8. ⭐ Reviews
+9. 🔔 Notifications
+10. 📋 Audit Logs
+11. 📊 Reporting queries

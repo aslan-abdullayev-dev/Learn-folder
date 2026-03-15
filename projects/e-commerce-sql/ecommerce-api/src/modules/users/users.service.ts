@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseSync } from 'node:sqlite';
-import { ApiResponse } from '../../common/responses/api-response';
+import { ApiResponse } from '../../core/responses/api-response';
 import {
   RawUserWithPassword,
   UserWithPassword,

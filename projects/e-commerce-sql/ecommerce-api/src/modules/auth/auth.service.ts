@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { UserValidationService } from '../users/validators/user-validation.service';
 import { TokenService } from './modules/token/token.service';
-import { ApiResponse } from '../../common/responses/api-response';
+import { ApiResponse } from '../../core/responses/api-response';
 
 @Injectable()
 export class AuthService {
