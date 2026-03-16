@@ -240,6 +240,15 @@ describe('UsersService', () => {
   // ─── createUser ─────────────────────────────────────────────────────────────
 
   describe('createUser', () => {
+    it('should throw ConflictException when email differs only in case', async () => {
+      await expect(
+        service.createUser(
+          FIXTURES.activeUser.email.toUpperCase(),
+          'password123',
+        ),
+      ).rejects.toThrow(ConflictException);
+    });
+
     it('should create a user and return correct fields', async () => {
       const result = await service.createUser('new@test.com', 'password123');
 
@@ -344,6 +353,22 @@ describe('UsersService', () => {
   // ─── updateUser ─────────────────────────────────────────────────────────────
 
   describe('updateUser', () => {
+    it('should reflect deletion if user is soft deleted after findById but before UPDATE completes', () => {
+      const raw = db
+        .prepare(`SELECT id FROM users WHERE email = ?`)
+        .get(FIXTURES.userToUpdate.email) as { id: string };
+
+      // Simulate race: soft delete the user directly on the DB mid-operation
+      db.prepare(
+        `UPDATE users SET is_deleted = 1, deleted_at = ?, updated_at = ? WHERE id = ?`,
+      ).run(new Date().toISOString(), new Date().toISOString(), raw.id);
+
+      // updateUser calls findById first — that will now throw
+      expect(() =>
+        service.updateUser(raw.id, { email: 'raced@test.com' }),
+      ).toThrow(NotFoundException);
+    });
+
     it('should update email successfully', () => {
       const raw = db
         .prepare(`SELECT id FROM users WHERE email = ?`)
@@ -449,6 +474,34 @@ describe('UsersService', () => {
   // ─── findUserForLogin ────────────────────────────────────────────────────────
 
   describe('findUserForLogin', () => {
+    it('should return each permission once even if granted via two roles', () => {
+      const now = new Date().toISOString();
+      // Create a second role with one overlapping permission (test:read)
+      db.prepare(
+        `INSERT INTO roles (id, name, description, created_at) VALUES (?, ?, ?, ?)`,
+      ).run('test-role-2-id', 'testRole2', 'Second test role', now);
+
+      db.prepare(
+        `INSERT INTO role_permissions (role_id, permission_id, created_at) VALUES (?, ?, ?)`,
+      ).run('test-role-2-id', 'test-perm-read-id', now);
+
+      const activeUser = db
+        .prepare(`SELECT id FROM users WHERE email = ?`)
+        .get(FIXTURES.activeUser.email) as { id: string };
+
+      db.prepare(
+        `INSERT INTO user_roles (user_id, role_id, created_at) VALUES (?, ?, ?)`,
+      ).run(activeUser.id, 'test-role-2-id', now);
+
+      const result = service.findUserForLogin(FIXTURES.activeUser.email);
+
+      const readCount = result?.permissions.filter(
+        (p) => p === 'test:read',
+      ).length;
+      expect(readCount).toBe(1);
+      expect(result?.permissions).toHaveLength(2);
+    });
+
     it('should return user with correct permissions from assigned role', () => {
       const result = service.findUserForLogin(FIXTURES.activeUser.email);
 
