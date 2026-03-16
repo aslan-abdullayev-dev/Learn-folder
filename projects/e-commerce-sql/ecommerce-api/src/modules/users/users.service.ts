@@ -135,13 +135,19 @@ export class UsersService {
   }
 
   findByEmail(email: string, excludeId?: string) {
-    const query = excludeId
-      ? `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0 AND id != ?`
-      : `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0`;
+    if (excludeId) {
+      return this.db
+        .prepare(
+          `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0 AND id != ?`,
+        )
+        .get(email, excludeId);
+    }
 
-    const params: string[] = excludeId ? [email, excludeId] : [email];
-
-    return this.db.prepare(query).get(...params);
+    return this.db
+      .prepare(
+        `SELECT ${this.USER_FIELDS} FROM users WHERE email = ? AND is_deleted = 0`,
+      )
+      .get(email);
   }
 
   private mapToUserWithPassword(raw: RawUserWithPassword): UserWithPassword {
