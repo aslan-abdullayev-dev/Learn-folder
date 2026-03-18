@@ -150,7 +150,7 @@ This means re-parenting never needs to update depths within the moved subtree.
 
 ---
 
-#### `category_slug_redirects` *(deferred)*
+#### `category_slug_redirects` *(table exists, service logic deferred)*
 
 | Column | Type | Notes |
 |---|---|---|

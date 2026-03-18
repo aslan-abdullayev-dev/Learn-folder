@@ -1,24 +1,16 @@
 # ⚙️ Core
 
 ---
+---
 
-## What It Is
+## Business
 
 Cross-cutting infrastructure applied globally to every request in the application.
 Nothing in `core/` is feature-specific — it defines how all requests are protected, processed, and responded to.
 
-All pieces are registered in `AppModule` as global providers:
-
-```typescript
-{ provide: APP_GUARD,       useClass: JwtAuthGuard }
-{ provide: APP_GUARD,       useClass: PermissionsGuard }
-{ provide: APP_INTERCEPTOR, useClass: ResponseInterceptor }
-{ provide: APP_FILTER,      useClass: HttpExceptionFilter }
-```
-
 ---
 
-## Request Lifecycle
+### Request Lifecycle
 
 Every incoming request passes through these layers in order:
 
@@ -49,56 +41,68 @@ HttpExceptionFilter — catches it, returns { success: false, message, data: nul
 
 ---
 
-## Guards
+### Global Registration
 
-### JwtAuthGuard
+All pieces are registered in `AppModule` as global providers:
 
-#### What It Does
+```typescript
+{ provide: APP_GUARD,       useClass: JwtAuthGuard }
+{ provide: APP_GUARD,       useClass: PermissionsGuard }
+{ provide: APP_INTERCEPTOR, useClass: ResponseInterceptor }
+{ provide: APP_FILTER,      useClass: HttpExceptionFilter }
+```
+
+---
+---
+
+## Technical
+
+### Guards
+
+#### JwtAuthGuard
+
 Authenticates every request using the JWT in the `Authorization: Bearer` header.
 Extends NestJS `AuthGuard('jwt')` which runs the Passport JWT strategy.
 
-#### Skip with `@IsPublic()`
-If the route handler has `@IsPublic()` metadata → returns `true` immediately, no token needed.
+**Skip with `@IsPublic()`** — if the route handler has `@IsPublic()` metadata → returns `true` immediately, unconditionally. No token is inspected regardless of whether an `Authorization` header is present.
 
-#### Error Handling
 | Scenario | Response |
 |---|---|
 | Token expired | `401 TOKEN_EXPIRED` |
 | Token invalid / missing | `401 UNAUTHORIZED` |
-| `@IsPublic()` route | Passes through |
+| `@IsPublic()` route | Always passes through |
 
 ---
 
-### PermissionsGuard
+#### PermissionsGuard
 
-#### What It Does
 Checks that the authenticated user holds the permission declared on the route via `@RequirePermission()`.
 Reads permissions from `req.user.permissions` — the array embedded in the JWT payload at login.
 
-#### Behaviour
 - No `@RequirePermission()` on route → passes through (no permission required).
 - `@RequirePermission('x:y')` present → checks `user.permissions.includes('x:y')`.
 - Permission missing → returns `false` → NestJS throws `403 Forbidden`.
 
-#### Important
 Runs **after** `JwtAuthGuard`. `req.user` is guaranteed to exist by the time it runs (except on `@IsPublic()` routes — but those have no `@RequirePermission()` anyway).
 
 ---
 
-## Decorators
+### Decorators
 
-### `@IsPublic()`
+#### `@IsPublic()`
 
 ```typescript
 export const IsPublic = () => SetMetadata('isPublic', true);
 ```
 
 Sets `isPublic = true` metadata on a route handler. Read by `JwtAuthGuard`.
-Use on any endpoint that does not require authentication (e.g. register, login).
+Use on any endpoint that does not require authentication (e.g. register, login, update-access-token).
+
+If a future route needs **optional auth** (serve both guests and logged-in users differently), add a separate `@IsOptionalAuth()` decorator — do not overload `@IsPublic()` for this.
 
 ---
 
-### `@RequirePermission(permission)`
+#### `@RequirePermission(permission)`
 
 ```typescript
 export const RequirePermission = (value: string) => SetMetadata('permission', value);
@@ -109,9 +113,9 @@ Value must match a permission name registered in the `permissions` table (e.g. `
 
 ---
 
-## Response Shape
+### Response Shape
 
-### `ApiResponse<T>`
+#### `ApiResponse<T>`
 
 Internal class returned by all service methods:
 
@@ -120,7 +124,7 @@ class ApiResponse<T> {
   message: string;
   data: T | null;
 
-  constructor(message: string, data: T | null = null)
+  constructor(message: string, data: T | null = null) {}
 }
 ```
 
@@ -129,7 +133,7 @@ Services return `new ApiResponse('Some message', payload)`.
 
 ---
 
-### `ResponseInterceptor`
+#### `ResponseInterceptor`
 
 Wraps every successful response:
 
@@ -137,7 +141,7 @@ Wraps every successful response:
 {
   "success": true,
   "message": "Category created successfully",
-  "data": { ... }
+  "data": {}
 }
 ```
 
@@ -145,7 +149,7 @@ If `data` is not provided → `null`. If `message` is missing → `"Success"`.
 
 ---
 
-### `HttpExceptionFilter`
+#### `HttpExceptionFilter`
 
 Catches all `HttpException` throws (400, 401, 403, 404, 409, etc.) and formats them consistently:
 
@@ -157,43 +161,51 @@ Catches all `HttpException` throws (400, 401, 403, 404, 409, etc.) and formats t
 }
 ```
 
-#### Message Extraction
-- If the exception response is an object with a `message` field → uses that value (supports class-validator's array of messages too).
-- Otherwise → uses `exception.message` directly.
+Message extraction: if the exception response is an object with a `message` field → uses that value (supports class-validator's array of messages too). Otherwise → uses `exception.message` directly.
 
 ---
 
-## File Structure
+### File Structure
 
 ```
 src/core/
 ├── decorators/
-│   ├── public.decorator.ts           @IsPublic()
+│   ├── public.decorator.ts               @IsPublic()
 │   └── require-permission.decorator.ts   @RequirePermission()
 │
 ├── guards/
-│   ├── jwt-auth.guard.ts             JWT authentication — global
-│   └── permissions.guard.ts          Permission check — global
+│   ├── jwt-auth.guard.ts                 JWT authentication — global
+│   └── permissions.guard.ts              Permission check — global
 │
 ├── interceptors/
-│   └── response.interceptor.ts       Wraps success responses — global
+│   └── response.interceptor.ts           Wraps success responses — global
 │
 ├── filters/
-│   └── http-exception.filter.ts      Formats error responses — global
+│   └── http-exception.filter.ts          Formats error responses — global
 │
 └── responses/
-    └── api-response.ts               ApiResponse<T> class used by all services
+    └── api-response.ts                   ApiResponse<T> class used by all services
 ```
 
 ---
 
-## Gotchas
+### Gotchas
 
-### Guards Run in Registration Order
-`JwtAuthGuard` is registered before `PermissionsGuard` in `AppModule`. Order matters — permissions check depends on `req.user` being set first.
+**Guards Run in Registration Order** — `JwtAuthGuard` is registered before `PermissionsGuard` in `AppModule`. Order matters — permissions check depends on `req.user` being set first.
 
-### `PermissionsGuard` Does Not Run on `@IsPublic()` Routes — But Safely
-`@IsPublic()` routes skip `JwtAuthGuard`, so `req.user` is `undefined`. `PermissionsGuard` still runs but since `@IsPublic()` routes never have `@RequirePermission()`, it hits the early return and passes through safely.
+**`PermissionsGuard` Does Not Run on `@IsPublic()` Routes — But Safely** — `@IsPublic()` routes skip `JwtAuthGuard`, so `req.user` is `undefined`. `PermissionsGuard` still runs but since `@IsPublic()` routes never have `@RequirePermission()`, it hits the early return and passes through safely.
 
-### class-validator Errors Are Auto-Formatted
-When a DTO validation fails, NestJS throws a `BadRequestException` with an array of messages. `HttpExceptionFilter` handles this — the `message` field in the response will be that array.
+**class-validator Errors Are Auto-Formatted** — When a DTO validation fails, NestJS throws a `BadRequestException` with an array of messages. `HttpExceptionFilter` handles this — the `message` field in the response will be that array.
+
+---
+---
+
+## Planned
+
+### Business
+
+- No planned business changes.
+
+### Technical
+
+- `@IsOptionalAuth()` decorator — for future routes that serve both guests and logged-in users differently without requiring authentication

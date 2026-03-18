@@ -114,7 +114,7 @@ Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run
 
 ### Rules
 
-- Module docs are the **source of truth** for each module — CLAUDE.md links to them, never duplicates them
+- Module docs are the **source of truth** for each module — CLAUDE.md links to them, never duplicates them. This includes `src/core/` — any changes to guards, decorators, interceptors, or filters go in `core.md`, not here
 - Update immediately when requirements change or decisions are made
 - When a new module is created → auto-create `src/modules/<name>/documentation/<name>.md` → move its planning content from README → remove that section from README
 - When any planned behaviour changes → update the module doc if it exists, otherwise update README
@@ -123,7 +123,7 @@ Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run
 
 ### Module Doc Structure
 
-Every module doc follows this layout:
+Every module doc follows this layout — including `src/core/documentation/core.md`:
 
 ```
 ## Business    ← rules, workflows, decisions (single --- between subsections)
@@ -164,6 +164,7 @@ Double `---` = major section break. Single `---` = subsection break.
 
 | Module | Doc |
 |---|---|
+| Core | `src/core/documentation/core.md` |
 | Auth | `src/modules/auth/documentation/auth.md` |
 | Users | `src/modules/users/documentation/users.md` |
 | Categories | `src/modules/categories/documentation/categories.md` |
@@ -176,5 +177,15 @@ Double `---` = major section break. Single `---` = subsection break.
 ### No ORM
 Raw SQL only — intentional for SQL practice. Never suggest an ORM regardless of complexity.
 
+### Microservices End Goal
+The monolith is the starting point, not the end state. Once the monolith is sufficiently stable (after Cart & Orders or Payments), remind the user to plan the microservices migration. Each major module becomes a separate NestJS service; RabbitMQ is the transport layer. Keep module boundaries clean and avoid cross-module direct imports to make the eventual split easier.
+
+Target structure: NestJS monorepo with `apps/` (one per service: gateway, auth, orders, inventory, notifications, etc.) and `libs/` (shared: guards, decorators, interceptors, ApiResponse, RabbitMQ event types). Modules communicate via RabbitMQ events only — never by injecting another module's service. Current user identity comes from `request.user` (JWT guard), never from injecting `UsersService`.
+
 ### CRM Side Project
 Do not start the CRM until **Categories**, **Inventory/Products**, and **Customer Profiles** are complete. Those three phases establish the repeatable patterns needed to start a new project confidently. Customer Profiles maps directly to CRM concepts and is the natural bridge.
+
+### No NextJS Frontend
+Frontend (NextJS or any UI) is out of scope for this project. The CRM (a separate NestJS project) serves as the real-world consumer of this API instead. No frontend work should be suggested or planned.
+
+The API should remain frontend-friendly long term — clean response shapes, proper error codes, pagination-ready endpoints — so a frontend can be attached later without rework.
