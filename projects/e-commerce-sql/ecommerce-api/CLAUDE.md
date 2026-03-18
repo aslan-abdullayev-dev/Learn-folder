@@ -18,18 +18,36 @@
 > When the user says "memorize" or "remember" anything, ALWAYS update both the memory file AND this CLAUDE.md — never just one.
 
 ---
+
+### Where to write a memorized decision
+
+"Memorize" = a decision was made. Write it to the most relevant section of this file:
+
+| Section | What goes here |
+|---|---|
+| For Claude | Rules about how Claude should behave in this repo |
+| Project Status | Phase changes, completions, what's in progress |
+| Architecture | Tech choices, patterns, global conventions |
+| Module Docs | Doc structure rules, links, lifecycle rules |
+| Decisions | Judgment calls, strategic choices, constraints |
+
+**Edge cases:**
+
+- **Cross-module** (e.g. deleting a vendor deactivates their products) → write in the module that owns the action; add a short reference note in the affected module
+- **Module boundary / interaction** (e.g. reservation happens at cart not checkout) → Decisions section here in CLAUDE.md
+- **Global conventions** (e.g. all IDs are UUID v4) → Architecture → Key Patterns
+
+---
 ---
 
 ## Project Status
 
 Multi-vendor e-commerce platform. **Learning project** — phases tackled one at a time to practice raw SQL and backend architecture.
 
-### Phases
-
 | Phase | Module | Status |
 |---|---|---|
-| 1 | Auth & Users | COMPLETE |
-| 2 | Categories | IN PROGRESS |
+| 1 | Auth & Users | ✅ Complete |
+| 2 | Categories | 🔄 In Progress |
 | 3 | Inventory | Not started |
 | 4 | Customer Profiles | Not started |
 | 5 | Cart & Orders | Not started |
@@ -55,6 +73,8 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 | Validation | class-validator |
 | Port | 8181 (default) |
 
+---
+
 ### Key Patterns
 
 - **No ORM** — raw SQL prepared statements via `DatabaseSync` only. Never suggest TypeORM, Prisma, or any ORM.
@@ -65,6 +85,8 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 - **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
 - **Permissions** — seeded via `npm run seed:permissions` (scans `*.permissions.ts`); named `module:action`
 - **Test DB** — `DB_NAME=test_db`; schema created inline in spec files
+
+---
 
 ### Database Files
 
@@ -78,20 +100,21 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 
 ## Module Docs
 
-Module docs are the **source of truth** for each module. CLAUDE.md links to them — never duplicates them.
+### Rules
 
-### CLAUDE.md Writing Rules
+- Module docs are the **source of truth** for each module — CLAUDE.md links to them, never duplicates them
+- Update immediately when requirements change or decisions are made
+- When a new module is created → auto-create `src/modules/<name>/documentation/<name>.md` → move its planning content from README → remove that section from README
+- When any planned behaviour changes → update the module doc if it exists, otherwise update README
 
-- Contents list at the top, every section linked
-- Sections in order: For Claude → Project Status → Architecture → Module Docs → Decisions
-- Double `---` between every top-level section
-- Tables over bullet lists wherever data is tabular
-- Decisions section at the bottom — one short entry per decision with context
+---
 
-### Structure (every module doc)
+### Module Doc Structure
+
+Every module doc follows this layout:
 
 ```
-## Business    ← rules, workflows, decisions
+## Business    ← rules, workflows, decisions (single --- between subsections)
 ---
 ---
 ## Technical   ← endpoints, DTOs, DB schema, service behaviour, file structure, gotchas
@@ -102,9 +125,30 @@ Module docs are the **source of truth** for each module. CLAUDE.md links to them
 ### Technical  ← deferred implementation items
 ```
 
-Double `---` = major section break. Single `---` = subsection break within Business or Technical.
+Double `---` = major section break. Single `---` = subsection break.
 
-### Links
+---
+
+### CLAUDE.md Writing Rules
+
+- Contents list at the top, every section linked
+- Sections in order: For Claude → Project Status → Architecture → Module Docs → Decisions
+- Double `---` between every top-level section; single `---` between subsections
+- Tables over bullet lists wherever data is tabular
+- Decisions section at the bottom — one short named entry per decision
+
+---
+
+### README Rules
+
+- Written for external people — draws a picture of the finished project
+- Contains: compelling description, tech highlights, setup/run/env vars, build phases, and scope notes for modules not yet created
+- Always update when operational details change (scripts, env vars, ports)
+- Module scope sections are removed from README once that module gets its own doc
+
+---
+
+### Module Doc Links
 
 | Module | Doc |
 |---|---|
