@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './core/guards/jwt-auth.guard';
 import { PermissionsGuard } from './core/guards/permissions.guard';
 import { ResponseInterceptor } from './core/interceptors/response.interceptor';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { HttpExceptionFilter } from './core/filters/http-exception.filter';
     AuthModule,
     DatabaseModule,
     UsersModule,
+    CategoriesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
