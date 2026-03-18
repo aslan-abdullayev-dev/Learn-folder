@@ -70,6 +70,8 @@ DB_NAME=db
 | `npm test` | Run all tests against `test_db` |
 | `npm run test:watch` | Tests in watch mode |
 | `npm run seed:permissions` | Seed permissions and assign superAdmin to `SUPER_ADMIN_EMAIL` |
+| `npm run db:init` | Create all tables from `database/schema.sql` (safe, skips existing) |
+| `npm run db:reset` | Drop all tables and recreate from schema — dev only |
 | `npm run format` | Prettier format |
 | `npm run lint` | ESLint fix |
 

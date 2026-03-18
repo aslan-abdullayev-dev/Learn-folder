@@ -57,6 +57,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 | 9 | Notifications | Not started |
 | 10 | Audit Logs | Not started |
 | 11 | Reporting | Not started |
+| — | Vendors, Campaigns, Search, Analytics | Future |
 
 ---
 ---
@@ -94,6 +95,17 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 |---|---|
 | Production | `database/db` |
 | Test | `database/test_db` |
+
+### Schema Management
+
+`database/schema.sql` is the single source of truth for all DDL. Never define table structure anywhere else — not in spec files, not inline in services.
+
+| Command | When to use |
+|---|---|
+| `npm run db:init` | Adding new tables — safe, skips existing |
+| `npm run db:reset` | Changing existing table structure — drops all and rebuilds |
+
+Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run db:reset` → tests pick it up automatically.
 
 ---
 ---

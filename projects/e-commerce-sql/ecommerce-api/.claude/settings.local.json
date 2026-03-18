@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "Bash(cross-env DB_NAME=db ts-node scripts/init-db.ts --reset)",
+      "Bash(npm test:*)"
+    ]
+  }
+}

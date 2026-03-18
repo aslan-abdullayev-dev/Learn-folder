@@ -31,65 +31,11 @@ function buildMockTokenService(): jest.Mocked<
 
 // ─── SCHEMA ───────────────────────────────────────────────────────────────────
 
-const SCHEMA = `
-  CREATE TABLE IF NOT EXISTS users (
-    id            TEXT PRIMARY KEY,
-    email         TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
-    status        TEXT NOT NULL DEFAULT 'active',
-    is_deleted    INTEGER NOT NULL DEFAULT 0,
-    deleted_at    TEXT,
-    created_by    TEXT,
-    created_at    TEXT NOT NULL,
-    updated_at    TEXT,
-    CHECK (status IN ('active', 'inactive', 'suspended', 'banned', 'pending_verification', 'deleted'))
-  );
-
-  CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_active
-  ON users (email) WHERE is_deleted = 0;
-
-  CREATE TABLE IF NOT EXISTS roles (
-    id          TEXT PRIMARY KEY,
-    name        TEXT NOT NULL UNIQUE,
-    description TEXT,
-    created_at  TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS permissions (
-    id          TEXT PRIMARY KEY,
-    name        TEXT NOT NULL UNIQUE,
-    module      TEXT NOT NULL,
-    action      TEXT NOT NULL,
-    description TEXT,
-    created_at  TEXT NOT NULL,
-    UNIQUE (module, action)
-  );
-
-  CREATE TABLE IF NOT EXISTS role_permissions (
-    role_id       TEXT NOT NULL REFERENCES roles(id),
-    permission_id TEXT NOT NULL REFERENCES permissions(id),
-    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
-    PRIMARY KEY (role_id, permission_id)
-  );
-
-  CREATE TABLE IF NOT EXISTS user_roles (
-    user_id    TEXT NOT NULL REFERENCES users(id),
-    role_id    TEXT NOT NULL REFERENCES roles(id),
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    PRIMARY KEY (user_id, role_id)
-  );
-
-  CREATE TABLE IF NOT EXISTS refresh_tokens (
-    id          TEXT PRIMARY KEY,
-    user_id     TEXT NOT NULL REFERENCES users(id),
-    token       TEXT NOT NULL UNIQUE,
-    is_used     INTEGER NOT NULL DEFAULT 0,
-    expires_at  TEXT NOT NULL,
-    device_type TEXT,
-    user_agent  TEXT,
-    created_at  TEXT NOT NULL
-  );
-`;
+import * as fs from 'fs';
+const SCHEMA = fs.readFileSync(
+  path.join(process.cwd(), 'database', 'schema.sql'),
+  'utf-8',
+);
 
 // ─── FIXTURES ─────────────────────────────────────────────────────────────────
 
