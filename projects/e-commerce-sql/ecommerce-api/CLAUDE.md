@@ -1,78 +1,124 @@
 # ecommerce-api — Claude Instructions
 
-> **For Claude:** Always read this file at the start of every session before doing any work in this repo. Update it whenever project state changes (new phase started, items completed, new rules added).
-> When the user says "memorize" or "remember" anything, ALWAYS update both the memory file AND this CLAUDE.md with the content — never just one.
+## Contents
 
-## Project Overview
-
-Multi-vendor e-commerce platform built with NestJS + SQLite (Node's built-in `DatabaseSync` API).
-This is a **learning project** — phases are tackled one at a time to practice raw SQL and backend architecture.
-
----
-
-## Tech Stack
-
-- **Framework:** NestJS 11, TypeScript
-- **Database:** SQLite via Node's built-in `DatabaseSync` (no ORM — raw SQL prepared statements only)
-- **Auth:** passport-jwt, bcrypt, uuid
-- **Validation:** class-validator
-- **Port:** 8181 (default)
-
-**Never suggest adding TypeORM, Prisma, or any ORM.** Raw SQL is intentional for SQL practice.
+1. [For Claude](#for-claude)
+2. [Project Status](#project-status)
+3. [Architecture](#architecture)
+4. [Module Docs](#module-docs)
+5. [Decisions](#decisions)
 
 ---
-
-## Key Patterns & Conventions
-
-- **No ORM** — all queries use raw SQL prepared statements via `DatabaseSync`
-- **Closure table** for hierarchical categories (`category_ancestors`)
-- **Soft deletes** via `is_deleted` flag — never hard delete
-- **Global guards:** `JwtAuthGuard` + `PermissionsGuard` applied via `APP_GUARD`
-- `@IsPublic()` decorator to bypass JWT; `@RequirePermission()` for permission checks
-- **ResponseInterceptor** wraps all responses: `ApiResponse<T> { message, data }`
-- **Separate test DB** (`DB_NAME=test_db`) — schema created inline in spec files
-- Permissions seeded via `npm run seed:permissions` (scans `*.permissions.ts` files)
-- Permission naming: `module:action` (e.g. `categories:create`)
-
-**Database files:** `database/db` (prod), `database/test_db` (test)
-
 ---
 
-## Module Documentation Rule
+## For Claude
 
-Every NestJS module **must** have a `documentation/` folder inside its module directory:
+> Always read this file at the start of every session before doing any work in this repo.
+> Update it whenever project state changes (new phase started, items completed, new rules added).
+> When the user says "memorize" or "remember" anything, ALWAYS update both the memory file AND this CLAUDE.md — never just one.
+
+---
+---
+
+## Project Status
+
+Multi-vendor e-commerce platform. **Learning project** — phases tackled one at a time to practice raw SQL and backend architecture.
+
+### Phases
+
+| Phase | Module | Status |
+|---|---|---|
+| 1 | Auth & Users | COMPLETE |
+| 2 | Categories | IN PROGRESS |
+| 3 | Inventory | Not started |
+| 4 | Customer Profiles | Not started |
+| 5 | Cart & Orders | Not started |
+| 6 | Payments | Not started |
+| 7 | Shipping | Not started |
+| 8 | Reviews | Not started |
+| 9 | Notifications | Not started |
+| 10 | Audit Logs | Not started |
+| 11 | Reporting | Not started |
+
+---
+---
+
+## Architecture
+
+### Tech Stack
+
+| Concern | Choice |
+|---|---|
+| Framework | NestJS 11, TypeScript |
+| Database | SQLite via Node's built-in `DatabaseSync` |
+| Auth | passport-jwt, bcrypt, uuid |
+| Validation | class-validator |
+| Port | 8181 (default) |
+
+### Key Patterns
+
+- **No ORM** — raw SQL prepared statements via `DatabaseSync` only. Never suggest TypeORM, Prisma, or any ORM.
+- **Soft deletes** — `is_deleted` flag. Never hard delete.
+- **Closure table** — hierarchical categories via `category_ancestors`
+- **Global guards** — `JwtAuthGuard` + `PermissionsGuard` applied via `APP_GUARD`
+- **Public routes** — `@IsPublic()` bypasses JWT; `@RequirePermission()` for permission checks
+- **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
+- **Permissions** — seeded via `npm run seed:permissions` (scans `*.permissions.ts`); named `module:action`
+- **Test DB** — `DB_NAME=test_db`; schema created inline in spec files
+
+### Database Files
+
+| Env | File |
+|---|---|
+| Production | `database/db` |
+| Test | `database/test_db` |
+
+---
+---
+
+## Module Docs
+
+Module docs are the **source of truth** for each module. CLAUDE.md links to them — never duplicates them.
+
+### CLAUDE.md Writing Rules
+
+- Contents list at the top, every section linked
+- Sections in order: For Claude → Project Status → Architecture → Module Docs → Decisions
+- Double `---` between every top-level section
+- Tables over bullet lists wherever data is tabular
+- Decisions section at the bottom — one short entry per decision with context
+
+### Structure (every module doc)
 
 ```
-src/modules/<name>/documentation/<name>.md
+## Business    ← rules, workflows, decisions
+---
+---
+## Technical   ← endpoints, DTOs, DB schema, service behaviour, file structure, gotchas
+---
+---
+## Planned
+### Business   ← upcoming features
+### Technical  ← deferred implementation items
 ```
 
-- This file is the source of truth for that module: endpoints, DB schema, business rules, deferred items
-- Update it immediately when requirements change or new rules are added
-- Format: H1/H2 headers, bold key terms, horizontal rules between sections, deferred items section
+Double `---` = major section break. Single `---` = subsection break within Business or Technical.
+
+### Links
+
+| Module | Doc |
+|---|---|
+| Auth | `src/modules/auth/documentation/auth.md` |
+| Users | `src/modules/users/documentation/users.md` |
+| Categories | `src/modules/categories/documentation/categories.md` |
 
 ---
+---
 
-## Implementation Status
+## Decisions
 
-### Phase 1 — Auth & Users: COMPLETE
-- JWT auth with refresh tokens + token reuse detection
-- User registration (public) + staff creation (admin-gated)
-- Role/permission system with superAdmin seed script
-- Global JWT guard, permissions guard, response interceptor, error filter
-- Comprehensive tests for auth, token, and users
+### No ORM
+Raw SQL only — intentional for SQL practice. Never suggest an ORM regardless of complexity.
 
-### Phase 2 — Categories: IN PROGRESS
-- Implemented: basic CREATE (root only), findAll, findById, closure table (self-reference only)
-- Design spec: `categories-phase-reference.md`
-
-**Deferred for after Inventory/Products:**
-- Slug conflict handling for soft-deleted categories (`{slug}--deleted-{id}`)
-- `PATCH /categories/:id` (update + slug redirects to `category_slug_redirects`)
-- `DELETE /categories/:id` (three-step guard: products check → children check → soft delete)
-- Re-parenting: `PATCH /categories/:id/parent` (closure table surgery)
-- `category_slug_redirects` table usage
-- Test coverage for categories module
-- Making `GET /categories` public (currently requires `categories:read` permission)
-
-### Future Phases (not started)
-Inventory → Customer Profiles → Cart & Orders → Payments → Shipping → Reviews → Notifications → Audit Logs → Reporting
+### CRM Side Project
+Do not start the CRM until **Categories**, **Inventory/Products**, and **Customer Profiles** are complete. Those three phases establish the repeatable patterns needed to start a new project confidently. Customer Profiles maps directly to CRM concepts and is the natural bridge.

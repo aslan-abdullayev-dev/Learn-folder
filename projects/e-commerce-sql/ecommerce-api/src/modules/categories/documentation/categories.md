@@ -2,28 +2,27 @@
 
 ---
 
-## What It Does
+## Business
+
+### What It Does
 
 Manages the product category tree. Categories are hierarchical (e.g. Electronics → Phones → Smartphones).
-The tree is stored using a **closure table** pattern — efficient ancestor/descendant queries with no recursion.
 
 ---
-
-## Core Design Decisions
 
 ### Two-Step Creation Workflow
 
 Category creation is split into two deliberate steps to prevent CRM users from accidentally publishing incomplete categories.
 
-#### Step 1 — Create Draft (`POST /categories`)
-- Always `is_active = 0`. Hardcoded — cannot be overridden via the request.
+**Step 1 — Create Draft (`POST /categories`)**
+- Always created as `is_active = false`. Cannot be overridden via the request.
 - No parent assigned at this stage.
 - Only name and slug required. Content filled later.
 
-#### Step 2 — Fill and Activate (`PATCH /categories/:id`)
+**Step 2 — Fill and Activate (`PATCH /categories/:id`)**
 - Fill in description, image, assign parent, set sort order.
-- Set `is_active = 1` when the category is ready.
-- **End users see nothing until this step is completed by an admin.**
+- Set `is_active = true` when the category is ready.
+- End users see nothing until this step is completed by an admin.
 
 > `isActive` and `parentId` are intentionally absent from the create DTO.
 
@@ -37,13 +36,42 @@ Enforced at query time via the closure table. No cascade writes on the DB.
 
 ---
 
-### Soft Delete Only
+### Soft Delete
 
 `is_deleted = 1` permanently hides the category. One-way — cannot be undone.
 
 ---
 
-## Endpoints
+### Product Assignment Rule
+
+Products can be assigned to both **active** and **inactive** categories. Assignment is only blocked if the category is **deleted** (`is_deleted = 1`).
+
+---
+
+### Parent Eligibility
+
+When assigning or changing a parent via `parentId`:
+
+- If the category being moved is **active** → new parent must be `is_deleted = 0` AND `is_active = 1`
+- If the category being moved is **inactive** → new parent must only be `is_deleted = 0`
+
+This allows operators to build chains of inactive categories and activate them all at once when ready.
+
+---
+
+### Delete Guards
+
+Before a category can be soft-deleted:
+
+1. **Products check (hard block)** — if the category has non-deleted products assigned → `409`. Admin must reassign first.
+2. **Children check** — if descendants exist, operator must declare `childAction: 'deactivate' | 'delete'` to proceed.
+
+---
+---
+
+## Technical
+
+### Endpoints
 
 | Method | Path | Access | Status |
 |---|---|---|---|
@@ -54,13 +82,13 @@ Enforced at query time via the closure table. No cascade writes on the DB.
 | `DELETE` | `/categories/:id` | `categories:delete` | Deferred |
 | `PATCH` | `/categories/:id/parent` | `categories:update` | Deferred |
 
-> `GET /categories` is an **admin view** — all non-deleted regardless of `is_active`. The public storefront endpoint is a future addition.
+> `GET /categories` is an **admin view** — returns all non-deleted regardless of `is_active`. Public storefront endpoint is a future addition.
 
 ---
 
-## DTOs
+### DTOs
 
-### `CreateCategoryDto`
+#### `CreateCategoryDto`
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
@@ -70,7 +98,7 @@ Enforced at query time via the closure table. No cascade writes on the DB.
 | `imageUrl` | string | No | |
 | `sortOrder` | number | No | Defaults to `0` |
 
-### `UpdateCategoryDto` *(planned)*
+#### `UpdateCategoryDto` *(planned)*
 
 All `CreateCategoryDto` fields optional, plus:
 
@@ -79,7 +107,7 @@ All `CreateCategoryDto` fields optional, plus:
 | `isActive` | boolean | Toggle storefront visibility |
 | `parentId` | string UUID | Triggers re-parent logic |
 
-### `DeleteCategoryDto` *(deferred)*
+#### `DeleteCategoryDto` *(deferred)*
 
 | Field | Type | Notes |
 |---|---|---|
@@ -87,9 +115,9 @@ All `CreateCategoryDto` fields optional, plus:
 
 ---
 
-## Database Schema
+### Database Schema
 
-### `categories`
+#### `categories`
 
 | Column | Type | Notes |
 |---|---|---|
@@ -106,7 +134,7 @@ All `CreateCategoryDto` fields optional, plus:
 
 ---
 
-### `category_ancestors` — Closure Table
+#### `category_ancestors` — Closure Table
 
 | Column | Type | Notes |
 |---|---|---|
@@ -122,7 +150,7 @@ This means re-parenting never needs to update depths within the moved subtree.
 
 ---
 
-### `category_slug_redirects` *(deferred)*
+#### `category_slug_redirects` *(deferred)*
 
 | Column | Type | Notes |
 |---|---|---|
@@ -134,9 +162,9 @@ Written on slug change or soft delete. Frontend uses it for `301` SEO redirects.
 
 ---
 
-## Service Behaviour
+### Service Behaviour
 
-### Create Category
+#### Create Category
 
 ```
 1. Validate slug uniqueness (including soft-deleted rows)
@@ -148,20 +176,17 @@ Currently root-only. Parent assigned later via `PATCH /categories/:id`.
 
 ---
 
-### Update Category *(planned)*
+#### Update Category *(planned)*
 
-#### If slug changes
-Write old slug to `category_slug_redirects` before updating.
+**If slug changes** → write old slug to `category_slug_redirects` before updating.
 
-#### If parentId changes
-Validate new parent: `is_deleted = 0` AND `is_active = 1`. Then run re-parent logic.
+**If parentId changes** → validate new parent per eligibility rules above, then run re-parent logic.
 
-#### All other fields
-Simple `UPDATE` + set `updated_at`.
+**All other fields** → simple `UPDATE` + set `updated_at`.
 
 ---
 
-### Re-Parent Logic
+#### Re-Parent Logic
 
 When moving category **M** to a new parent:
 
@@ -180,30 +205,30 @@ When moving category **M** to a new parent:
 
 ---
 
-### Delete Category *(deferred)*
+#### Delete Category *(deferred)*
 
-#### Step 1 — Products Check (hardblock)
-Count non-deleted products in this category.
-If > 0 → `409`. Admin must reassign first.
-
-#### Step 2 — Children Check
-Query for descendants with `depth > 0`.
-If children exist → `409` with count.
-Accept `childAction: 'deactivate' | 'delete'` in body → apply to all descendants → continue.
-
-#### Step 3 — Safe Delete
 ```
-1. Find nearest active ancestor (for redirect target)
-2. Write current slug to category_slug_redirects
-3. SET is_deleted = 1, updated_at = now
-4. Transaction
+Step 1 — Products check (hardblock)
+  Count non-deleted products in this category.
+  If > 0 → 409. Admin must reassign first.
+
+Step 2 — Children check
+  Query for descendants with depth > 0.
+  If children exist → 409 with count.
+  Accept childAction: 'deactivate' | 'delete' → apply to all descendants → continue.
+
+Step 3 — Safe delete
+  1. Find nearest active ancestor (for redirect target)
+  2. Write current slug to category_slug_redirects
+  3. SET is_deleted = 1, updated_at = now
+  4. Transaction
 ```
 
 ---
 
-## Useful SQL Queries
+### Useful SQL Queries
 
-### Breadcrumb Path (all ancestors)
+#### Breadcrumb Path (all ancestors)
 
 ```sql
 SELECT ancestor_id FROM category_ancestors
@@ -211,7 +236,7 @@ WHERE descendant_id = ?
 ORDER BY depth DESC
 ```
 
-### Direct Children
+#### Direct Children
 
 ```sql
 SELECT c.*
@@ -222,7 +247,7 @@ WHERE ca.ancestor_id = ?
   AND c.is_deleted = 0
 ```
 
-### Full Subtree
+#### Full Subtree
 
 ```sql
 SELECT descendant_id FROM category_ancestors
@@ -230,7 +255,7 @@ WHERE ancestor_id = ?
   AND depth > 0
 ```
 
-### Storefront-Visible *(future public endpoint)*
+#### Storefront-Visible *(future public endpoint)*
 
 ```sql
 SELECT c.*
@@ -249,7 +274,7 @@ WHERE c.is_active = 1
 
 ---
 
-## File Structure
+### File Structure
 
 ```
 src/modules/categories/
@@ -268,30 +293,33 @@ src/modules/categories/
 
 ---
 
-## Gotchas
+### Gotchas
 
-### Slug Is Permanently Occupied
-Even after soft delete. The soft-deleted row's slug is renamed to `{slug}--deleted-{id}` before a new category can claim it. *(not yet implemented)*
+**Slug Is Permanently Occupied** — Even after soft delete. The soft-deleted row's slug is renamed to `{slug}--deleted-{id}` before a new category can claim it. *(not yet implemented)*
 
-### No Cascade on `category_ancestors`
-No `ON DELETE CASCADE` — categories are soft deleted, FKs always stay valid.
-Ancestor rows are cleaned up in code only during re-parent.
+**No Cascade on `category_ancestors`** — No `ON DELETE CASCADE` — categories are soft deleted, FKs always stay valid. Ancestor rows are cleaned up in code only during re-parent.
 
-### Parent Eligibility
-On update with `parentId`: parent must be `is_deleted = 0` AND `is_active = 1`.
-Cannot nest under an invisible parent.
-
-### `sort_order` Is Sibling-Scoped
-Order siblings by `sort_order ASC` among categories with the same direct parent (`depth = 1` from same ancestor).
+**`sort_order` Is Sibling-Scoped** — Order siblings by `sort_order ASC` among categories with the same direct parent (`depth = 1` from same ancestor).
 
 ---
+---
 
-## Deferred Items
+## Planned
 
-- `PATCH /categories/:id` — update, parentId assignment, isActive toggle, slug redirects
-- `DELETE /categories/:id` — three-step guard
-- `PATCH /categories/:id/parent` — dedicated re-parent
-- `category_slug_redirects` table usage
-- Slug conflict handling for soft-deleted categories
-- Test coverage
-- Public storefront endpoint with ancestor-chain visibility query
+### Business
+
+- **`PATCH /categories/:id`** — operators can update name, description, image, sort order, assign a parent, and activate/deactivate a category
+- **`DELETE /categories/:id`** — safe deletion with product reassignment guard and child cascade options
+- **Public storefront endpoint** — only returns categories where the full ancestor chain is active and non-deleted
+- **Slug redirects** — old slugs redirect to the current category for SEO continuity after renames or deletes
+
+### Technical
+
+- Implement `UpdateCategoryDto` with `isActive` and `parentId`
+- Re-parent logic in service (closure table surgery, single transaction)
+- Slug conflict handling for soft-deleted categories (`{slug}--deleted-{id}`)
+- `category_slug_redirects` table writes on slug change and soft delete
+- `DELETE /categories/:id` three-step guard
+- `PATCH /categories/:id/parent` dedicated re-parent endpoint
+- Test coverage for all categories endpoints
+- Make `GET /categories` public (currently requires `categories:read` permission)

@@ -2,27 +2,16 @@
 
 ---
 
-## What It Does
+## Business
+
+### What It Does
 
 Manages user accounts. Two creation paths: **public self-registration** and **admin-gated staff creation**.
 Full CRUD with soft delete — no user is ever hard deleted from the database.
 
 ---
 
-## Endpoints
-
-| Method | Path | Access |
-|---|---|---|
-| `POST` | `/users/register` | Public |
-| `POST` | `/users/register-staff` | `users:create` |
-| `GET` | `/users` | `users:read` |
-| `GET` | `/users/:id` | `users:read` |
-| `PATCH` | `/users/:id` | `users:update` |
-| `DELETE` | `/users/:id` | `users:delete` |
-
----
-
-## User Statuses
+### User Statuses
 
 | Status | Can Log In | Notes |
 |---|---|---|
@@ -37,55 +26,72 @@ Status validation on login lives in `UserValidationService` in the **auth module
 
 ---
 
-## Creation Rules
+### Creation Rules
 
-### Email
-Normalized to lowercase before storage. All lookups use lowercase.
-Uniqueness is checked against **non-deleted users only** — a soft-deleted email can be re-registered.
+- **Email** — normalized to lowercase. Uniqueness checked against non-deleted users only — a soft-deleted email can be re-registered.
+- **Password** — hashed with `bcrypt` at 10 rounds. Never stored plain, never returned by any endpoint.
+- **`created_by`** — `null` for self-registered users; set to `req.user.sub` for staff created by an admin.
 
-### Password
-Hashed with `bcrypt` at 10 rounds. Never stored plain, never returned by any endpoint.
+---
 
-### `created_by`
-- Self-registered users → `null`
-- Staff created by admin → set to `req.user.sub` (the creator's id from their JWT)
+### Update Rules
+
+Only `email` and `status` can be updated via `PATCH /users/:id`.
+
+- Email is normalized to lowercase. Uniqueness check excludes the user being updated so they can keep their own email.
+- If no valid fields are provided → `400 No fields to update`.
+- `updated_at` is always set on any successful update.
+
+---
+
+### Soft Delete
+
+Sets `is_deleted = 1`, `deleted_at = now`, `updated_at = now`.
+All `SELECT` queries filter `WHERE is_deleted = 0` — deleted users are completely invisible via the API and cannot log in.
+
+---
+---
+
+## Technical
+
+### Endpoints
+
+| Method | Path | Access |
+|---|---|---|
+| `POST` | `/users/register` | Public |
+| `POST` | `/users/register-staff` | `users:create` |
+| `GET` | `/users` | `users:read` |
+| `GET` | `/users/:id` | `users:read` |
+| `PATCH` | `/users/:id` | `users:update` |
+| `DELETE` | `/users/:id` | `users:delete` |
+
+---
 
 ### Shared Method
+
 Both `POST /users/register` and `POST /users/register-staff` call the same `createUser(email, password, createdBy?)` internally.
 
 ---
 
-## Update Rules
+### Database — `users`
 
-### Allowed Fields
-Only `email` and `status` can be updated via `PATCH /users/:id`.
+| Column | Notes |
+|---|---|
+| `id` | UUID |
+| `email` | Lowercase, unique among non-deleted |
+| `password_hash` | bcrypt 10 rounds — never returned |
+| `status` | See statuses above |
+| `is_deleted` | `0` / `1` |
+| `deleted_at` | ISO timestamp, `null` until deleted |
+| `created_by` | FK → users(id), `null` for self-registered |
+| `created_at` | ISO timestamp |
+| `updated_at` | ISO timestamp, `null` until first update |
 
-### Email Update
-Normalized to lowercase. Uniqueness checked — excludes the user being updated so they can keep their own email.
-
-### Empty Update
-If no valid fields are provided → `400 No fields to update`.
-
-### `updated_at`
-Always set on any successful update.
-
----
-
-## Soft Delete
-
-### What It Does
-```
-is_deleted = 1
-deleted_at = now
-updated_at = now
-```
-
-### Effect
-All `SELECT` queries filter `WHERE is_deleted = 0` — deleted users are completely invisible via the API and cannot log in.
+**Fields returned to client:** `id · email · status · created_at · updated_at`
 
 ---
 
-## File Structure
+### File Structure
 
 ```
 src/modules/users/
@@ -107,32 +113,23 @@ src/modules/users/
 
 ---
 
-## Database — `users`
+### Gotchas
 
-| Column | Notes |
-|---|---|
-| `id` | UUID |
-| `email` | Lowercase, unique among non-deleted |
-| `password_hash` | bcrypt 10 rounds — never returned |
-| `status` | See statuses above |
-| `is_deleted` | `0` / `1` |
-| `deleted_at` | ISO timestamp, `null` until deleted |
-| `created_by` | FK → users(id), `null` for self-registered |
-| `created_at` | ISO timestamp |
-| `updated_at` | ISO timestamp, `null` until first update |
+**`findUserForLogin` Is Internal** — Used only by the auth module. Joins roles → permissions, returns `password_hash`. Not exposed via any controller.
 
-### Fields Returned to Client
-`id · email · status · created_at · updated_at`
+**`findByEmail` Is a Shared Helper** — Used for uniqueness checks on create and update. Accepts optional `excludeId` to allow a user to keep their own email.
+
+**No Role Assignment Endpoint** — Roles are assigned via `npm run seed:permissions` which assigns `superAdmin` to the email in `SUPER_ADMIN_EMAIL`.
 
 ---
+---
 
-## Gotchas
+## Planned
 
-### `findUserForLogin` Is Internal
-Used only by the auth module. Joins roles → permissions, returns `password_hash`. Not exposed via any controller.
+### Business
 
-### `findByEmail` Is a Shared Helper
-Used for uniqueness checks on create and update. Accepts optional `excludeId` to allow a user to keep their own email.
+- **Role assignment via API** — currently only `superAdmin` can be seeded via script; no endpoint exists to assign roles to other users
 
-### No Role Assignment Endpoint
-Roles are assigned via `npm run seed:permissions` which assigns `superAdmin` to the email in `SUPER_ADMIN_EMAIL`.
+### Technical
+
+- `POST /users/:id/roles` or similar — endpoint to assign/remove roles from a user without relying on the seed script

@@ -181,26 +181,3 @@
 9. 🔔 Notifications
 10. 📋 Audit Logs
 11. 📊 Reporting queries
-
-Electronics
-├── Phones & Tablets
-│   ├── Smartphones
-│   └── Tablets
-├── Computers
-│   ├── Laptops
-│   └── Desktops
-└── Audio
-    ├── Headphones
-    └── Speakers
-
-Fashion
-├── Men
-│   ├── Tops
-│   └── Bottoms
-└── Women
-    ├── Tops
-    └── Bottoms
-
-Home & Living
-├── Furniture
-└── Kitchen
