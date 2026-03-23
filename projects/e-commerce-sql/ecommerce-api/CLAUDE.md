@@ -14,14 +14,55 @@
 ## For Claude
 
 > Always read this file at the start of every session before doing any work in this repo.
-> Update it whenever project state changes (new phase started, items completed, new rules added).
-> When the user says "memorize" or "remember" anything, ALWAYS update both the memory file AND this CLAUDE.md — never just one.
+> Do not wait to be told — update docs as part of completing any task. Writing code and updating docs are the same step.
 
 ---
 
-### Where to write a memorized decision
+### Reading guide
 
-"Memorize" = a decision was made. Write it to the most relevant section of this file:
+Read the right file before the right task. Never skip this.
+
+| Task type | Read before starting |
+|---|---|
+| Implementing or changing a business rule / workflow | `<name>.md` |
+| Implementing or changing an endpoint, DTO, service, or DB | `<name>.tech.md` |
+| Touching core guards, decorators, interceptors, or filters | `core.tech.md` |
+| Starting a new module phase | `src/docs/roadmap.md` → then create both docs |
+| Cross-module interaction (service A calls service B) | Both modules' `.tech.md` files |
+| Making a strategic or architectural decision | This CLAUDE.md |
+| Beginning any session | This CLAUDE.md first, then the relevant module docs |
+
+---
+
+### Write triggers
+
+Do not wait for the user to say "memorize" or "remember". Update the relevant file immediately whenever any of the following happen:
+
+| Trigger | What to update |
+|---|---|
+| New module created | Create `<name>.md` + `<name>.tech.md`; split roadmap section — business scope → `<name>.md` Planned, technical items → `<name>.tech.md` Planned; delete from roadmap; add both to Module Doc Links table |
+| New endpoint added | `<name>.tech.md` → Endpoints table; update any sequence diagrams that include it |
+| New DTO added or changed | `<name>.tech.md` → DTOs section |
+| Schema change (table, column, index) | `<name>.tech.md` → Database Schema section + ER diagram; `database/schema.sql` |
+| Service flow changes (new step, branch, error path) | `<name>.tech.md` → relevant sequence or flowchart diagram |
+| Business rule added or changed | `<name>.md` → relevant Business section; update any business diagrams affected |
+| Status or state transition changes | `<name>.md` → state diagram + status table |
+| Cross-module dependency added | Both modules' `.tech.md` → dependency diagram or Gotchas; note which module calls which |
+| Core infrastructure changes (guard, decorator, interceptor) | `core.tech.md` → relevant section + diagrams; check if any module `.tech.md` references it |
+| Planned business feature added or changed | `<name>.md` → Planned → Business (or `src/docs/roadmap.md` if no doc yet) |
+| Planned technical item added or changed | `<name>.tech.md` → Planned → Technical (or `src/docs/roadmap.md` if no doc yet) |
+| Scope decided for unstarted module | `src/docs/roadmap.md` → its phase or future section |
+| Architectural decision made | CLAUDE.md → Architecture or Decisions |
+| Global convention established | CLAUDE.md → Architecture → Key Patterns |
+| Phase started | CLAUDE.md → Project Status; create module docs; move roadmap section |
+| Phase completed | CLAUDE.md → Project Status |
+| Script / env var / port changed | README |
+| Doc file moved or renamed | Update all cross-reference links in files that link to it |
+| User says "memorize" or "remember" | Memory file (`~/.claude/projects/.../memory/`) AND this CLAUDE.md — never just one |
+
+---
+
+### Where to write a decision
 
 | Section | What goes here |
 |---|---|
@@ -31,11 +72,15 @@
 | Module Docs | Doc structure rules, links, lifecycle rules |
 | Decisions | Judgment calls, strategic choices, constraints |
 
-**Edge cases:**
+**Which file within a module:**
 
-- **Cross-module** (e.g. deleting a vendor deactivates their products) → write in the module that owns the action; add a short reference note in the affected module
-- **Module boundary / interaction** (e.g. reservation happens at cart not checkout) → Decisions section here in CLAUDE.md
-- **Global conventions** (e.g. all IDs are UUID v4) → Architecture → Key Patterns
+| Decision type | File |
+|---|---|
+| Business rule, workflow, visibility logic | `<name>.md` |
+| Endpoint behaviour, DB schema, service implementation | `<name>.tech.md` |
+| Cross-module note (e.g. auth calls users) | `<name>.tech.md` Gotchas in the calling module; brief ref in called module |
+| Module boundary decision (e.g. reservation at cart not checkout) | CLAUDE.md → Decisions |
+| Global convention | CLAUDE.md → Architecture → Key Patterns |
 
 ---
 ---
@@ -52,7 +97,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 | 4 | Customer Profiles | Not started |
 | 5 | Cart & Orders | Not started |
 | 6 | Payments | Not started |
-| 7 | Shipping | Not started |
+| 7 | Shipping & Returns | Not started |
 | 8 | Reviews | Not started |
 | 9 | Notifications | Not started |
 | 10 | Audit Logs | Not started |
@@ -85,7 +130,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 - **Public routes** — `@IsPublic()` bypasses JWT; `@RequirePermission()` for permission checks
 - **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
 - **Permissions** — seeded via `npm run seed:permissions` (scans `*.permissions.ts`); named `module:action`
-- **Test DB** — `DB_NAME=test_db`; schema created inline in spec files
+- **Test DB** — `DB_NAME=test_db`; uses `database/test_db` file; schema from `database/schema.sql` — never defined inline in spec files
 
 ---
 
@@ -112,32 +157,90 @@ Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run
 
 ## Module Docs
 
-### Rules
+### Ownership Rules
 
-- Module docs are the **source of truth** for each module — CLAUDE.md links to them, never duplicates them. This includes `src/core/` — any changes to guards, decorators, interceptors, or filters go in `core.md`, not here
-- Update immediately when requirements change or decisions are made
-- When a new module is created → auto-create `src/modules/<name>/documentation/<name>.md` → move its planning content from README → remove that section from README
-- When any planned behaviour changes → update the module doc if it exists, otherwise update README
+- Each doc pair is the **sole source of truth** for its module — CLAUDE.md links, never duplicates
+- `src/core/docs/core.tech.md` owns all guard, decorator, interceptor, and filter documentation — never put this in other module docs
+- Update triggers are defined in the **Write triggers** table above — follow without being asked
+- Before working on a module, consult the **Reading guide** above for which file to read first
+
+---
+
+### Doc Locations
+
+All docs live under `src/` — never at the project root.
+
+| File | Location |
+|---|---|
+| Module business doc | `src/modules/<name>/docs/<name>.md` |
+| Module technical doc | `src/modules/<name>/docs/<name>.tech.md` |
+| Core business doc | `src/core/docs/core.md` |
+| Core technical doc | `src/core/docs/core.tech.md` |
+| Roadmap | `src/docs/roadmap.md` |
+
+Each business doc links to its tech doc at the top, and vice versa.
 
 ---
 
 ### Module Doc Structure
 
-Every module doc follows this layout — including `src/core/documentation/core.md`:
-
+**Business doc** (`<name>.md`):
 ```
-## Business    ← rules, workflows, decisions (single --- between subsections)
----
----
-## Technical   ← endpoints, DTOs, DB schema, service behaviour, file structure, gotchas
+## Business
+### What It Does
+### [Domain rules, workflows, decisions]
 ---
 ---
 ## Planned
-### Business   ← upcoming features
+### Business   ← features not yet built
+```
+
+**Technical doc** (`<name>.tech.md`):
+```
+## Technical
+### Endpoints
+### DTOs
+### Database Schema
+### Service Behaviour
+### File Structure
+### Gotchas
+---
+---
+## Planned
 ### Technical  ← deferred implementation items
 ```
 
-Double `---` = major section break. Single `---` = subsection break.
+Double `---` = major section break. Single `---` = subsection break within a section.
+
+**Diagrams** — use Mermaid (` ```mermaid `). Add diagrams where a flow, state machine, decision tree, or relationship is clearer visually than in prose. Diagrams are part of the doc — update them when the code or rules they represent change.
+
+---
+
+### Roadmap
+
+`src/docs/roadmap.md` holds scope notes for every module that has no doc yet.
+
+| Event | Action |
+|---|---|
+| New scope decided for unstarted module | Add/update its section in roadmap |
+| Module phase starts | Move roadmap section → new module doc's Planned section, delete from roadmap |
+| Planned behaviour changes for unstarted module | Update its roadmap section |
+
+Roadmap structure: **Upcoming Phases** (ordered by phase number) → **Future Modules** (unphased).
+
+---
+
+### README
+
+External-facing only. Contains: description, tech stack, setup, env vars, scripts, build phases table. Nothing else.
+
+| What changed | Update README? |
+|---|---|
+| Script added or renamed | Yes |
+| Env var added or changed | Yes |
+| Port changed | Yes |
+| Module scope or planning | No — use roadmap |
+| Architecture decisions | No — use CLAUDE.md |
 
 ---
 
@@ -151,23 +254,15 @@ Double `---` = major section break. Single `---` = subsection break.
 
 ---
 
-### README Rules
-
-- Written for external people — draws a picture of the finished project
-- Contains: compelling description, tech highlights, setup/run/env vars, build phases, and scope notes for modules not yet created
-- Always update when operational details change (scripts, env vars, ports)
-- Module scope sections are removed from README once that module gets its own doc
-
----
-
 ### Module Doc Links
 
-| Module | Doc |
-|---|---|
-| Core | `src/core/documentation/core.md` |
-| Auth | `src/modules/auth/documentation/auth.md` |
-| Users | `src/modules/users/documentation/users.md` |
-| Categories | `src/modules/categories/documentation/categories.md` |
+| Module | Business | Technical |
+|---|---|---|
+| Core | `src/core/docs/core.md` | `src/core/docs/core.tech.md` |
+| Auth | `src/modules/auth/docs/auth.md` | `src/modules/auth/docs/auth.tech.md` |
+| Users | `src/modules/users/docs/users.md` | `src/modules/users/docs/users.tech.md` |
+| Categories | `src/modules/categories/docs/categories.md` | `src/modules/categories/docs/categories.tech.md` |
+| Roadmap | `src/docs/roadmap.md` | — |
 
 ---
 ---
@@ -185,7 +280,13 @@ Target structure: NestJS monorepo with `apps/` (one per service: gateway, auth, 
 ### CRM Side Project
 Do not start the CRM until **Categories**, **Inventory/Products**, and **Customer Profiles** are complete. Those three phases establish the repeatable patterns needed to start a new project confidently. Customer Profiles maps directly to CRM concepts and is the natural bridge.
 
-### No NextJS Frontend
-Frontend (NextJS or any UI) is out of scope for this project. The CRM (a separate NestJS project) serves as the real-world consumer of this API instead. No frontend work should be suggested or planned.
+CRM is a separate Angular project — a frontend that consumes `ecommerce-api` directly. No separate CRM backend.
 
-The API should remain frontend-friendly long term — clean response shapes, proper error codes, pagination-ready endpoints — so a frontend can be attached later without rework.
+### Frontend Plan
+`ecommerce-api` serves all consumers:
+- **CRM** — Angular frontend, for internal operators. Start after Categories + Inventory + Customer Profiles.
+- **Customer-facing ecommerce frontend** — not planned.
+
+No NextJS or other frontend frameworks planned. Angular is the chosen frontend for the CRM.
+
+The API should remain frontend-friendly — clean response shapes, proper error codes, pagination-ready endpoints.

@@ -1,45 +1,11 @@
-# ⚙️ Core
+# ⚙️ Core — Technical
+
+Business reference: [core.md](./core.md)
 
 ---
 ---
 
-## Business
-
-Cross-cutting infrastructure applied globally to every request in the application.
-Nothing in `core/` is feature-specific — it defines how all requests are protected, processed, and responded to.
-
----
-
-### Request Lifecycle
-
-Every incoming request passes through these layers in order:
-
-```
-Request
-  │
-  ▼
-JwtAuthGuard        — is the user authenticated?
-  │
-  ▼
-PermissionsGuard    — does the user have the required permission?
-  │
-  ▼
-Route Handler       — controller method runs, returns ApiResponse
-  │
-  ▼
-ResponseInterceptor — wraps the result into the standard shape
-  │
-  ▼
-Response { success: true, message, data }
-
-
-On any thrown HttpException:
-  │
-  ▼
-HttpExceptionFilter — catches it, returns { success: false, message, data: null }
-```
-
----
+## Technical
 
 ### Global Registration
 
@@ -52,10 +18,20 @@ All pieces are registered in `AppModule` as global providers:
 { provide: APP_FILTER,      useClass: HttpExceptionFilter }
 ```
 
----
----
+```mermaid
+flowchart LR
+    AM[AppModule]
+    AM -->|APP_GUARD 1st| JA[JwtAuthGuard\njwt-auth.guard.ts]
+    AM -->|APP_GUARD 2nd| PG[PermissionsGuard\npermissions.guard.ts]
+    AM -->|APP_INTERCEPTOR| RI[ResponseInterceptor\nresponse.interceptor.ts]
+    AM -->|APP_FILTER| EF[HttpExceptionFilter\nhttp-exception.filter.ts]
+    JA -->|extends| AG[AuthGuard jwt\nPassport strategy]
+    JA -->|reads metadata| PD[public.decorator.ts]
+    PG -->|reads metadata| RPD[require-permission.decorator.ts]
+    PG -->|reads| RU[req.user.permissions]
+```
 
-## Technical
+---
 
 ### Guards
 
@@ -64,13 +40,24 @@ All pieces are registered in `AppModule` as global providers:
 Authenticates every request using the JWT in the `Authorization: Bearer` header.
 Extends NestJS `AuthGuard('jwt')` which runs the Passport JWT strategy.
 
-**Skip with `@IsPublic()`** — if the route handler has `@IsPublic()` metadata → returns `true` immediately, unconditionally. No token is inspected regardless of whether an `Authorization` header is present.
+**Skip with `@IsPublic()`** — if the route handler has `@IsPublic()` metadata → `canActivate` returns `true` immediately. No token is inspected.
 
 | Scenario | Response |
 |---|---|
 | Token expired | `401 TOKEN_EXPIRED` |
 | Token invalid / missing | `401 UNAUTHORIZED` |
 | `@IsPublic()` route | Always passes through |
+
+```mermaid
+flowchart TD
+    A[canActivate called] --> B{isPublic metadata\non handler?}
+    B -- Yes --> C[return true]
+    B -- No --> D[super.canActivate\nPassport JWT strategy]
+    D --> E{handleRequest}
+    E -->|TokenExpiredError| F[throw 401 TOKEN_EXPIRED]
+    E -->|JsonWebTokenError or no user| G[throw 401 UNAUTHORIZED]
+    E -->|valid user| H[return user → req.user set]
+```
 
 ---
 
@@ -79,9 +66,9 @@ Extends NestJS `AuthGuard('jwt')` which runs the Passport JWT strategy.
 Checks that the authenticated user holds the permission declared on the route via `@RequirePermission()`.
 Reads permissions from `req.user.permissions` — the array embedded in the JWT payload at login.
 
-- No `@RequirePermission()` on route → passes through (no permission required).
-- `@RequirePermission('x:y')` present → checks `user.permissions.includes('x:y')`.
-- Permission missing → returns `false` → NestJS throws `403 Forbidden`.
+- No `@RequirePermission()` on route → returns `true` immediately
+- `@RequirePermission('x:y')` present → `user.permissions.includes('x:y')`
+- Permission missing → returns `false` → NestJS throws `403 Forbidden`
 
 Runs **after** `JwtAuthGuard`. `req.user` is guaranteed to exist by the time it runs (except on `@IsPublic()` routes — but those have no `@RequirePermission()` anyway).
 
@@ -96,9 +83,8 @@ export const IsPublic = () => SetMetadata('isPublic', true);
 ```
 
 Sets `isPublic = true` metadata on a route handler. Read by `JwtAuthGuard`.
-Use on any endpoint that does not require authentication (e.g. register, login, update-access-token).
 
-If a future route needs **optional auth** (serve both guests and logged-in users differently), add a separate `@IsOptionalAuth()` decorator — do not overload `@IsPublic()` for this.
+Do not overload this for optional auth — add a separate `@IsOptionalAuth()` decorator for that case.
 
 ---
 
@@ -195,17 +181,14 @@ src/core/
 
 **`PermissionsGuard` Does Not Run on `@IsPublic()` Routes — But Safely** — `@IsPublic()` routes skip `JwtAuthGuard`, so `req.user` is `undefined`. `PermissionsGuard` still runs but since `@IsPublic()` routes never have `@RequirePermission()`, it hits the early return and passes through safely.
 
-**class-validator Errors Are Auto-Formatted** — When a DTO validation fails, NestJS throws a `BadRequestException` with an array of messages. `HttpExceptionFilter` handles this — the `message` field in the response will be that array.
+**class-validator Errors Are Auto-Formatted** — When a DTO validation fails, NestJS throws a `BadRequestException` with an array of messages. `HttpExceptionFilter` handles this — the `message` field in the response will be that array. This means `message` can be `string | string[]` — planned to standardize to always `string[]`.
 
 ---
 ---
 
 ## Planned
 
-### Business
-
-- No planned business changes.
-
 ### Technical
 
 - `@IsOptionalAuth()` decorator — for future routes that serve both guests and logged-in users differently without requiring authentication
+- Standardize error `message` to always be `string[]` — `HttpExceptionFilter` should wrap single strings in an array so the CRM and any future consumer never needs to branch on `typeof message`
