@@ -183,6 +183,8 @@ src/core/
 
 **class-validator Errors Are Auto-Formatted** — When a DTO validation fails, NestJS throws a `BadRequestException` with an array of messages. `HttpExceptionFilter` handles this — the `message` field in the response will be that array. This means `message` can be `string | string[]` — planned to standardize to always `string[]`.
 
+**Full Error Catalogue** — All HTTP error codes and messages produced by this API are documented in [errors.md](../../docs/errors.md).
+
 ---
 ---
 

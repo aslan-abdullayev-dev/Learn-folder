@@ -12,6 +12,29 @@ Nothing in `core/` is feature-specific — it defines how all requests are prote
 
 ---
 
+### What It Does
+
+Every HTTP request — regardless of which module handles it — passes through the same pipeline before any business logic runs and after it returns:
+
+- **Authentication** — is there a valid, non-expired JWT? If not, reject before the handler ever runs.
+- **Authorisation** — does this user hold the permission this route requires? If not, reject with 403.
+- **Response shaping** — wrap every success response in a consistent envelope so the CRM and any other consumer never need to branch on response shape.
+- **Error formatting** — catch every thrown exception and format it with the same envelope, so errors look the same as successes structurally.
+
+The result: module code never needs to think about auth, tokens, or response formatting. It just runs its logic and returns data.
+
+---
+
+### Why Global Guards Matter
+
+Guards are applied at the framework level via `APP_GUARD` — not per-controller. This means:
+
+- **Secure by default** — a new endpoint is protected the moment it's added. No opt-in required.
+- **Cannot be forgotten** — there is no way to accidentally ship an unprotected endpoint. A route must explicitly opt out with `@IsPublic()`.
+- **Permission-scoped** — routes that need a specific permission declare it with `@RequirePermission('module:action')`. No permission declared = any authenticated user can call it.
+
+---
+
 ### Request Lifecycle
 
 Every request passes through guards → handler → interceptor. Exceptions at any point go to the filter.

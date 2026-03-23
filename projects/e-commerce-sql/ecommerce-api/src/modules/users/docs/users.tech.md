@@ -109,6 +109,106 @@ sequenceDiagram
 
 ---
 
+### Examples
+
+#### `POST /users/register`
+
+**Request:**
+```json
+{
+  "email": "jane@example.com",
+  "password": "secret123"
+}
+```
+
+**201 — success:**
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "jane@example.com",
+    "status": "active",
+    "createdAt": "2026-03-24T10:00:00.000Z"
+  }
+}
+```
+
+**409 — email taken:**
+```json
+{
+  "success": false,
+  "message": "Email already in use",
+  "data": null
+}
+```
+
+---
+
+#### `GET /users/:id`
+
+**Response 200:**
+```json
+{
+  "success": true,
+  "message": "User retrieved successfully",
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "jane@example.com",
+    "status": "active",
+    "createdAt": "2026-03-24T10:00:00.000Z",
+    "updatedAt": null
+  }
+}
+```
+
+**404 — not found:**
+```json
+{
+  "success": false,
+  "message": "User not found",
+  "data": null
+}
+```
+
+---
+
+#### `PATCH /users/:id`
+
+**Request:**
+```json
+{
+  "status": "inactive"
+}
+```
+
+**200 — success:**
+```json
+{
+  "success": true,
+  "message": "User updated successfully",
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "jane@example.com",
+    "status": "inactive",
+    "createdAt": "2026-03-24T10:00:00.000Z",
+    "updatedAt": "2026-03-24T11:30:00.000Z"
+  }
+}
+```
+
+**400 — nothing to update:**
+```json
+{
+  "success": false,
+  "message": "No fields to update",
+  "data": null
+}
+```
+
+---
+
 ### Database — `users`
 
 | Column | Notes |
@@ -167,3 +267,5 @@ src/modules/users/
 
 - `POST /users/:id/roles` or similar — endpoint to assign/remove roles from a user without relying on the seed script
 - Expose `banned` status in `UpdateUserDto` once the business decision is made
+- Complete Examples section — add DELETE example and 403 permission error case to existing examples
+- Add cross-module dependency note — document that `AuthService` calls `UsersService.findUserForLogin` (internal, not exposed via controller)

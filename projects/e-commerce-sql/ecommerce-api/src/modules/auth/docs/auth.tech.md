@@ -154,6 +154,91 @@ sequenceDiagram
 
 ---
 
+### Examples
+
+#### `POST /auth/login`
+
+**Request:**
+```json
+{
+  "email": "admin@example.com",
+  "password": "secret123"
+}
+```
+
+**200 — success:**
+```json
+{
+  "success": true,
+  "message": "User logged in successfully",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "550e8400-e29b-41d4-a716-446655440000"
+  }
+}
+```
+
+**401 — wrong credentials:**
+```json
+{
+  "success": false,
+  "message": "Invalid credentials",
+  "data": null
+}
+```
+
+**403 — blocked account:**
+```json
+{
+  "success": false,
+  "message": "Account has been suspended. Please contact support",
+  "data": null
+}
+```
+
+---
+
+#### `POST /auth/update-access-token`
+
+**Request:**
+```json
+{
+  "refreshToken": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+**200 — success:**
+```json
+{
+  "success": true,
+  "message": "Token refreshed successfully",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+  }
+}
+```
+
+**401 — token reused or not found:**
+```json
+{
+  "success": false,
+  "message": "UNAUTHORIZED",
+  "data": null
+}
+```
+
+**401 — token expired:**
+```json
+{
+  "success": false,
+  "message": "TOKEN_EXPIRED",
+  "data": null
+}
+```
+
+---
+
 ### Database
 
 ```mermaid
@@ -232,3 +317,4 @@ src/modules/auth/
 ### Technical
 
 - `POST /auth/logout` — mark all of the user's refresh tokens as `is_used = 1`
+- Add cross-module dependency section — document the `UsersService.findUserForLogin` boundary (called by both `AuthService` at login and `TokenService` at refresh)

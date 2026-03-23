@@ -51,6 +51,88 @@ All `CreateCategoryDto` fields optional, plus:
 
 ---
 
+### Examples
+
+#### `POST /categories`
+
+**Request:**
+```json
+{
+  "name": "Electronics",
+  "slug": "electronics",
+  "description": "All electronic products",
+  "sortOrder": 1
+}
+```
+
+**201 — success:**
+```json
+{
+  "success": true,
+  "message": "Category created successfully",
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Electronics",
+    "slug": "electronics",
+    "description": "All electronic products",
+    "imageUrl": null,
+    "isActive": false,
+    "isDeleted": false,
+    "sortOrder": 1,
+    "createdAt": "2026-03-24T10:00:00.000Z",
+    "updatedAt": null
+  }
+}
+```
+
+**409 — slug taken:**
+```json
+{
+  "success": false,
+  "message": "Slug already in use",
+  "data": null
+}
+```
+
+---
+
+#### `GET /categories`
+
+**Response 200:**
+```json
+{
+  "success": true,
+  "message": "Categories retrieved successfully",
+  "data": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "Electronics",
+      "slug": "electronics",
+      "isActive": false,
+      "isDeleted": false,
+      "sortOrder": 1,
+      "createdAt": "2026-03-24T10:00:00.000Z",
+      "updatedAt": null
+    }
+  ]
+}
+```
+
+---
+
+#### `GET /categories/:id`
+
+**404 — not found:**
+```json
+{
+  "success": false,
+  "message": "Category not found",
+  "data": null
+}
+```
+
+---
+
 ### Create Category Flow
 
 ```mermaid
@@ -292,3 +374,5 @@ src/modules/categories/
 - `PATCH /categories/:id/parent` dedicated re-parent endpoint
 - Test coverage for all categories endpoints
 - Make `GET /categories` public (currently requires `categories:read` permission)
+- Complete Examples section — add all error responses per endpoint; add PATCH and DELETE skeleton examples
+- Fix file structure tree — add `docs/` subdirectory with both doc files listed

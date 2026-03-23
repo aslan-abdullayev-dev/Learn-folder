@@ -27,6 +27,7 @@ Read the right file before the right task. Never skip this.
 | Implementing or changing a business rule / workflow | `<name>.md` |
 | Implementing or changing an endpoint, DTO, service, or DB | `<name>.tech.md` |
 | Touching core guards, decorators, interceptors, or filters | `core.tech.md` |
+| Adding or changing any error response | `src/docs/errors.md` |
 | Starting a new module phase | `src/docs/roadmap.md` → then create both docs |
 | Cross-module interaction (service A calls service B) | Both modules' `.tech.md` files |
 | Making a strategic or architectural decision | This CLAUDE.md |
@@ -56,6 +57,7 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 | Global convention established | CLAUDE.md → Architecture → Key Patterns |
 | Phase started | CLAUDE.md → Project Status; create module docs; move roadmap section |
 | Phase completed | CLAUDE.md → Project Status |
+| New error code or message added / changed | `src/docs/errors.md` → relevant status code section |
 | Script / env var / port changed | README |
 | Doc file moved or renamed | Update all cross-reference links in files that link to it |
 | User says "memorize" or "remember" | Memory file (`~/.claude/projects/.../memory/`) AND this CLAUDE.md — never just one |
@@ -188,7 +190,10 @@ Each business doc links to its tech doc at the top, and vice versa.
 ```
 ## Business
 ### What It Does
-### [Domain rules, workflows, decisions]
+  - What problem does this module solve for the product?
+  - Why does it work the way it does? (key design decisions in plain language)
+### [Domain rules, workflows, state machines, visibility rules]
+  - Mermaid diagrams for any flow, state machine, or decision tree
 ---
 ---
 ## Planned
@@ -198,12 +203,13 @@ Each business doc links to its tech doc at the top, and vice versa.
 **Technical doc** (`<name>.tech.md`):
 ```
 ## Technical
-### Endpoints
-### DTOs
-### Database Schema
-### Service Behaviour
-### File Structure
-### Gotchas
+### Endpoints       ← method, path, permission, status
+### DTOs            ← field tables with types, required, notes
+### Examples        ← one block per endpoint: request + every response variant (200, 4xx)
+### [Service flows] ← sequenceDiagram or flowchart per non-trivial operation
+### Database Schema ← erDiagram + column tables
+### File Structure  ← annotated directory tree
+### Gotchas         ← non-obvious behaviours, traps, internal-only methods
 ---
 ---
 ## Planned
@@ -213,6 +219,16 @@ Each business doc links to its tech doc at the top, and vice versa.
 Double `---` = major section break. Single `---` = subsection break within a section.
 
 **Diagrams** — use Mermaid (` ```mermaid `). Add diagrams where a flow, state machine, decision tree, or relationship is clearer visually than in prose. Diagrams are part of the doc — update them when the code or rules they represent change.
+
+**Examples section** — every endpoint needs a block showing:
+- The request body (if applicable)
+- The success response with realistic data
+- Every distinct error response the endpoint can return (one block per status code)
+
+**Roadmap phase entries** — each phase section in `src/docs/roadmap.md` must include:
+- A one-line scope summary
+- Business rules (what operators/customers can do, constraints they feel)
+- Technical constraints (implementation decisions, atomicity requirements, known traps)
 
 ---
 
@@ -263,6 +279,9 @@ External-facing only. Contains: description, tech stack, setup, env vars, script
 | Users | `src/modules/users/docs/users.md` | `src/modules/users/docs/users.tech.md` |
 | Categories | `src/modules/categories/docs/categories.md` | `src/modules/categories/docs/categories.tech.md` |
 | Roadmap | `src/docs/roadmap.md` | — |
+| Error Reference | `src/docs/errors.md` | — |
+| Testing | `src/docs/testing.md` | — (not yet created) |
+| Permissions | `src/docs/permissions.md` | — (not yet created) |
 
 ---
 ---
@@ -282,6 +301,9 @@ Do not start the CRM until **Categories**, **Inventory/Products**, and **Custome
 
 CRM is a separate Angular project — a frontend that consumes `ecommerce-api` directly. No separate CRM backend.
 
+### Naming Convention
+DB columns use `snake_case`. DTO fields and API response properties use `camelCase`. Mapping happens in the service layer — never return raw DB column names to the client.
+
 ### Frontend Plan
 `ecommerce-api` serves all consumers:
 - **CRM** — Angular frontend, for internal operators. Start after Categories + Inventory + Customer Profiles.
@@ -290,3 +312,15 @@ CRM is a separate Angular project — a frontend that consumes `ecommerce-api` d
 No NextJS or other frontend frameworks planned. Angular is the chosen frontend for the CRM.
 
 The API should remain frontend-friendly — clean response shapes, proper error codes, pagination-ready endpoints.
+
+---
+---
+
+## Planned
+
+### Architecture / Docs
+
+- Convert Key Patterns bullet list to a table (violates own "tables over bullet lists" rule)
+- Create `src/docs/testing.md` — testing strategy, setup, spec patterns, example
+- Create `src/docs/permissions.md` — permissions file structure, naming convention, how to add a new permission
+- Resolve stock reservation timing contradiction in roadmap: Phase 3 says "during checkout", Phase 5 says "at cart-add" — decide and align both
