@@ -1,0 +1,5 @@
+[workspace]
+members = ["hello_cargo",
+    "hello_world",
+]
+resolver = "2"
