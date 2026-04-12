@@ -1,0 +1,1 @@
+I need you to store conversations detailed summary as an md file inside each subproject inside rust_brown_book. please create those files and add data to relevant one from this session. please use notes.md file from existing project   

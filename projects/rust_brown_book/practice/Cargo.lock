@@ -27,21 +27,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "guessing_game"
-version = "0.1.0"
-dependencies = [
- "rand",
-]
-
-[[package]]
-name = "hello_cargo"
-version = "0.1.0"
-
-[[package]]
-name = "hello_world"
-version = "0.1.0"
-
-[[package]]
 name = "libc"
 version = "0.2.184"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -120,10 +105,6 @@ name = "unicode-ident"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
-
-[[package]]
-name = "variables_and_mut"
-version = "0.1.0"
 
 [[package]]
 name = "wasi"
