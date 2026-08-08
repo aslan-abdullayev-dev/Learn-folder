@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.3 Hello, Cargo! — Rust Book Study</title>
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --panel: #ffffff;
+    --text: #2a2622;
+    --muted: #6b6357;
+    --border: #e6e1d9;
+    --accent: #b5502e;
+    --accent-soft: #f3e3da;
+    --good: #3f7d4f;
+    --good-bg: #e7f3ea;
+    --bad: #b03a3a;
+    --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --panel: #262320;
+      --text: #ece7df;
+      --muted: #a89e8f;
+      --border: #3a352e;
+      --accent: #e08a5f;
+      --accent-soft: #3a2b22;
+      --good: #7fc994;
+      --good-bg: #1f3327;
+      --bad: #e07a7a;
+      --bad-bg: #3a2323;
+      --code-bg: #211e1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a17; --panel: #262320; --text: #ece7df; --muted: #a89e8f;
+    --border: #3a352e; --accent: #e08a5f; --accent-soft: #3a2b22;
+    --good: #7fc994; --good-bg: #1f3327; --bad: #e07a7a; --bad-bg: #3a2323;
+    --code-bg: #211e1a;
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfaf8; --panel: #ffffff; --text: #2a2622; --muted: #6b6357;
+    --border: #e6e1d9; --accent: #b5502e; --accent-soft: #f3e3da;
+    --good: #3f7d4f; --good-bg: #e7f3ea; --bad: #b03a3a; --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  h1 {
+    font-size: 1.65rem;
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .summary ul { margin: 0; padding-left: 1.2rem; }
+  .summary li { margin-bottom: 0.6rem; }
+  .summary li:last-child { margin-bottom: 0; }
+  .summary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+  }
+  .summary th, .summary td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary th { color: var(--muted); font-weight: 600; }
+  code {
+    background: var(--code-bg);
+    border-radius: 5px;
+    padding: 0.12em 0.4em;
+    font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.2rem;
+  }
+  #score-pill {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .question {
+    border-top: 1px solid var(--border);
+    padding-top: 1.3rem;
+    margin-top: 1.3rem;
+  }
+  .question:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .q-text { font-weight: 600; margin-bottom: 0.7rem; font-size: 0.96rem; }
+  .q-text code { font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .option {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 9px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+    color: var(--text);
+    transition: border-color 0.12s ease, background 0.12s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .option code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .option:hover { border-color: var(--accent); }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight: 600; }
+  .option.incorrect { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .option:disabled { cursor: default; }
+  .explain {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: none;
+  }
+  .explain.shown { display: block; }
+  .actions {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    margin-top: 1.8rem;
+  }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 9px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Chapter 1 &middot; Getting Started</div>
+  <h1>1.3 &mdash; Hello, Cargo!</h1>
+
+  <div class="panel summary">
+    <h2>Summary</h2>
+    <ul>
+      <li>Cargo is Rust's <strong>build system and package manager</strong> &mdash; it ships with the standard Rust install. <code>cargo --version</code> checks it.</li>
+      <li>
+        <table>
+          <tr><th>Command</th><th>Does</th></tr>
+          <tr><td><code>cargo new &lt;name&gt;</code></td><td>scaffold a new project</td></tr>
+          <tr><td><code>cargo build</code></td><td>compile (debug mode by default)</td></tr>
+          <tr><td><code>cargo run</code></td><td>build and run in one step</td></tr>
+          <tr><td><code>cargo check</code></td><td>type-check only, no executable &mdash; fastest feedback</td></tr>
+          <tr><td><code>cargo build --release</code></td><td>optimized build</td></tr>
+        </table>
+      </li>
+      <li>Project layout: <code>Cargo.toml</code> (TOML config) + <code>Cargo.lock</code> (exact resolved dependency versions, auto-managed) + <code>src/main.rs</code> (source) + <code>target/</code> (all build output, never the project root).</li>
+      <li><code>Cargo.toml</code> has a <code>[package]</code> section (name, version, edition) and a <code>[dependencies]</code> section.</li>
+      <li><strong>Debug</strong> build: fast to compile, slower to run. <strong>Release</strong> build: slower to compile, optimized/fast to run.</li>
+      <li>The same Cargo commands work identically on Linux, macOS, and Windows.</li>
+      <li>To convert an existing non-Cargo project: move the source into <code>src/</code>, then run <code>cargo init</code>.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="quiz-header">
+      <h2>Quiz</h2>
+      <span id="score-pill">0 / 10 answered</span>
+    </div>
+    <div id="quiz"></div>
+    <div class="actions">
+      <button class="ghost" id="reset-btn">Reset</button>
+    </div>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What is Cargo, in one line?",
+    options: [
+      "Rust's linter and formatter bundled together",
+      "Rust's build system and package manager",
+      "A third-party alternative to rustc",
+      "The Rust standard library's I/O module"
+    ],
+    correct: 1,
+    explain: "Cargo handles compiling your code, managing dependencies, and building libraries — it ships with the standard Rust install."
+  },
+  {
+    q: "Which command scaffolds a brand-new Cargo project?",
+    options: [
+      "cargo init --new",
+      "cargo new <name>",
+      "cargo create <name>",
+      "cargo build --new"
+    ],
+    correct: 1,
+    explain: "cargo new <name> creates the directory, Cargo.toml, and src/main.rs for you."
+  },
+  {
+    q: "What's the actual difference between cargo build and cargo run?",
+    options: [
+      "They're identical aliases",
+      "cargo build only compiles; cargo run compiles then executes",
+      "cargo run only works in release mode",
+      "cargo build requires internet access, cargo run doesn't"
+    ],
+    correct: 1,
+    explain: "cargo build stops after producing the binary; cargo run does that and then immediately runs it."
+  },
+  {
+    q: "Why reach for cargo check instead of cargo build while actively writing code?",
+    options: [
+      "cargo check catches more bugs than cargo build",
+      "cargo check is faster since it skips generating an executable",
+      "cargo check auto-formats your code as it type-checks",
+      "There's no difference — check is just an alias for build"
+    ],
+    correct: 1,
+    explain: "cargo check does the type-checking pass but stops short of codegen, so it's much faster — ideal for a tight edit/verify loop."
+  },
+  {
+    q: "What produces an optimized build meant for distribution/production?",
+    options: [
+      "cargo build",
+      "cargo run --optimized",
+      "cargo build --release",
+      "cargo package --prod"
+    ],
+    correct: 2,
+    explain: "cargo build --release trades slower compile time for a much faster runtime binary, output to target/release/."
+  },
+  {
+    q: "What's the difference in purpose between Cargo.toml and Cargo.lock?",
+    options: [
+      "Cargo.toml is auto-generated; Cargo.lock is hand-edited",
+      "They're two names for the same file on different platforms",
+      "Cargo.toml is the human-edited config; Cargo.lock is the auto-managed exact-version record",
+      "Cargo.lock lists source code files; Cargo.toml lists build output"
+    ],
+    correct: 2,
+    explain: "You edit Cargo.toml (name, version, dependencies); Cargo itself maintains Cargo.lock to pin exact resolved versions."
+  },
+  {
+    q: "Where does Cargo place compiled output, and does it matter whether it's a debug or release build?",
+    options: [
+      "Always directly in the project root as './binary'",
+      "In target/, split into target/debug/ or target/release/ depending on build type",
+      "In src/, next to main.rs",
+      "In a hidden .cargo/ folder, same location regardless of build type"
+    ],
+    correct: 1,
+    explain: "Cargo keeps all build artifacts out of the project root, under target/, with separate debug/ and release/ subfolders."
+  },
+  {
+    q: "What's the tradeoff between a debug build and a release build?",
+    options: [
+      "Debug: fast compile, slower runtime. Release: slower compile, optimized runtime.",
+      "Debug: slower compile, faster runtime. Release: fast compile, slower runtime.",
+      "There's no runtime difference — release only strips debug symbols",
+      "Debug builds can't be run at all, only checked"
+    ],
+    correct: 0,
+    explain: "Debug mode favors fast iteration (quick compiles); release mode spends more compile time to optimize the actual execution speed."
+  },
+  {
+    q: "How do the Cargo commands (build, run, check, etc.) behave across operating systems?",
+    options: [
+      "Different flags are required on Windows vs Linux/macOS",
+      "The same commands work identically across Linux, macOS, and Windows",
+      "Cargo only officially supports Linux",
+      "Windows requires cargo.exe subcommands with different names"
+    ],
+    correct: 1,
+    explain: "Cargo's command interface is consistent across all three platforms — this is one of its main selling points."
+  },
+  {
+    q: "You have an existing Rust file NOT set up as a Cargo project. How do you bring it into Cargo's structure?",
+    options: [
+      "Run cargo new in the same directory to overwrite it",
+      "Move the source into a src/ directory, then run cargo init",
+      "Rename the file to Cargo.toml",
+      "It's impossible — you must start over with cargo new"
+    ],
+    correct: 1,
+    explain: "cargo init sets up Cargo.toml and the rest of the project structure around code you already have, as long as it's under src/."
+  }
+];
+
+const quizEl = document.getElementById('quiz');
+const scorePill = document.getElementById('score-pill');
+const resultEl = document.getElementById('result');
+const answered = new Array(QUESTIONS.length).fill(false);
+const wasCorrect = new Array(QUESTIONS.length).fill(false);
+
+function renderQuestion(item, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'question';
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = `${idx + 1}. ${item.q}`;
+  wrap.appendChild(qText);
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+
+  const explain = document.createElement('div');
+  explain.className = 'explain';
+  explain.textContent = item.explain;
+
+  item.options.forEach((optText, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = optText;
+    btn.addEventListener('click', () => {
+      if (answered[idx]) return;
+      answered[idx] = true;
+      wasCorrect[idx] = optIdx === item.correct;
+      [...optsWrap.children].forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.correct) b.classList.add('correct');
+        else if (i === optIdx) b.classList.add('incorrect');
+      });
+      explain.classList.add('shown');
+      updateScore();
+    });
+    optsWrap.appendChild(btn);
+  });
+
+  wrap.appendChild(optsWrap);
+  wrap.appendChild(explain);
+  quizEl.appendChild(wrap);
+}
+
+function updateScore() {
+  const done = answered.filter(Boolean).length;
+  scorePill.textContent = `${done} / ${QUESTIONS.length} answered`;
+  if (done === QUESTIONS.length) {
+    const correctCount = wasCorrect.filter(Boolean).length;
+    resultEl.style.display = 'block';
+    resultEl.textContent = `Done — ${correctCount} / ${QUESTIONS.length} correct on the first try per question.`;
+  }
+}
+
+function reset() {
+  quizEl.innerHTML = '';
+  answered.fill(false);
+  wasCorrect.fill(false);
+  resultEl.style.display = 'none';
+  QUESTIONS.forEach(renderQuestion);
+  updateScore();
+}
+
+document.getElementById('reset-btn').addEventListener('click', reset);
+reset();
+</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.1 Installation — Rust Book Study</title>
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --panel: #ffffff;
+    --text: #2a2622;
+    --muted: #6b6357;
+    --border: #e6e1d9;
+    --accent: #b5502e;
+    --accent-soft: #f3e3da;
+    --good: #3f7d4f;
+    --good-bg: #e7f3ea;
+    --bad: #b03a3a;
+    --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --panel: #262320;
+      --text: #ece7df;
+      --muted: #a89e8f;
+      --border: #3a352e;
+      --accent: #e08a5f;
+      --accent-soft: #3a2b22;
+      --good: #7fc994;
+      --good-bg: #1f3327;
+      --bad: #e07a7a;
+      --bad-bg: #3a2323;
+      --code-bg: #211e1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a17; --panel: #262320; --text: #ece7df; --muted: #a89e8f;
+    --border: #3a352e; --accent: #e08a5f; --accent-soft: #3a2b22;
+    --good: #7fc994; --good-bg: #1f3327; --bad: #e07a7a; --bad-bg: #3a2323;
+    --code-bg: #211e1a;
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfaf8; --panel: #ffffff; --text: #2a2622; --muted: #6b6357;
+    --border: #e6e1d9; --accent: #b5502e; --accent-soft: #f3e3da;
+    --good: #3f7d4f; --good-bg: #e7f3ea; --bad: #b03a3a; --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  h1 {
+    font-size: 1.65rem;
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .summary ul { margin: 0; padding-left: 1.2rem; }
+  .summary li { margin-bottom: 0.6rem; }
+  .summary li:last-child { margin-bottom: 0; }
+  code {
+    background: var(--code-bg);
+    border-radius: 5px;
+    padding: 0.12em 0.4em;
+    font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.2rem;
+  }
+  #score-pill {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .question {
+    border-top: 1px solid var(--border);
+    padding-top: 1.3rem;
+    margin-top: 1.3rem;
+  }
+  .question:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .q-text { font-weight: 600; margin-bottom: 0.7rem; font-size: 0.96rem; }
+  .options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .option {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 9px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+    color: var(--text);
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  .option:hover { border-color: var(--accent); }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight: 600; }
+  .option.incorrect { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .option:disabled { cursor: default; }
+  .explain {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: none;
+  }
+  .explain.shown { display: block; }
+  .actions {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    margin-top: 1.8rem;
+  }
+  button.primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { opacity: 0.92; }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 9px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Chapter 1 &middot; Getting Started</div>
+  <h1>1.1 &mdash; Installation</h1>
+
+  <div class="panel summary">
+    <h2>Summary</h2>
+    <ul>
+      <li>Install Rust with <code>rustup</code>, the toolchain/version manager &mdash; not your OS package manager.</li>
+      <li><code>rustc --version</code> verifies the install (format: <code>rustc x.y.z (hash yyyy-mm-dd)</code>).</li>
+      <li>macOS/Linux need a linker, usually already present via Xcode Command Line Tools or a C compiler package.</li>
+      <li><code>rustup update</code> upgrades, <code>rustup self uninstall</code> removes, <code>rustup doc</code> opens the docs offline.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="quiz-header">
+      <h2>Quiz</h2>
+      <span id="score-pill">0 / 5 answered</span>
+    </div>
+    <div id="quiz"></div>
+    <div class="actions">
+      <button class="ghost" id="reset-btn">Reset</button>
+    </div>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What's the recommended way to install Rust?",
+    options: [
+      "Your OS package manager (apt/brew/etc.)",
+      "rustup",
+      "Download rustc directly from GitHub releases",
+      "npm install rust"
+    ],
+    correct: 1,
+    explain: "rustup manages toolchain versions, updates, and uninstalls in a way OS package managers generally don't."
+  },
+  {
+    q: "Which command prints your installed Rust version?",
+    options: [
+      "rust --version",
+      "rustup --check",
+      "rustc --version",
+      "cargo version"
+    ],
+    correct: 2,
+    explain: "rustc --version prints something like: rustc 1.79.0 (129f3b996 2024-06-10)."
+  },
+  {
+    q: "How do you update your Rust installation?",
+    options: [
+      "rustup update",
+      "cargo update",
+      "rustc --upgrade",
+      "Reinstall from scratch"
+    ],
+    correct: 0,
+    explain: "rustup update pulls the latest stable toolchain (and updates other installed toolchains too)."
+  },
+  {
+    q: "On macOS, what's commonly needed before Rust can compile anything, and how do you get it?",
+    options: [
+      "A Python interpreter, via brew install python",
+      "A linker/C compiler, via xcode-select --install",
+      "Node.js, via nvm",
+      "Nothing extra is ever needed on macOS"
+    ],
+    correct: 1,
+    explain: "Rust needs a linker; on macOS that comes from the Xcode Command Line Tools."
+  },
+  {
+    q: "What does rustup doc do?",
+    options: [
+      "Publishes your crate's docs to docs.rs",
+      "Opens the Rust documentation locally, offline",
+      "Generates a Cargo.toml from doc comments",
+      "Lints your code comments"
+    ],
+    correct: 1,
+    explain: "rustup doc opens the local copy of the Rust docs in your browser, no internet required."
+  }
+];
+
+const quizEl = document.getElementById('quiz');
+const scorePill = document.getElementById('score-pill');
+const resultEl = document.getElementById('result');
+const answered = new Array(QUESTIONS.length).fill(false);
+const wasCorrect = new Array(QUESTIONS.length).fill(false);
+
+function renderQuestion(item, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'question';
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.textContent = `${idx + 1}. ${item.q}`;
+  wrap.appendChild(qText);
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+
+  const explain = document.createElement('div');
+  explain.className = 'explain';
+  explain.textContent = item.explain;
+
+  item.options.forEach((optText, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = optText;
+    btn.addEventListener('click', () => {
+      if (answered[idx]) return;
+      answered[idx] = true;
+      wasCorrect[idx] = optIdx === item.correct;
+      [...optsWrap.children].forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.correct) b.classList.add('correct');
+        else if (i === optIdx) b.classList.add('incorrect');
+      });
+      explain.classList.add('shown');
+      updateScore();
+    });
+    optsWrap.appendChild(btn);
+  });
+
+  wrap.appendChild(optsWrap);
+  wrap.appendChild(explain);
+  quizEl.appendChild(wrap);
+}
+
+function updateScore() {
+  const done = answered.filter(Boolean).length;
+  scorePill.textContent = `${done} / ${QUESTIONS.length} answered`;
+  if (done === QUESTIONS.length) {
+    const correctCount = wasCorrect.filter(Boolean).length;
+    resultEl.style.display = 'block';
+    resultEl.textContent = `Done — ${correctCount} / ${QUESTIONS.length} correct on the first try per question.`;
+  }
+}
+
+function reset() {
+  quizEl.innerHTML = '';
+  answered.fill(false);
+  wasCorrect.fill(false);
+  resultEl.style.display = 'none';
+  QUESTIONS.forEach(renderQuestion);
+  updateScore();
+}
+
+document.getElementById('reset-btn').addEventListener('click', reset);
+reset();
+</script>
+</body>
+</html>

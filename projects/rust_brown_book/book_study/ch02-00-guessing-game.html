@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2.0 Programming a Guessing Game — Rust Book Study</title>
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --panel: #ffffff;
+    --text: #2a2622;
+    --muted: #6b6357;
+    --border: #e6e1d9;
+    --accent: #b5502e;
+    --accent-soft: #f3e3da;
+    --good: #3f7d4f;
+    --good-bg: #e7f3ea;
+    --bad: #b03a3a;
+    --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --panel: #262320;
+      --text: #ece7df;
+      --muted: #a89e8f;
+      --border: #3a352e;
+      --accent: #e08a5f;
+      --accent-soft: #3a2b22;
+      --good: #7fc994;
+      --good-bg: #1f3327;
+      --bad: #e07a7a;
+      --bad-bg: #3a2323;
+      --code-bg: #211e1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a17; --panel: #262320; --text: #ece7df; --muted: #a89e8f;
+    --border: #3a352e; --accent: #e08a5f; --accent-soft: #3a2b22;
+    --good: #7fc994; --good-bg: #1f3327; --bad: #e07a7a; --bad-bg: #3a2323;
+    --code-bg: #211e1a;
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfaf8; --panel: #ffffff; --text: #2a2622; --muted: #6b6357;
+    --border: #e6e1d9; --accent: #b5502e; --accent-soft: #f3e3da;
+    --good: #3f7d4f; --good-bg: #e7f3ea; --bad: #b03a3a; --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  h1 {
+    font-size: 1.65rem;
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .summary ul { margin: 0; padding-left: 1.2rem; }
+  .summary li { margin-bottom: 0.6rem; }
+  .summary li:last-child { margin-bottom: 0; }
+  .summary pre {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    margin: 0.6rem 0 0;
+  }
+  code {
+    background: var(--code-bg);
+    border-radius: 5px;
+    padding: 0.12em 0.4em;
+    font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre code { background: none; padding: 0; }
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.2rem;
+  }
+  #score-pill {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .question {
+    border-top: 1px solid var(--border);
+    padding-top: 1.3rem;
+    margin-top: 1.3rem;
+  }
+  .question:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .q-text { font-weight: 600; margin-bottom: 0.7rem; font-size: 0.96rem; }
+  .q-text code { font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .option {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 9px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+    color: var(--text);
+    transition: border-color 0.12s ease, background 0.12s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .option code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .option:hover { border-color: var(--accent); }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight: 600; }
+  .option.incorrect { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .option:disabled { cursor: default; }
+  .explain {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: none;
+  }
+  .explain.shown { display: block; }
+  .actions {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    margin-top: 1.8rem;
+  }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 9px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Chapter 2</div>
+  <h1>2.0 &mdash; Programming a Guessing Game</h1>
+
+  <div class="panel summary">
+    <h2>Summary</h2>
+    <ul>
+      <li><code>let</code> is immutable by default; <code>let mut guess = String::new();</code> is required because <code>read_line</code> needs to write into it.</li>
+      <li><code>io::stdin().read_line(&amp;mut guess)</code> reads a line of input into that string by mutating it in place (no new <code>String</code> returned) &mdash; it returns an <code>io::Result</code>.</li>
+      <li><code>.expect("message")</code> unwraps a <code>Result</code>: returns the <code>Ok</code> value, or panics with your message on <code>Err</code>.</li>
+      <li><code>.trim()</code> strips leading/trailing whitespace (including the newline <code>read_line</code> leaves behind); <code>.parse()</code> converts the <code>String</code> to another type and returns a <code>Result</code>.</li>
+      <li><strong>Shadowing</strong> lets <code>let guess: u32 = guess.trim().parse()...</code> reuse the name <code>guess</code> for the parsed number, instead of inventing a second variable name for the converted value.</li>
+      <li>
+        <pre><code>let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => continue,
+};</code></pre>
+        This compiles because <code>continue</code> never produces a value &mdash; it can stand in for whatever type the <code>Ok</code> arm requires.
+      </li>
+      <li><code>std::cmp::Ordering</code> (<code>Less</code> / <code>Greater</code> / <code>Equal</code>) plus <code>guess.cmp(&amp;secret_number)</code> drives a second <code>match</code> to compare the guess against the answer.</li>
+      <li>The whole game runs inside <code>loop { ... }</code>, exiting via <code>break</code> once the <code>Ordering::Equal</code> arm is hit.</li>
+      <li>External crate <strong>rand</strong>: add it under <code>[dependencies]</code> in <code>Cargo.toml</code>, then <code>use rand::Rng;</code> and call <code>rand::thread_rng().gen_range(1..=100)</code> to get the secret number.</li>
+      <li>Dependency versions use SemVer caret requirements by default &mdash; <code>rand = "0.8.5"</code> means <code>&gt;=0.8.5, &lt;0.9.0</code>. <code>Cargo.lock</code> then records the exact resolved versions so rebuilds stay reproducible.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="quiz-header">
+      <h2>Quiz</h2>
+      <span id="score-pill">0 / 11 answered</span>
+    </div>
+    <div id="quiz"></div>
+    <div class="actions">
+      <button class="ghost" id="reset-btn">Reset</button>
+    </div>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "Why does <code>read_line</code> take <code>&amp;mut guess</code> instead of just <code>guess</code>?",
+    options: [
+      "It's required syntax with no real reason",
+      "So it can mutate the existing String in place, appending input to it",
+      "Because String doesn't implement Copy",
+      "To make the call thread-safe"
+    ],
+    correct: 1,
+    explain: "read_line writes directly into the buffer you pass it, so it needs a mutable reference rather than returning a brand-new String."
+  },
+  {
+    q: "What does <code>.expect(\"message\")</code> do when called on a Result?",
+    options: [
+      "Logs the message and returns None on any outcome",
+      "Returns the Ok value, or panics with the given message on Err",
+      "Retries the operation up to 3 times before failing",
+      "Converts the Result into an Option"
+    ],
+    correct: 1,
+    explain: "expect unwraps the Result — happy path gives you the Ok value, error path crashes the program with your message."
+  },
+  {
+    q: "What do <code>.trim()</code> and <code>.parse()</code> each do to the raw input string, in order?",
+    options: [
+      "trim() converts to a number; parse() removes whitespace",
+      "trim() strips whitespace/newline; parse() converts the String into another type, returning a Result",
+      "Both do the same thing — parse() is just an alias for trim()",
+      "trim() validates the input; parse() logs it"
+    ],
+    correct: 1,
+    explain: "trim() removes the trailing newline read_line leaves in place; parse() then attempts the type conversion and reports success/failure via Result."
+  },
+  {
+    q: "Why does the guessing game shadow the name <code>guess</code> instead of introducing a second variable name for the parsed number?",
+    options: [
+      "Rust doesn't allow two variables to exist at once in the same scope",
+      "Shadowing lets you reuse a meaningful name while changing type, avoiding awkward names like guess_str/guess_num",
+      "It's required by the borrow checker",
+      "It makes the program run faster"
+    ],
+    correct: 1,
+    explain: "Shadowing rebinds the name to a new value (and possibly new type) without needing a fresh identifier."
+  },
+  {
+    q: "In <code>Err(_) => continue</code> sitting alongside <code>Ok(num) => num</code> in the same match, why does this compile even though the arms look like different types?",
+    options: [
+      "Rust ignores type mismatches inside match arms",
+      "continue never produces a value, so it can coerce to whatever type the other arm needs",
+      "continue is secretly typed as u32",
+      "The compiler inserts an implicit unwrap()"
+    ],
+    correct: 1,
+    explain: "continue (like break, return, panic!) diverges — it never evaluates to a value — so Rust lets it satisfy any type the other arm requires."
+  },
+  {
+    q: "What are the three variants of std::cmp::Ordering, and what produces one?",
+    options: [
+      "Before / After / Same, produced by .compare()",
+      "Less / Greater / Equal, produced by calling .cmp() between two comparable values",
+      "Lt / Gt / Eq, produced automatically by match",
+      "Min / Max / Mid, produced by .sort()"
+    ],
+    correct: 1,
+    explain: "guess.cmp(&secret_number) returns an Ordering, which the game then matches on to print too-low/too-high/correct."
+  },
+  {
+    q: "How does the guessing game's main loop terminate?",
+    options: [
+      "It runs a fixed number of iterations",
+      "loop runs indefinitely until break is called in the Ordering::Equal arm",
+      "It uses a while condition checking guess == secret",
+      "The program exits via std::process::exit only"
+    ],
+    correct: 1,
+    explain: "loop { ... } has no built-in exit condition — break in the Equal arm is what stops it once the guess is correct."
+  },
+  {
+    q: "What's the minimal correct way to generate a number from 1 to 100 inclusive with the rand crate?",
+    options: [
+      "rand::random(1, 100)",
+      "use rand::Rng; rand::thread_rng().gen_range(1..=100)",
+      "rand::gen(1..100)",
+      "use std::rand; rand::range(1, 100)"
+    ],
+    correct: 1,
+    explain: "gen_range needs the Rng trait in scope, called on a generator from thread_rng(); the inclusive range 1..=100 includes 100."
+  },
+  {
+    q: "In Cargo.toml, what does rand = \"0.8.5\" actually permit Cargo to install?",
+    options: [
+      "Exactly version 0.8.5, nothing else",
+      "Any version, ignoring the number entirely",
+      "Any version >=0.8.5 and <0.9.0 (SemVer caret requirement)",
+      "Any version <=0.8.5"
+    ],
+    correct: 2,
+    explain: "The caret requirement (default in Cargo.toml) allows compatible updates — patch and minor bumps — but not a breaking major/minor jump."
+  },
+  {
+    q: "What is Cargo.lock's role once rand has been added as a dependency?",
+    options: [
+      "It documents which crates are forbidden",
+      "It records the exact resolved dependency versions so builds stay reproducible across machines and time",
+      "It stores the compiled rand binary directly",
+      "It replaces the need for Cargo.toml entirely"
+    ],
+    correct: 1,
+    explain: "Cargo.lock pins the precise versions actually resolved, so everyone building the project gets identical dependency versions."
+  },
+  {
+    q: "What does io::stdin().read_line(&mut guess) return, and why does the tutorial call .expect() on it?",
+    options: [
+      "It returns nothing; expect() is unnecessary boilerplate",
+      "It returns an io::Result, and expect() handles the case where reading input fails",
+      "It returns the parsed number directly",
+      "It returns a bool indicating whether input was empty"
+    ],
+    correct: 1,
+    explain: "read_line can fail (I/O error), so it returns a Result; expect() is the tutorial's way of surfacing that failure instead of silently ignoring it."
+  }
+];
+
+const quizEl = document.getElementById('quiz');
+const scorePill = document.getElementById('score-pill');
+const resultEl = document.getElementById('result');
+const answered = new Array(QUESTIONS.length).fill(false);
+const wasCorrect = new Array(QUESTIONS.length).fill(false);
+
+function renderQuestion(item, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'question';
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = `${idx + 1}. ${item.q}`;
+  wrap.appendChild(qText);
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+
+  const explain = document.createElement('div');
+  explain.className = 'explain';
+  explain.textContent = item.explain;
+
+  item.options.forEach((optText, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = optText;
+    btn.addEventListener('click', () => {
+      if (answered[idx]) return;
+      answered[idx] = true;
+      wasCorrect[idx] = optIdx === item.correct;
+      [...optsWrap.children].forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.correct) b.classList.add('correct');
+        else if (i === optIdx) b.classList.add('incorrect');
+      });
+      explain.classList.add('shown');
+      updateScore();
+    });
+    optsWrap.appendChild(btn);
+  });
+
+  wrap.appendChild(optsWrap);
+  wrap.appendChild(explain);
+  quizEl.appendChild(wrap);
+}
+
+function updateScore() {
+  const done = answered.filter(Boolean).length;
+  scorePill.textContent = `${done} / ${QUESTIONS.length} answered`;
+  if (done === QUESTIONS.length) {
+    const correctCount = wasCorrect.filter(Boolean).length;
+    resultEl.style.display = 'block';
+    resultEl.textContent = `Done — ${correctCount} / ${QUESTIONS.length} correct on the first try per question.`;
+  }
+}
+
+function reset() {
+  quizEl.innerHTML = '';
+  answered.fill(false);
+  wasCorrect.fill(false);
+  resultEl.style.display = 'none';
+  QUESTIONS.forEach(renderQuestion);
+  updateScore();
+}
+
+document.getElementById('reset-btn').addEventListener('click', reset);
+reset();
+</script>
+</body>
+</html>

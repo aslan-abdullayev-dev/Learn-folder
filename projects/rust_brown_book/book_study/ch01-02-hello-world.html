@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1.2 Hello, World! — Rust Book Study</title>
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --panel: #ffffff;
+    --text: #2a2622;
+    --muted: #6b6357;
+    --border: #e6e1d9;
+    --accent: #b5502e;
+    --accent-soft: #f3e3da;
+    --good: #3f7d4f;
+    --good-bg: #e7f3ea;
+    --bad: #b03a3a;
+    --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --panel: #262320;
+      --text: #ece7df;
+      --muted: #a89e8f;
+      --border: #3a352e;
+      --accent: #e08a5f;
+      --accent-soft: #3a2b22;
+      --good: #7fc994;
+      --good-bg: #1f3327;
+      --bad: #e07a7a;
+      --bad-bg: #3a2323;
+      --code-bg: #211e1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a17; --panel: #262320; --text: #ece7df; --muted: #a89e8f;
+    --border: #3a352e; --accent: #e08a5f; --accent-soft: #3a2b22;
+    --good: #7fc994; --good-bg: #1f3327; --bad: #e07a7a; --bad-bg: #3a2323;
+    --code-bg: #211e1a;
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfaf8; --panel: #ffffff; --text: #2a2622; --muted: #6b6357;
+    --border: #e6e1d9; --accent: #b5502e; --accent-soft: #f3e3da;
+    --good: #3f7d4f; --good-bg: #e7f3ea; --bad: #b03a3a; --bad-bg: #fbe9e8;
+    --code-bg: #f1ede6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  h1 {
+    font-size: 1.65rem;
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .summary ul { margin: 0; padding-left: 1.2rem; }
+  .summary li { margin-bottom: 0.6rem; }
+  .summary li:last-child { margin-bottom: 0; }
+  .summary pre {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    margin: 0.6rem 0 0;
+  }
+  code {
+    background: var(--code-bg);
+    border-radius: 5px;
+    padding: 0.12em 0.4em;
+    font-size: 0.88em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre code { background: none; padding: 0; }
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.2rem;
+  }
+  #score-pill {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .question {
+    border-top: 1px solid var(--border);
+    padding-top: 1.3rem;
+    margin-top: 1.3rem;
+  }
+  .question:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .q-text { font-weight: 600; margin-bottom: 0.7rem; font-size: 0.96rem; }
+  .q-text code { font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .option {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 9px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+    color: var(--text);
+    transition: border-color 0.12s ease, background 0.12s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .option code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .option:hover { border-color: var(--accent); }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight: 600; }
+  .option.incorrect { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .option:disabled { cursor: default; }
+  .explain {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: none;
+  }
+  .explain.shown { display: block; }
+  .actions {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    margin-top: 1.8rem;
+  }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 9px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Chapter 1 &middot; Getting Started</div>
+  <h1>1.2 &mdash; Hello, World!</h1>
+
+  <div class="panel summary">
+    <h2>Summary</h2>
+    <ul>
+      <li>Source files use the <code>.rs</code> extension; filenames use snake_case (e.g. <code>hello_world.rs</code>).</li>
+      <li><code>fn main() { ... }</code> is the required entry point &mdash; it always runs first. Opening brace stays on the same line as the declaration.</li>
+      <li><code>println!</code> is a <strong>macro</strong>, not a function &mdash; the <code>!</code> is what marks it as one. Statements inside end with <code>;</code>.</li>
+      <li>Compile with <code>rustc main.rs</code>, then run the resulting binary separately: <code>./main</code> (Linux/macOS/PowerShell) or <code>.\main</code> (Windows cmd). On Windows this also produces a <code>.pdb</code> file holding debug symbols &mdash; not needed to run the program, just to debug it.</li>
+      <li>Rust is <strong>ahead-of-time compiled</strong>: you must compile before running, unlike Python/Ruby/JS. The upside &mdash; the compiled binary runs on a machine with no Rust installed at all.</li>
+      <li><code>rustfmt</code> auto-formats code (style only, doesn't affect whether it compiles or runs correctly); <code>rust-analyzer</code> powers editor/IDE support. <code>cargo</code> is introduced next for anything beyond a single file.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="quiz-header">
+      <h2>Quiz</h2>
+      <span id="score-pill">0 / 9 answered</span>
+    </div>
+    <div id="quiz"></div>
+    <div class="actions">
+      <button class="ghost" id="reset-btn">Reset</button>
+    </div>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What is <code>println!</code>, precisely?",
+    options: [
+      "A built-in function in std::io",
+      "A macro, indicated by the trailing !",
+      "A keyword, like fn or let",
+      "A method on the String type"
+    ],
+    correct: 1,
+    explain: "The ! is the tell — println! is a macro, which is why it can do things (like variadic-style formatting) an ordinary function signature couldn't."
+  },
+  {
+    q: "Which function must every executable Rust program define, and what's special about it?",
+    options: [
+      "start() — called by the OS loader directly",
+      "run() — required by rustc's linker step",
+      "main() — it's always the first code that runs",
+      "init() — sets up the runtime before main logic"
+    ],
+    correct: 2,
+    explain: "main() is the fixed entry point; the compiled binary always begins execution there."
+  },
+  {
+    q: "What are the two separate steps to go from source code to a running program using rustc directly (no Cargo)?",
+    options: [
+      "rustc build main.rs then rustc start main",
+      "rustc main.rs to compile, then ./main to run it",
+      "rustc --run main.rs does both at once",
+      "rustc init then rustc main.rs"
+    ],
+    correct: 1,
+    explain: "rustc main.rs produces a binary; that binary is a separate, independent step to execute (./main or .\\main on Windows)."
+  },
+  {
+    q: "True/false framed as a choice: does the compiled binary need Rust installed to run on another machine?",
+    options: [
+      "Yes — rustc must be present at runtime to interpret it",
+      "No — it's a standalone ahead-of-time compiled executable",
+      "Only if the program uses println!",
+      "Only on Windows, due to the .pdb file"
+    ],
+    correct: 1,
+    explain: "Ahead-of-time compilation means the binary is self-contained machine code; it runs with no Rust toolchain present."
+  },
+  {
+    q: "How does Rust's compile model differ fundamentally from Python or Ruby's?",
+    options: [
+      "Rust has no difference — both compile ahead of time",
+      "Python/Ruby compile ahead of time, Rust is interpreted",
+      "Rust compiles ahead of time before running; Python/Ruby interpret source directly",
+      "Rust only compiles when using Cargo, never with rustc alone"
+    ],
+    correct: 2,
+    explain: "Rust requires an explicit compile step producing a binary; Python/Ruby run the source directly each time via an interpreter."
+  },
+  {
+    q: "On Windows, compiling produces an executable plus what extra file, and what's it for?",
+    options: [
+      "A .dll file, required to run the executable",
+      "A .pdb file, containing debugging information",
+      "A .lock file, tracking the build version",
+      "A .toml file, describing the binary's metadata"
+    ],
+    correct: 1,
+    explain: "Windows compilation also emits a .pdb (Program Database) file with debug symbols; it isn't needed to run the program, just to debug it."
+  },
+  {
+    q: "What's the naming convention for multi-word Rust source filenames?",
+    options: [
+      "camelCase, e.g. helloWorld.rs",
+      "PascalCase, e.g. HelloWorld.rs",
+      "snake_case, e.g. hello_world.rs",
+      "kebab-case, e.g. hello-world.rs"
+    ],
+    correct: 2,
+    explain: "Rust convention uses snake_case for filenames, matching its convention for function and variable names."
+  },
+  {
+    q: "Style-wise, where does the opening curly brace go in a Rust function declaration?",
+    options: [
+      "On its own line below the declaration",
+      "On the same line as the declaration, with one space before it",
+      "Indented one level below the declaration",
+      "Rust has no brace convention — rustfmt allows either"
+    ],
+    correct: 1,
+    explain: "fn main() { on one line is the idiomatic style; rustfmt enforces this automatically if you run it."
+  },
+  {
+    q: "What is rustfmt, and how does it relate to writing correct programs?",
+    options: [
+      "A linter that blocks compilation on style violations",
+      "An automatic code formatter — a style tool, not a correctness tool",
+      "The macro expander that processes println!",
+      "A required dependency listed in Cargo.toml"
+    ],
+    correct: 1,
+    explain: "rustfmt reformats your code to the standard style; it doesn't affect whether the program compiles or behaves correctly."
+  }
+];
+
+const quizEl = document.getElementById('quiz');
+const scorePill = document.getElementById('score-pill');
+const resultEl = document.getElementById('result');
+const answered = new Array(QUESTIONS.length).fill(false);
+const wasCorrect = new Array(QUESTIONS.length).fill(false);
+
+function renderQuestion(item, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'question';
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = `${idx + 1}. ${item.q}`;
+  wrap.appendChild(qText);
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+
+  const explain = document.createElement('div');
+  explain.className = 'explain';
+  explain.textContent = item.explain;
+
+  item.options.forEach((optText, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = optText;
+    btn.addEventListener('click', () => {
+      if (answered[idx]) return;
+      answered[idx] = true;
+      wasCorrect[idx] = optIdx === item.correct;
+      [...optsWrap.children].forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.correct) b.classList.add('correct');
+        else if (i === optIdx) b.classList.add('incorrect');
+      });
+      explain.classList.add('shown');
+      updateScore();
+    });
+    optsWrap.appendChild(btn);
+  });
+
+  wrap.appendChild(optsWrap);
+  wrap.appendChild(explain);
+  quizEl.appendChild(wrap);
+}
+
+function updateScore() {
+  const done = answered.filter(Boolean).length;
+  scorePill.textContent = `${done} / ${QUESTIONS.length} answered`;
+  if (done === QUESTIONS.length) {
+    const correctCount = wasCorrect.filter(Boolean).length;
+    resultEl.style.display = 'block';
+    resultEl.textContent = `Done — ${correctCount} / ${QUESTIONS.length} correct on the first try per question.`;
+  }
+}
+
+function reset() {
+  quizEl.innerHTML = '';
+  answered.fill(false);
+  wasCorrect.fill(false);
+  resultEl.style.display = 'none';
+  QUESTIONS.forEach(renderQuestion);
+  updateScore();
+}
+
+document.getElementById('reset-btn').addEventListener('click', reset);
+reset();
+</script>
+</body>
+</html>
