@@ -36,7 +36,20 @@ A production-grade marketplace where:
 
 ## 🚀 Setup
 
-Currently being rebuilt from scratch against PostgreSQL. Setup instructions, environment variables, and scripts will return here as that work lands.
+Being rebuilt from scratch against PostgreSQL — app-level setup (install, run, test) will return here once the NestJS side lands. Database is available now:
+
+1. Copy `.env.example` to `.env` and fill in real values
+2. `docker compose up -d` — starts Postgres 16 on `localhost:5432`
+3. Connect with DataGrip (or `psql`) using the `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` values from `.env`
+4. `docker compose down` stops it (data persists in a named volume); `docker compose down -v` also wipes the volume
+
+### Environment variables
+
+| Var | Purpose |
+|---|---|
+| `POSTGRES_USER` | Postgres superuser created on first container boot |
+| `POSTGRES_PASSWORD` | Password for that user |
+| `POSTGRES_DB` | Database created on first container boot |
 
 ---
 
