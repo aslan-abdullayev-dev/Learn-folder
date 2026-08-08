@@ -13,75 +13,19 @@ Handles login and token management. Returns a **JWT access token** and a **refre
 
 ---
 
-### Login Flow
+### Login Flow (business steps)
 
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant AS as AuthService
-    participant US as UsersService
-    participant UVS as UserValidationService
-    participant TS as TokenService
+1. Look up the user by email
+2. Compare password against the stored hash — no match → `401 Invalid credentials`
+3. Check account status against the blocked-status table below — blocked → reject with the matching code/message
+4. Issue an access token + refresh token pair
 
-    C->>AS: POST /auth/login { email, password }
-    AS->>US: findUserForLogin(email)
+### Token Refresh Flow (business steps)
 
-    alt user not found
-        AS-->>C: 401 Invalid credentials
-    end
-
-    AS->>AS: bcrypt.compare(password, hash)
-    alt password mismatch
-        AS-->>C: 401 Invalid credentials
-    end
-
-    AS->>UVS: validateUserStatus(status)
-    alt pending_verification
-        UVS-->>C: 403 Please verify your email
-    else inactive
-        UVS-->>C: 403 Account is inactive
-    else suspended
-        UVS-->>C: 403 Account has been suspended
-    else banned
-        UVS-->>C: 403 Account has been permanently banned
-    else deleted
-        UVS-->>C: 404 Account not found
-    end
-
-    AS->>TS: issueTokenPair(user, userAgent)
-    TS-->>C: 200 { accessToken, refreshToken }
-```
-
----
-
-### Token Refresh Flow
-
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant TS as TokenService
-
-    C->>TS: POST /auth/update-access-token { refreshToken }
-    TS->>TS: findRefreshToken(token)
-
-    alt token not found
-        TS-->>C: 401 UNAUTHORIZED
-    end
-
-    alt is_used = 1 — reuse detected
-        TS->>TS: revokeAllUserTokens(user_id)
-        TS-->>C: 401 UNAUTHORIZED
-    end
-
-    alt token expired
-        TS-->>C: 401 TOKEN_EXPIRED
-    end
-
-    TS->>TS: re-fetch user for fresh permissions
-    TS->>TS: mark old token as used
-    TS->>TS: issue new token pair
-    TS-->>C: 200 { accessToken, refreshToken }
-```
+1. Look up the refresh token — not found → `401 UNAUTHORIZED`
+2. If the token was already used, treat it as a reuse/replay attack — revoke all of that user's tokens, reject with `401 UNAUTHORIZED`
+3. If expired → `401 TOKEN_EXPIRED`
+4. Re-check current permissions, mark the old token used, issue a new pair
 
 ---
 
