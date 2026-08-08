@@ -116,7 +116,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 | Concern | Choice |
 |---|---|
 | Framework | NestJS 11, TypeScript |
-| Database | SQLite via Node's built-in `DatabaseSync` |
+| Database | PostgreSQL — raw SQL only, no ORM |
 | Auth | passport-jwt, bcrypt, uuid |
 | Validation | class-validator |
 | Port | 8181 (default) |
@@ -125,32 +125,20 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 
 ### Key Patterns
 
-- **No ORM** — raw SQL prepared statements via `DatabaseSync` only. Never suggest TypeORM, Prisma, or any ORM.
+- **No ORM** — raw SQL prepared statements only. Never suggest TypeORM, Prisma, or any ORM.
 - **Soft deletes** — `is_deleted` flag. Never hard delete.
 - **Closure table** — hierarchical categories via `category_ancestors`
 - **Global guards** — `JwtAuthGuard` + `PermissionsGuard` applied via `APP_GUARD`
 - **Public routes** — `@IsPublic()` bypasses JWT; `@RequirePermission()` for permission checks
 - **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
-- **Permissions** — seeded via `npm run seed:permissions` (scans `*.permissions.ts`); named `module:action`
-- **Test DB** — `DB_NAME=test_db`; uses `database/test_db` file; schema from `database/schema.sql` — never defined inline in spec files
+- **Permissions** — named `module:action`; seeding approach to be redecided during rebuild (previously a standalone script)
+- **Schema single source of truth** — table structure defined once in one file, never inline in spec files or services; exact file/location pending rebuild
 
 ---
 
-### Database Files
+### Database Files & Schema Management
 
-| Env | File |
-|---|---|
-| Production | `database/db` |
-| Test | `database/test_db` |
-
-### Schema Management
-
-`database/schema.sql` is the single source of truth for all DDL. Never define table structure anywhere else — not in spec files, not inline in services.
-
-| Command | When to use |
-|---|---|
-| `npm run db:init` | Adding new tables — safe, skips existing |
-| `npm run db:reset` | Changing existing table structure — drops all and rebuilds |
+Pending rebuild — connection config, schema file location, and dev/test database strategy are being redesigned against PostgreSQL by the user directly. See Decisions → 2026-08-08 Reset. Update this section once decided.
 
 Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run db:reset` → tests pick it up automatically.
 
