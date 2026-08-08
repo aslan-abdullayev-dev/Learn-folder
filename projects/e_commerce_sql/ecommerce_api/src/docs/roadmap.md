@@ -25,7 +25,7 @@ Phases in build order. Each section moves out when that phase starts.
 - The platform company tracks stock across physical storage locations and shops
 
 **Technical constraints:**
-- Reservation must be atomic — race conditions on stock updates must be handled (SQLite locking or retry logic)
+- Reservation must be atomic — race conditions on stock updates must be handled (row-level locking or retry logic)
 - Stock changes are append-only events (debit/credit) — current level is derived, not stored directly, or cached via a running total column
 - Low-stock threshold is per-variant, not global
 

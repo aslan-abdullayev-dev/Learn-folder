@@ -1,6 +1,6 @@
 # 🛒 ecommerce-api
 
-A full-featured multi-vendor e-commerce platform API built from scratch with NestJS and raw SQLite — no ORM, no shortcuts. Every query is a hand-written prepared statement. Built as a deep-dive into backend architecture and SQL.
+A full-featured multi-vendor e-commerce platform API built from scratch with NestJS and raw SQL — no ORM, no shortcuts. Every query is a hand-written prepared statement. Built as a deep-dive into backend architecture and SQL.
 
 ---
 
@@ -23,7 +23,7 @@ A production-grade marketplace where:
 | Concern | Choice |
 |---|---|
 | Framework | NestJS 11, TypeScript |
-| Database | SQLite via Node's built-in `DatabaseSync` — raw SQL only |
+| Database | PostgreSQL — raw SQL only, no ORM |
 | Auth | passport-jwt, bcrypt |
 | Real-time | WebSockets |
 | Background jobs | BullMQ, cron |
@@ -36,44 +36,7 @@ A production-grade marketplace where:
 
 ## 🚀 Setup
 
-```bash
-npm install
-```
-
-Create a `.env` file in the project root:
-
-```env
-JWT_SECRET=your_jwt_secret
-SUPER_ADMIN_EMAIL=your_admin_email@example.com
-DB_NAME=db
-```
-
----
-
-## 🔑 Environment Variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `JWT_SECRET` | Yes | Signs JWT access tokens. App throws on startup if missing. |
-| `SUPER_ADMIN_EMAIL` | Yes | Receives superAdmin role when running the seed script. |
-| `DB_NAME` | No | Database filename under `database/`. Defaults to `db`. Use `test_db` for tests. |
-
----
-
-## 📜 Scripts
-
-| Command | Description |
-|---|---|
-| `npm run start:dev` | Start with file watching |
-| `npm run start:prod` | Run compiled output |
-| `npm run build` | Compile TypeScript |
-| `npm test` | Run all tests against `test_db` |
-| `npm run test:watch` | Tests in watch mode |
-| `npm run seed:permissions` | Seed permissions and assign superAdmin to `SUPER_ADMIN_EMAIL` |
-| `npm run db:init` | Create all tables from `database/schema.sql` (safe, skips existing) |
-| `npm run db:reset` | Drop all tables and recreate from schema — dev only |
-| `npm run format` | Prettier format |
-| `npm run lint` | ESLint fix |
+Currently being rebuilt from scratch against PostgreSQL. Setup instructions, environment variables, and scripts will return here as that work lands.
 
 ---
 
@@ -81,8 +44,8 @@ DB_NAME=db
 
 | # | Module | Status |
 |---|---|---|
-| 1 | Auth & Users | ✅ Complete |
-| 2 | Categories | 🔄 In Progress |
+| 1 | Auth & Users | 📋 Planned |
+| 2 | Categories | 📋 Planned |
 | 3 | Inventory | 📋 Planned |
 | 4 | Customer Profiles | 📋 Planned |
 | 5 | Cart & Orders | 📋 Planned |
