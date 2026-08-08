@@ -93,8 +93,8 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 
 | Phase | Module | Status |
 |---|---|---|
-| 1 | Auth & Users | ✅ Complete |
-| 2 | Categories | 🔄 In Progress |
+| 1 | Auth & Users | 🔁 Restarting — source wiped, docs intact, rebuilding against PostgreSQL |
+| 2 | Categories | 🔁 Restarting — source wiped, docs intact, rebuilding against PostgreSQL |
 | 3 | Inventory | Not started |
 | 4 | Customer Profiles | Not started |
 | 5 | Cart & Orders | Not started |
@@ -290,6 +290,9 @@ External-facing only. Contains: description, tech stack, setup, env vars, script
 
 ### No ORM
 Raw SQL only — intentional for SQL practice. Never suggest an ORM regardless of complexity.
+
+### 2026-08-08 Reset: SQLite → PostgreSQL
+Project paused for several months; on resuming, all source code was deleted (`src/**/*.ts`, `database/*.ts`, `database/schema.sql`, `database/db`, `database/test_db`, `scripts/*.ts`) and will be rebuilt from scratch against **PostgreSQL** instead of SQLite. Git history and every markdown doc (business + technical, per module) were kept untouched as the spec to rebuild against. The Postgres connection layer, Docker setup, and schema are being written by the user directly as the relearning exercise — do not pre-build `docker-compose.yml`, a `DatabaseModule`/`DatabaseService`, or `schema.sql` unless explicitly asked. `database/documentation/database.md` still describes the old synchronous `DatabaseSync` pattern and is stale until the new DB layer exists — update it once the user has built the replacement.
 
 ### Microservices End Goal
 The monolith is the starting point, not the end state. Once the monolith is sufficiently stable (after Cart & Orders or Payments), remind the user to plan the microservices migration. Each major module becomes a separate NestJS service; RabbitMQ is the transport layer. Keep module boundaries clean and avoid cross-module direct imports to make the eventual split easier.
