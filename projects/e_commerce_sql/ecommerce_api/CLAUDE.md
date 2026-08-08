@@ -91,10 +91,12 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 
 Multi-vendor e-commerce platform. **Learning project** — phases tackled one at a time to practice raw SQL and backend architecture.
 
+**Current state (2026-08-08):** Full reset, twice over. First pass wiped all source code but kept docs (see Decisions). Same day, the user deleted every remaining doc too (`core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md`) — a deliberate choice, not an accident. **Only this `CLAUDE.md` and `README.md` exist right now.** `src/` is empty. The Reading Guide and Module Doc Links below describe the intended structure for when docs get recreated — none of those files currently exist, so don't try to read or reference them until they're written fresh.
+
 | Phase | Module | Status |
 |---|---|---|
-| 1 | Auth & Users | 🔁 Restarting — source wiped, docs intact, rebuilding against PostgreSQL |
-| 2 | Categories | 🔁 Restarting — source wiped, docs intact, rebuilding against PostgreSQL |
+| 1 | Auth & Users | Not started — full reset, no docs or code |
+| 2 | Categories | Not started — full reset, no docs or code |
 | 3 | Inventory | Not started |
 | 4 | Customer Profiles | Not started |
 | 5 | Cart & Orders | Not started |
@@ -105,6 +107,16 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 | 10 | Audit Logs | Not started |
 | 11 | Reporting | Not started |
 | — | Vendors, Campaigns, Search, Analytics | Future |
+
+---
+
+### Local Dev Environment (as of 2026-08-08)
+
+- Working on git branch `ecommerce_api` — kept separate from `main`, which carries unrelated changes from other projects in this monorepo
+- Docker Desktop installed and confirmed running (`docker ps` works)
+- DataGrip installed (chosen over pgAdmin — user already uses DataGrip at work, direct skill transfer)
+- PostgreSQL will run via **Docker Compose**, not Homebrew/Postgres.app — decided so it scales cleanly once Redis/RabbitMQ/Meilisearch join later (see Tech Stack)
+- **Not yet created:** `docker-compose.yml`, any `DatabaseModule`/`DatabaseService`, `schema.sql`. The user is writing `docker-compose.yml` themselves as the relearning exercise — it needs: `services:`, a service name, `image: postgres:16`, `environment:` (user/password/db name), `ports: "5432:5432"`, `volumes:` for persistence. **Do not write this file, or any DB layer code, unless explicitly asked** — same constraint as the Decisions entry below.
 
 ---
 ---
@@ -282,6 +294,9 @@ Raw SQL only — intentional for SQL practice. Never suggest an ORM regardless o
 ### 2026-08-08 Reset: SQLite → PostgreSQL
 Project paused for several months; on resuming, all source code and the entire `database/` directory were deleted, and every module's technical doc (`<name>.tech.md`) was trimmed back to a target design (endpoints/DTOs + Planned) — implementation specifics that described the old SQLite build (schema, example payloads, flow diagrams with literal queries, file structure, gotchas) were removed since they no longer apply and shouldn't bias the rebuild. Business docs (`<name>.md`) and `roadmap.md` were kept as-is — they capture product/business intent, not implementation, and remain valid regardless of engine. Rebuilding from scratch against **PostgreSQL**. The Postgres connection layer, Docker setup, and schema are being written by the user directly as the relearning exercise — do not pre-build `docker-compose.yml`, a `DatabaseModule`/`DatabaseService`, or `schema.sql` unless explicitly asked.
 
+### 2026-08-08 Full Reset: All Docs Deleted Too
+Same day as the reset above, the user went further and deleted every remaining doc — `core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md` — not just source code. This followed a review pass where several business docs turned out to still contain previous-implementation detail (exact deleted class/decorator names like `JwtAuthGuard`, `@IsPublic()` in sequence diagrams and prose) despite earlier trimming — rather than keep chasing leftover implementation detail doc-by-doc, the user chose to restart documentation from zero alongside the code. This was deliberate, not accidental. Only `CLAUDE.md` and `README.md` remain. Do not attempt to reconstruct or restore any deleted doc from memory or git history — when a module is picked up again, write its docs fresh, informed by conversation with the user at that time.
+
 ### Microservices End Goal
 The monolith is the starting point, not the end state. Once the monolith is sufficiently stable (after Cart & Orders or Payments), remind the user to plan the microservices migration. Each major module becomes a separate NestJS service; RabbitMQ is the transport layer. Keep module boundaries clean and avoid cross-module direct imports to make the eventual split easier.
 
@@ -314,4 +329,4 @@ The API should remain frontend-friendly — clean response shapes, proper error 
 - Convert Key Patterns bullet list to a table (violates own "tables over bullet lists" rule)
 - Create `src/docs/testing.md` — testing strategy, setup, spec patterns, example
 - Create `src/docs/permissions.md` — permissions file structure, naming convention, how to add a new permission
-- Resolve stock reservation timing contradiction in roadmap: Phase 3 says "during checkout", Phase 5 says "at cart-add" — decide and align both
+- When `roadmap.md` is recreated: watch for a stock reservation timing contradiction between Inventory and Cart & Orders phases (checkout-time vs cart-add-time reservation) — decide and align both when writing that scope
