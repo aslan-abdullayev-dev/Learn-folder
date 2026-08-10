@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,17 +9,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000;
 
-  const config = new DocumentBuilder()
-    .setTitle('Dev Match API')
-    .setVersion('1.0')
-    .addServer(`http://localhost:${port}`)
-    .build();
-  const document = SwaggerModule.createDocument(app, config, {
-    operationIdFactory: (_controllerKey: string, methodKey: string) => methodKey,
-  });
-  SwaggerModule.setup('api', app, document, {
-    swaggerOptions: { defaultModelsExpandDepth: -1 },
-  });
+  setupSwagger(app, port);
 
   await app.listen(port);
 }
