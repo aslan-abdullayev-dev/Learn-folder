@@ -13,7 +13,7 @@ export function setupSwagger(app: INestApplication, port: number | string) {
       methodKey,
   });
 
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('swagger', app, document, {
     swaggerOptions: { defaultModelsExpandDepth: -1, docExpansion: 'none' },
   });
 }

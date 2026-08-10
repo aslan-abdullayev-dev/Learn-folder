@@ -1,11 +1,3 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ProfileBodyDto } from './profile-body.dto';
 
-export class CreateProfileDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-}
+export class CreateProfileDto extends ProfileBodyDto {}
