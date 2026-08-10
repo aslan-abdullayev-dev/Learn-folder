@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -51,4 +54,8 @@ export class ProfilesController {
   ): UpdateProfileStatusResponseDto {
     return { id: params.id, status: data.status };
   }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param() _params: FindOneProfileDto) {}
 }
