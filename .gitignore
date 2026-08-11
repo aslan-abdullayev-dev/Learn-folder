@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
+projects/dev_match_nestjs_fcc/data/
 
 # Editor directories and files
 .vscode/*

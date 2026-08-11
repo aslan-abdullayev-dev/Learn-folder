@@ -1,8 +1,8 @@
 import { ProfileStatus } from '../enums/profile-status.enum';
 
-export interface ProfileDomain {
+export type UpdateProfileServiceInterface = {
   id: string;
   name: string;
   description: string;
   status: ProfileStatus;
-}
+};
