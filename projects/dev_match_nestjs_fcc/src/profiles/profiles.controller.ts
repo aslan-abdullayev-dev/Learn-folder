@@ -31,8 +31,12 @@ export class ProfilesController {
   }
 
   @Get(':id')
-  findOne(@Param() params: FindOneProfileDto): FindOneProfileResponseDto {
-    return { id: params.id };
+  findOne(
+    @Param() params: FindOneProfileDto,
+  ): FindOneProfileResponseDto | null {
+    const res = this.profilesService.findOne(params.id);
+    if (!res) return null;
+    return res;
   }
 
   @Post()
@@ -45,7 +49,11 @@ export class ProfilesController {
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileDto,
   ): UpdateProfileResponseDto {
-    return { id: params.id, name: data.name, description: data.description };
+    return {
+      id: Number(params.id),
+      name: data.name,
+      description: data.description,
+    };
   }
 
   @Patch(':id/status')
@@ -53,7 +61,7 @@ export class ProfilesController {
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileStatusDto,
   ): UpdateProfileStatusResponseDto {
-    return { id: params.id, status: data.status };
+    return { id: Number(params.id), status: data.status };
   }
 
   @Delete(':id')

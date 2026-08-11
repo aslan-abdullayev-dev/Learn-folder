@@ -1,3 +1,5 @@
 export class FindOneProfileResponseDto {
-  id: number;
+  id: string;
+  name: string;
+  description: string;
 }

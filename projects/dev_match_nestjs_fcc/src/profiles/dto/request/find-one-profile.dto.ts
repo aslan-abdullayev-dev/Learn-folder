@@ -1,8 +1,7 @@
-import { Type } from 'class-transformer';
-import { IsInt } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class FindOneProfileDto {
-  @Type(() => Number)
-  @IsInt()
-  id: number;
+  @IsString()
+  @IsNotEmpty()
+  id: string;
 }
