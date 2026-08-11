@@ -11,7 +11,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateProfileDto } from './dto/request/create-profile.dto';
-import { CreateProfileResponseDto } from './dto/response/create-profile-response.dto';
 import { FindAllProfilesResponseDto } from './dto/response/find-all-profiles-response.dto';
 import { FindOneProfileDto } from './dto/request/find-one-profile.dto';
 import { FindOneProfileResponseDto } from './dto/response/find-one-profile-response.dto';
@@ -40,8 +39,11 @@ export class ProfilesController {
   }
 
   @Post()
-  create(@Body() data: CreateProfileDto): CreateProfileResponseDto {
-    return { name: data.name, description: data.description };
+  create(@Body() data: CreateProfileDto): FindOneProfileResponseDto | null {
+    const newProfileId = this.profilesService.create(data);
+    const res = this.profilesService.findOne(newProfileId);
+    if (!res) return null;
+    return res;
   }
 
   @Put(':id')
