@@ -28,56 +28,40 @@ export class ProfilesController {
   }
 
   @Get(':id')
-  findOne(
-    @Param() params: FindOneProfileDto,
-  ): FindOneProfileResponseDto | null {
-    const res = this.profilesService.findOne(params.id);
-    if (!res) return null;
-    return res;
+  findOne(@Param() params: FindOneProfileDto): FindOneProfileResponseDto {
+    return this.profilesService.findOne(params.id);
   }
 
   @Post()
   async create(
     @Body() data: CreateProfileDto,
-  ): Promise<FindOneProfileResponseDto | null> {
+  ): Promise<FindOneProfileResponseDto> {
     const newProfileId = await this.profilesService.create(data);
-    const res = this.profilesService.findOne(newProfileId);
-    if (!res) return null;
-    return res;
+    return this.profilesService.findOne(newProfileId);
   }
 
   @Put(':id')
   async update(
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileDto,
-  ): Promise<FindOneProfileResponseDto | null> {
+  ): Promise<FindOneProfileResponseDto> {
     const updatedId = await this.profilesService.update({
       ...data,
       id: params.id,
     });
-    if (updatedId) {
-      const res = this.profilesService.findOne(updatedId);
-      if (!res) return null;
-      return res;
-    }
-    return null;
+    return this.profilesService.findOne(updatedId);
   }
 
   @Patch(':id/status')
   async updateStatus(
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileStatusDto,
-  ): Promise<FindOneProfileResponseDto | null> {
+  ): Promise<FindOneProfileResponseDto> {
     const updatedId = await this.profilesService.updateStatus({
       id: params.id,
       status: data.status,
     });
-    if (updatedId) {
-      const res = this.profilesService.findOne(updatedId);
-      if (!res) return null;
-      return res;
-    }
-    return null;
+    return this.profilesService.findOne(updatedId);
   }
 
   @Delete(':id')

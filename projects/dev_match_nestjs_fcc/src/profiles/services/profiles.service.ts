@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { CreateProfileServiceInterface } from '../interfaces/create-profile-service.interface';
 import { ProfileDomain } from '../interfaces/profile-domain.interface';
@@ -22,7 +22,9 @@ export class ProfilesService implements OnModuleInit {
   }
 
   findOne(id: string) {
-    return this.profiles.find((profile) => profile.id === id);
+    const matchingProfile = this.profiles.find((profile) => profile.id === id);
+    if (!matchingProfile) throw new NotFoundException();
+    return matchingProfile;
   }
 
   async create(body: CreateProfileServiceInterface): Promise<string> {
@@ -32,27 +34,27 @@ export class ProfilesService implements OnModuleInit {
     return uuid;
   }
 
-  async update(body: UpdateProfileServiceInterface): Promise<string | null> {
+  async update(body: UpdateProfileServiceInterface): Promise<string> {
     const target = this.profiles.findIndex((profile) => profile.id === body.id);
     if (target > -1) {
       this.profiles[target] = { ...body };
       await this.storage.write(this.profiles);
       return body.id;
     } else {
-      return null;
+      throw new NotFoundException();
     }
   }
 
   async updateStatus(
     body: UpdateProfileStatusServiceInterface,
-  ): Promise<string | null> {
+  ): Promise<string> {
     const target = this.profiles.findIndex((profile) => profile.id === body.id);
     if (target > -1) {
       this.profiles[target].status = body.status;
       await this.storage.write(this.profiles);
       return body.id;
     } else {
-      return null;
+      throw new NotFoundException();
     }
   }
 
@@ -61,6 +63,8 @@ export class ProfilesService implements OnModuleInit {
     if (target > -1) {
       this.profiles.splice(target, 1);
       await this.storage.write(this.profiles);
+    } else {
+      throw new NotFoundException();
     }
   }
 }
