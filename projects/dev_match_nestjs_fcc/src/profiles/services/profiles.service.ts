@@ -55,4 +55,12 @@ export class ProfilesService implements OnModuleInit {
       return null;
     }
   }
+
+  async remove(id: string) {
+    const target = this.profiles.findIndex((profile) => profile.id === id);
+    if (target > -1) {
+      this.profiles.splice(target, 1);
+      await this.storage.write(this.profiles);
+    }
+  }
 }

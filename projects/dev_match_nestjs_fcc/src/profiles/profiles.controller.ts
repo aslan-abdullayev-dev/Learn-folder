@@ -82,5 +82,7 @@ export class ProfilesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param() _params: FindOneProfileDto) {}
+  async remove(@Param() params: FindOneProfileDto) {
+    await this.profilesService.remove(params.id);
+  }
 }
