@@ -16,7 +16,6 @@ import { FindOneProfileDto } from './dto/request/find-one-profile.dto';
 import { FindOneProfileResponseDto } from './dto/response/find-one-profile-response.dto';
 import { UpdateProfileDto } from './dto/request/update-profile.dto';
 import { UpdateProfileStatusDto } from './dto/request/update-profile-status.dto';
-import { UpdateProfileStatusResponseDto } from './dto/response/update-profile-status-response.dto';
 import { ProfilesService } from './services/profiles.service';
 
 @Controller('profiles')
@@ -57,7 +56,7 @@ export class ProfilesController {
       id: params.id,
     });
     if (updatedId) {
-      const res = this.profilesService.findOne(params.id);
+      const res = this.profilesService.findOne(updatedId);
       if (!res) return null;
       return res;
     }
@@ -65,11 +64,20 @@ export class ProfilesController {
   }
 
   @Patch(':id/status')
-  updateStatus(
+  async updateStatus(
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileStatusDto,
-  ): UpdateProfileStatusResponseDto {
-    return { id: Number(params.id), status: data.status };
+  ): Promise<FindOneProfileResponseDto | null> {
+    const updatedId = await this.profilesService.updateStatus({
+      id: params.id,
+      status: data.status,
+    });
+    if (updatedId) {
+      const res = this.profilesService.findOne(updatedId);
+      if (!res) return null;
+      return res;
+    }
+    return null;
   }
 
   @Delete(':id')

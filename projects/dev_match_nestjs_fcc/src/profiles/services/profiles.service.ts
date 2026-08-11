@@ -5,6 +5,7 @@ import { ProfileDomain } from '../interfaces/profile-domain.interface';
 import { UpdateProfileServiceInterface } from '../interfaces/update-profile-service.interface';
 import { ProfileStatus } from '../enums/profile-status.enum';
 import { ProfilesStorageService } from './profiles-storage.service';
+import { UpdateProfileStatusServiceInterface } from '../interfaces/update-profile-status-service.interface';
 
 @Injectable()
 export class ProfilesService implements OnModuleInit {
@@ -35,6 +36,19 @@ export class ProfilesService implements OnModuleInit {
     const target = this.profiles.findIndex((profile) => profile.id === body.id);
     if (target > -1) {
       this.profiles[target] = { ...body };
+      await this.storage.write(this.profiles);
+      return body.id;
+    } else {
+      return null;
+    }
+  }
+
+  async updateStatus(
+    body: UpdateProfileStatusServiceInterface,
+  ): Promise<string | null> {
+    const target = this.profiles.findIndex((profile) => profile.id === body.id);
+    if (target > -1) {
+      this.profiles[target].status = body.status;
       await this.storage.write(this.profiles);
       return body.id;
     } else {
