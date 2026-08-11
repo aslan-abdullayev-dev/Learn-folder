@@ -1,3 +1,5 @@
 export class FindAllProfilesResponseDto {
-  location: string;
+  id: string;
+  name: string;
+  description: string;
 }

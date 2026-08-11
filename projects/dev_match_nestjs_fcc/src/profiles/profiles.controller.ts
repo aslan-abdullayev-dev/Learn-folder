@@ -9,11 +9,9 @@ import {
   Patch,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { CreateProfileDto } from './dto/request/create-profile.dto';
 import { CreateProfileResponseDto } from './dto/response/create-profile-response.dto';
-import { FindAllProfilesDto } from './dto/request/find-all-profiles.dto';
 import { FindAllProfilesResponseDto } from './dto/response/find-all-profiles-response.dto';
 import { FindOneProfileDto } from './dto/request/find-one-profile.dto';
 import { FindOneProfileResponseDto } from './dto/response/find-one-profile-response.dto';
@@ -21,12 +19,15 @@ import { UpdateProfileDto } from './dto/request/update-profile.dto';
 import { UpdateProfileResponseDto } from './dto/response/update-profile-response.dto';
 import { UpdateProfileStatusDto } from './dto/request/update-profile-status.dto';
 import { UpdateProfileStatusResponseDto } from './dto/response/update-profile-status-response.dto';
+import { ProfilesService } from './profiles.service';
 
 @Controller('profiles')
 export class ProfilesController {
+  constructor(private readonly profilesService: ProfilesService) {}
+
   @Get()
-  findAll(@Query() query: FindAllProfilesDto): FindAllProfilesResponseDto[] {
-    return [{ location: query.location }];
+  findAll(): FindAllProfilesResponseDto[] {
+    return this.profilesService.findAll();
   }
 
   @Get(':id')
