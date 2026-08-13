@@ -17,6 +17,7 @@ import { FindOneProfileResponseDto } from './dto/response/find-one-profile-respo
 import { UpdateProfileDto } from './dto/request/update-profile.dto';
 import { UpdateProfileStatusDto } from './dto/request/update-profile-status.dto';
 import { ProfilesService } from './services/profiles.service';
+import { ApiNotFoundResponse } from '@nestjs/swagger';
 
 @Controller('profiles')
 export class ProfilesController {
@@ -28,6 +29,7 @@ export class ProfilesController {
   }
 
   @Get(':id')
+  @ApiNotFoundResponse({ description: 'Profile not found' })
   findOne(@Param() params: FindOneProfileDto): FindOneProfileResponseDto {
     return this.profilesService.findOne(params.id);
   }
@@ -41,6 +43,7 @@ export class ProfilesController {
   }
 
   @Put(':id')
+  @ApiNotFoundResponse({ description: 'Profile not found' })
   async update(
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileDto,
@@ -53,6 +56,7 @@ export class ProfilesController {
   }
 
   @Patch(':id/status')
+  @ApiNotFoundResponse({ description: 'Profile not found' })
   async updateStatus(
     @Param() params: FindOneProfileDto,
     @Body() data: UpdateProfileStatusDto,
@@ -66,6 +70,7 @@ export class ProfilesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNotFoundResponse({ description: 'Profile not found' })
   async remove(@Param() params: FindOneProfileDto) {
     await this.profilesService.remove(params.id);
   }
