@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { CreateProfileServiceInterface } from '../interfaces/create-profile-service.interface';
 import { ProfileDomain } from '../interfaces/profile-domain.interface';
@@ -6,6 +6,7 @@ import { UpdateProfileServiceInterface } from '../interfaces/update-profile-serv
 import { ProfileStatus } from '../enums/profile-status.enum';
 import { ProfilesStorageService } from './profiles-storage.service';
 import { UpdateProfileStatusServiceInterface } from '../interfaces/update-profile-status-service.interface';
+import { ProfileNotFoundError } from '../errors/profile-not-found.error';
 
 @Injectable()
 export class ProfilesService implements OnModuleInit {
@@ -23,7 +24,7 @@ export class ProfilesService implements OnModuleInit {
 
   findOne(id: string) {
     const matchingProfile = this.profiles.find((profile) => profile.id === id);
-    if (!matchingProfile) throw new NotFoundException();
+    if (!matchingProfile) throw new ProfileNotFoundError();
     return matchingProfile;
   }
 
@@ -41,7 +42,7 @@ export class ProfilesService implements OnModuleInit {
       await this.storage.write(this.profiles);
       return body.id;
     } else {
-      throw new NotFoundException();
+      throw new ProfileNotFoundError();
     }
   }
 
@@ -54,7 +55,7 @@ export class ProfilesService implements OnModuleInit {
       await this.storage.write(this.profiles);
       return body.id;
     } else {
-      throw new NotFoundException();
+      throw new ProfileNotFoundError();
     }
   }
 
@@ -64,7 +65,7 @@ export class ProfilesService implements OnModuleInit {
       this.profiles.splice(target, 1);
       await this.storage.write(this.profiles);
     } else {
-      throw new NotFoundException();
+      throw new ProfileNotFoundError();
     }
   }
 }
