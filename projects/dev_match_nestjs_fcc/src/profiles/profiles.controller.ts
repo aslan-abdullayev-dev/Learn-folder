@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateProfileDto } from './dto/request/create-profile.dto';
 import { FindAllProfilesResponseDto } from './dto/response/find-all-profiles-response.dto';
@@ -20,8 +21,10 @@ import { UpdateProfileStatusDto } from './dto/request/update-profile-status.dto'
 import { ProfilesService } from './services/profiles.service';
 import { ApiNotFoundResponse } from '@nestjs/swagger';
 import { ProfileNotFoundError } from './errors/profile-not-found.error';
+import { ProfilesGuard } from './profiles.guard';
 
 @Controller('profiles')
+@UseGuards(ProfilesGuard)
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
