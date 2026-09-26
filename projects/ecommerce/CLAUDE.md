@@ -130,9 +130,8 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 
 | # | Next step | Ticket | Notes |
 |---|---|---|---|
-| 1 | User reviews PLAT-7 output, then Claude moves it to Done | PLAT-7 (In Review) | Review `docs/adr/` + CLAUDE.md → For Claude → Task management |
-| 2 | Commit the uncommitted work — **only when the user asks** | PLAT-1 (Done), PLAT-7 | Everything since the flatten is staged/untracked, nothing committed. Suggested: `PLAT-1: flatten project structure`, then `PLAT-7: ADRs, Definition of Ready/Done, task management rules` (incl. untracked `docs/`) |
-| 3 | Start PLAT-2 Split Compose — most important this sprint | PLAT-2 (To Do) | Unblocks IDN-3 and PLAT-3. Flow: In Progress → branch `PLAT-2-compose-split` → work → `/code-review` → In Review → commit → Done |
+| ✅ | PLAT-1 and PLAT-7 Done, committed (`2d2db66`, `4575d6b`) and pushed to `origin/ecommerce_api` | | Commit style: `Type(KEY-N): message`, e.g. `Chore(PLAT-1): …`, `Docs(PLAT-7): …` |
+| 3 | Start PLAT-2 Split Compose — most important this sprint | PLAT-2 (To Do) | **Scope: ONLY move the Postgres service + `pgdata` volume (keep `name: ecommerce_api_pgdata`) into `infra/compose.yaml`, move `POSTGRES_*` env to `infra/.env`/`.env.example`, and replace root `docker-compose.yml` with a `compose.yaml` containing only `include: [infra/compose.yaml]`.** No per-service compose files — auth's is IDN-3, gateway's is PLAT-4. Follow the acceptance criteria in the Jira ticket. Unblocks IDN-3 and PLAT-3. Flow: In Progress → branch `PLAT-2-compose-split` → work → `/code-review` → In Review → commit → Done |
 | 4 | Decide "Auth and Users: one service or two?" → ADR 0011 + follow-up tickets | IDN-1 | Must happen before IDN-2 (decides which tables exist) |
 | 5 | Then in parallel: PLAT-3 init script (user writes), IDN-2 auth schema (user writes), IDN-4 docs sweep (Claude can do) | | IDN-3 stays in backlog, labelled `blocked`, until PLAT-2 is Done |
 
