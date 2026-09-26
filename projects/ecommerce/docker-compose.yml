@@ -12,3 +12,6 @@ services:
 
 volumes:
   pgdata:
+    # pinned: Compose prefixes volumes with the folder name; the project folder was
+    # renamed ecommerce_api -> ecommerce, so pin the original name to keep existing data
+    name: ecommerce_api_pgdata

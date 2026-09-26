@@ -113,6 +113,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 ### Local Dev Environment (as of 2026-08-08)
 
 - Working on git branch `ecommerce_api` — kept separate from `main`, which carries unrelated changes from other projects in this monorepo
+- **Project root is `Learn-folder/projects/ecommerce/` (flattened 2026-09-25)** — previously `projects/e_commerce_sql/ecommerce_api/`; the outer `e_commerce_sql/` wrapper held nothing else and was removed, along with nested per-folder `.idea/` dirs (open the IDE at the project root only). Compose volume name pinned to `ecommerce_api_pgdata` in `docker-compose.yml` so the existing Postgres data survives the rename. The git branch keeps its `ecommerce_api` name.
 - Docker Desktop installed and confirmed running (`docker ps` works)
 - DataGrip installed (chosen over pgAdmin — user already uses DataGrip at work, direct skill transfer)
 - PostgreSQL runs via **Docker Compose**, not Homebrew/Postgres.app — decided so it scales cleanly once Redis/RabbitMQ/Meilisearch join later (see Tech Stack)
@@ -147,7 +148,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 - **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
 - **Permissions** — named `module:action`; seeding approach to be redecided during rebuild (previously a standalone script)
 - **Schema single source of truth** — table structure defined once in one file, never inline in spec files or services; exact file/location pending rebuild
-- **No shared code between services** — no `libs/` folder, categorically. Each service (`apps/<name>`) has its own DTOs, interceptors, `ApiResponse` wrapper rather than importing shared internal packages. Deliberate — see Decisions → Microservices Architecture. (Auth is not part of this: JWT verification happens once, centrally, at the Gateway — it's not per-service code at all, so there's nothing to duplicate or share for that piece.)
+- **No shared code between services** — no `libs/` folder, categorically. Each service (`backend/<name>/`) has its own DTOs, interceptors, `ApiResponse` wrapper rather than importing shared internal packages. Deliberate — see Decisions → Microservices Architecture. (Auth is not part of this: JWT verification happens once, centrally, at the Gateway — it's not per-service code at all, so there's nothing to duplicate or share for that piece.)
 - **Module DB isolation, technically enforced** — one Postgres container, one database per service (e.g. `auth_db`, `users_db`), each with its own dedicated role granted `CONNECT` only on its own database (public `CONNECT` revoked). Postgres connections are scoped to exactly one database with no cross-database query syntax available by default — so cross-service table access is blocked structurally and by permissions, not just by convention
 
 ---
@@ -311,20 +312,35 @@ Same day as the reset above, the user went further and deleted every remaining d
 - **Database isolation, technically enforced:** one Postgres container, one database per service (e.g. `auth_db`, `users_db`), each with its own dedicated role granted `CONNECT` only on its own database (public `CONNECT` revoked). See Key Patterns → Module DB isolation for the full mechanism.
 - RabbitMQ remains the event transport for async communication between services once needed.
 
+### Folder Layout (decided 2026-09-25)
+```
+ecommerce/                 project root — CLAUDE.md, README.md, docker-compose.yml, .env(.example), single .idea/
+├── backend/               one independent NestJS project per service
+│   ├── gateway/           single entry point for both frontends; JWT verified here
+│   ├── auth/              (exists)
+│   └── <service>/         users, catalog, orders, ... as phases land
+├── frontend/              one independent project per app — frontends call only the gateway
+│   ├── crm/               Angular, internal operators
+│   └── storefront/        customer-facing, very low priority
+└── infra/
+    └── postgres/init/     mounted to /docker-entrypoint-initdb.d — CREATE DATABASE + role per service
+```
+No `packages/`/`libs/` — consistent with zero shared code. Folders are created when their work actually starts, not pre-scaffolded empty.
+
 ### CRM Side Project
 Do not start the CRM until **Categories**, **Inventory/Products**, and **Customer Profiles** are complete. Those three phases establish the repeatable patterns needed to start a new project confidently. Customer Profiles maps directly to CRM concepts and is the natural bridge.
 
-CRM is a separate Angular project — a frontend that consumes `ecommerce-api` directly. No separate CRM backend.
+CRM is a separate Angular project (`frontend/crm/`) — a frontend that consumes the API through the gateway. No separate CRM backend.
 
 ### Naming Convention
 DB columns use `snake_case`. DTO fields and API response properties use `camelCase`. Mapping happens in the service layer — never return raw DB column names to the client.
 
 ### Frontend Plan
-`ecommerce-api` serves all consumers:
-- **CRM** — Angular frontend, for internal operators. Start after Categories + Inventory + Customer Profiles.
-- **Customer-facing ecommerce frontend** — not planned.
+The backend (via the gateway) serves two frontends, both living in this repo under `frontend/`:
+- **CRM** (`frontend/crm/`) — Angular frontend, for internal operators. Start after Categories + Inventory + Customer Profiles.
+- **Customer storefront** (`frontend/storefront/`) — planned (revised 2026-09-25, previously "not planned"), **very low priority** — after the CRM. Framework not decided yet.
 
-No NextJS or other frontend frameworks planned. Angular is the chosen frontend for the CRM.
+Angular is the chosen frontend for the CRM.
 
 The API should remain frontend-friendly — clean response shapes, proper error codes, pagination-ready endpoints.
 
