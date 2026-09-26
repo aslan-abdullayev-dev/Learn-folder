@@ -53,7 +53,7 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 | Planned business feature added or changed | `<name>.md` → Planned → Business (or `src/docs/roadmap.md` if no doc yet) |
 | Planned technical item added or changed | `<name>.tech.md` → Planned → Technical (or `src/docs/roadmap.md` if no doc yet) |
 | Scope decided for unstarted module | `src/docs/roadmap.md` → its phase or future section |
-| Architectural decision made | CLAUDE.md → Architecture or Decisions |
+| Architectural decision made | New ADR in `docs/adr/` + row in CLAUDE.md → Decisions index + `docs/adr/README.md` |
 | Global convention established | CLAUDE.md → Architecture → Key Patterns |
 | Phase started | CLAUDE.md → Project Status; create module docs; move roadmap section |
 | Phase completed | CLAUDE.md → Project Status |
@@ -72,7 +72,7 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 | Project Status | Phase changes, completions, what's in progress |
 | Architecture | Tech choices, patterns, global conventions |
 | Module Docs | Doc structure rules, links, lifecycle rules |
-| Decisions | Judgment calls, strategic choices, constraints |
+| Decisions | Index of ADRs (`docs/adr/`) with the one-line rule for Claude — full records live in the ADR files |
 
 **Which file within a module:**
 
@@ -81,8 +81,43 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 | Business rule, workflow, visibility logic | `<name>.md` |
 | Endpoint behaviour, DB schema, service implementation | `<name>.tech.md` |
 | Cross-module note (e.g. auth calls users) | `<name>.tech.md` Gotchas in the calling module; brief ref in called module |
-| Module boundary decision (e.g. reservation at cart not checkout) | CLAUDE.md → Decisions |
+| Module boundary decision (e.g. reservation at cart not checkout) | New ADR + CLAUDE.md → Decisions index |
 | Global convention | CLAUDE.md → Architecture → Key Patterns |
+
+### Task management (Jira)
+
+Setup and reasoning: [ADR 0009](docs/adr/0009-jira-team-spaces.md), [ADR 0010](docs/adr/0010-record-decisions-as-adrs.md). Site `aslanabdullayevdev.atlassian.net`, via the `atlassian` MCP server. **Jira is the source of truth for the backlog — don't duplicate ticket lists here.**
+
+| Space | Team | Owns | Board |
+|---|---|---|---|
+| `PLAT` | Platform/DevOps | infra compose, Postgres/RabbitMQ/Redis, CI, gateway | PLAT board |
+| `IDN` | Identity | `backend/auth`, `backend/users` | IDN board |
+| `COM`, `CRM`, `SHOP` (future) | Commerce / CRM FE / Storefront FE | — | create when phase starts |
+
+**Workflow:** `To Do` → `Ready For Development` → `In Progress` → `In Review` → `Done`.
+
+**Rules:**
+- Every decision or piece of work agreed in conversation gets a ticket in the owning team's space; tell the user the key. Decisions also get an ADR.
+- Technical work = **Task**; user-visible value = **Story**; each team's larger goals = **Epic** in its own space. Cross-team dependencies = "blocks" links; cross-team goals = label `init-<name>` (current: `init-phase1-auth`).
+- Descriptions follow: Background / Why / What to do / Acceptance criteria / Out of scope / Depends on.
+- **Blocked tickets:** "blocks" link to the blocker + label `blocked` + a comment saying what unblocks it; keep them in the backlog, not in a sprint. When the blocker is Done, remove the label. (Jira's "Flag" isn't on this site's edit screens; saved search for all blocked work: `labels = blocked`.)
+- Move tickets as work actually happens: `In Progress` when starting, `In Review` when changes are ready for review, `Done` only after the user confirms.
+- Branches and commit messages carry the key: `IDN-12-login-endpoint`, `PLAT-3: move postgres to infra/compose.yaml`.
+- The user moves tickets into sprints and starts/closes sprints; Jira UI configuration is done by the user, Claude verifies via API.
+
+**Definition of Ready** (may move to `Ready For Development` / into a sprint):
+- Has Background + Why — anyone can tell what problem it solves.
+- Has testable acceptance criteria.
+- Dependencies known and linked ("blocks"), and not blocked by unfinished work in the same sprint unless planned.
+- Small enough to finish within one sprint (otherwise split it).
+- Open decisions it depends on are made (or it's explicitly a spike to make them).
+
+**Definition of Done** (may move to `Done`):
+- All acceptance criteria met and verified (run it, not just "it compiles").
+- Reviewed (`/code-review`, CodeRabbit, or the user) and merged/committed with the ticket key in the message.
+- Docs updated per the Write triggers above (CLAUDE.md, README, module docs, ADR if a decision was made).
+- No secrets committed; nothing left that only works on one machine.
+- The user confirmed.
 
 ---
 ---
@@ -91,7 +126,19 @@ Do not wait for the user to say "memorize" or "remember". Update the relevant fi
 
 Multi-vendor e-commerce platform. **Learning project** — phases tackled one at a time to practice raw SQL and backend architecture.
 
-**Current state (2026-08-08):** Full reset, twice over. First pass wiped all source code but kept docs (see Decisions). Same day, the user deleted every remaining doc too (`core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md`) — a deliberate choice, not an accident. **Only this `CLAUDE.md` and `README.md` exist right now.** `src/` is empty. The Reading Guide and Module Doc Links below describe the intended structure for when docs get recreated — none of those files currently exist, so don't try to read or reference them until they're written fresh.
+**Where we left off (2026-09-26)** — resume here. Live ticket status is in Jira (check it first); this is the handoff summary:
+
+| # | Next step | Ticket | Notes |
+|---|---|---|---|
+| 1 | User reviews PLAT-7 output, then Claude moves it to Done | PLAT-7 (In Review) | Review `docs/adr/` + CLAUDE.md → For Claude → Task management |
+| 2 | Commit the uncommitted work — **only when the user asks** | PLAT-1 (Done), PLAT-7 | Everything since the flatten is staged/untracked, nothing committed. Suggested: `PLAT-1: flatten project structure`, then `PLAT-7: ADRs, Definition of Ready/Done, task management rules` (incl. untracked `docs/`) |
+| 3 | Start PLAT-2 Split Compose — most important this sprint | PLAT-2 (To Do) | Unblocks IDN-3 and PLAT-3. Flow: In Progress → branch `PLAT-2-compose-split` → work → `/code-review` → In Review → commit → Done |
+| 4 | Decide "Auth and Users: one service or two?" → ADR 0011 + follow-up tickets | IDN-1 | Must happen before IDN-2 (decides which tables exist) |
+| 5 | Then in parallel: PLAT-3 init script (user writes), IDN-2 auth schema (user writes), IDN-4 docs sweep (Claude can do) | | IDN-3 stays in backlog, labelled `blocked`, until PLAT-2 is Done |
+
+Sprints: PLAT Sprint 1 (PLAT-1,2,3,7) and IDN Sprint 1 (IDN-2, IDN-4), both Sep 25 → Oct 2. Postgres runs as `ecommerce-postgres-1` on volume `ecommerce_api_pgdata` (`auth_db` + `auth_service` intact).
+
+**History (2026-08-08):** Full reset, twice over. First pass wiped all source code but kept docs (see Decisions). Same day, the user deleted every remaining doc too (`core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md`) — a deliberate choice, not an accident. **Only this `CLAUDE.md` and `README.md` exist right now.** `src/` is empty. The Reading Guide and Module Doc Links below describe the intended structure for when docs get recreated — none of those files currently exist, so don't try to read or reference them until they're written fresh.
 
 | Phase | Module | Status |
 |---|---|---|
@@ -119,7 +166,7 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 - PostgreSQL runs via **Docker Compose**, not Homebrew/Postgres.app — decided so it scales cleanly once Redis/RabbitMQ/Meilisearch join later (see Tech Stack)
 - `docker-compose.yml` **created** (2026-08-08) — single `postgres:16` service, `services:`/`environment:`/`ports: "5432:5432"`/`volumes:` for persistence, credentials via `.env` (gitignored) with `.env.example` checked in. Written by Claude at the user's explicit request, after the user chose a chat-based concept primer over the self-write exercise.
 - **Still not created:** any `DatabaseModule`/`DatabaseService`, `schema.sql`. **Do not write these, or any DB layer code, unless explicitly asked** — same constraint as the Decisions entry below.
-- **Old single-app NestJS scaffold removed (2026-08-08)** — the root-level `package.json`/`node_modules`/`tsconfig.json`/`tsconfig.build.json`/`nest-cli.json`/`eslint.config.mjs`/`.prettierrc`/empty `src/` were leftover from the pre-microservices monolith plan and no longer fit the `backend/<service>/` structure (see Decisions → Microservices Architecture). Deleted, recoverable via git history if ever needed. `backend/` created at the repo root; each service gets its own independent scaffold inside it, starting with `backend/auth/`.
+- **Old single-app NestJS scaffold removed (2026-08-08)** — the root-level `package.json`/`node_modules`/`tsconfig.json`/`tsconfig.build.json`/`nest-cli.json`/`eslint.config.mjs`/`.prettierrc`/empty `src/` were leftover from the pre-microservices monolith plan and no longer fit the `backend/<service>/` structure (see [ADR 0004](docs/adr/0004-microservices-from-phase-1.md)). Deleted, recoverable via git history if ever needed. `backend/` created at the repo root; each service gets its own independent scaffold inside it, starting with `backend/auth/`.
 
 ---
 ---
@@ -148,14 +195,14 @@ Multi-vendor e-commerce platform. **Learning project** — phases tackled one at
 - **Response shape** — `ResponseInterceptor` wraps all responses: `ApiResponse<T> { message, data }`
 - **Permissions** — named `module:action`; seeding approach to be redecided during rebuild (previously a standalone script)
 - **Schema single source of truth** — table structure defined once in one file, never inline in spec files or services; exact file/location pending rebuild
-- **No shared code between services** — no `libs/` folder, categorically. Each service (`backend/<name>/`) has its own DTOs, interceptors, `ApiResponse` wrapper rather than importing shared internal packages. Deliberate — see Decisions → Microservices Architecture. (Auth is not part of this: JWT verification happens once, centrally, at the Gateway — it's not per-service code at all, so there's nothing to duplicate or share for that piece.)
+- **No shared code between services** — no `libs/` folder, categorically. Each service (`backend/<name>/`) has its own DTOs, interceptors, `ApiResponse` wrapper rather than importing shared internal packages. Deliberate — see [ADR 0004](docs/adr/0004-microservices-from-phase-1.md). (Auth is not part of this: JWT verification happens once, centrally, at the Gateway — it's not per-service code at all, so there's nothing to duplicate or share for that piece.)
 - **Module DB isolation, technically enforced** — one Postgres container, one database per service (e.g. `auth_db`, `users_db`), each with its own dedicated role granted `CONNECT` only on its own database (public `CONNECT` revoked). Postgres connections are scoped to exactly one database with no cross-database query syntax available by default — so cross-service table access is blocked structurally and by permissions, not just by convention
 
 ---
 
 ### Database Files & Schema Management
 
-Pending rebuild — connection config, schema file location, and dev/test database strategy are being redesigned against PostgreSQL by the user directly. See Decisions → 2026-08-08 Reset. Update this section once decided.
+Pending rebuild — connection config, schema file location, and dev/test database strategy are being redesigned against PostgreSQL by the user directly. See [ADR 0002](docs/adr/0002-reset-sqlite-to-postgres.md). Update this section once decided.
 
 Workflow for schema changes: edit `schema.sql` → `cross-env DB_NAME=db npm run db:reset` → tests pick it up automatically.
 
@@ -271,7 +318,7 @@ External-facing only. Contains: description, tech stack, setup, env vars, script
 - Sections in order: For Claude → Project Status → Architecture → Module Docs → Decisions
 - Double `---` between every top-level section; single `---` between subsections
 - Tables over bullet lists wherever data is tabular
-- Decisions section at the bottom — one short named entry per decision
+- Decisions section at the bottom — one index row per ADR; full text lives in `docs/adr/`
 
 ---
 
@@ -293,56 +340,20 @@ External-facing only. Contains: description, tech stack, setup, env vars, script
 
 ## Decisions
 
-### No ORM
-Raw SQL only — intentional for SQL practice. Never suggest an ORM regardless of complexity.
+Full records live in **[`docs/adr/`](docs/adr/README.md)** (context, alternatives, consequences). This index holds the rule Claude must follow for each. New decision → new ADR file + index row here + row in `docs/adr/README.md`. Never edit an accepted ADR; supersede it.
 
-### 2026-08-08 Reset: SQLite → PostgreSQL
-Project paused for several months; on resuming, all source code and the entire `database/` directory were deleted, and every module's technical doc (`<name>.tech.md`) was trimmed back to a target design (endpoints/DTOs + Planned) — implementation specifics that described the old SQLite build (schema, example payloads, flow diagrams with literal queries, file structure, gotchas) were removed since they no longer apply and shouldn't bias the rebuild. Business docs (`<name>.md`) and `roadmap.md` were kept as-is — they capture product/business intent, not implementation, and remain valid regardless of engine. Rebuilding from scratch against **PostgreSQL**. The Postgres connection layer, Docker setup, and schema are being written by the user directly as the relearning exercise — do not pre-build `docker-compose.yml`, a `DatabaseModule`/`DatabaseService`, or `schema.sql` unless explicitly asked.
-
-### 2026-08-08 Full Reset: All Docs Deleted Too
-Same day as the reset above, the user went further and deleted every remaining doc — `core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md` — not just source code. This followed a review pass where several business docs turned out to still contain previous-implementation detail (exact deleted class/decorator names like `JwtAuthGuard`, `@IsPublic()` in sequence diagrams and prose) despite earlier trimming — rather than keep chasing leftover implementation detail doc-by-doc, the user chose to restart documentation from zero alongside the code. This was deliberate, not accidental. Only `CLAUDE.md` and `README.md` remain. Do not attempt to reconstruct or restore any deleted doc from memory or git history — when a module is picked up again, write its docs fresh, informed by conversation with the user at that time.
-### Microservices Architecture (revised 2026-08-08 — supersedes original "monolith first" plan)
-**Originally planned:** monolith first, split into microservices later (after Cart & Orders or Payments). **Revised same day:** the user wants to learn microservices patterns hands-on, so the project is built as microservices starting from **Phase 1 (Auth & Users)** — not deferred. Accepted tradeoff: more upfront complexity (distributed auth, service boundaries decided before the domain is proven) in exchange for the learning value; the user made this call explicitly, knowing the cost.
-
-- **One monorepo, not separate git repos per service — and not NestJS's built-in `apps/`+`libs/` workspace tooling either.** That tooling shares one root `package.json`/`node_modules` across every service, which is its own form of coupling (shared dependency versions) and doesn't fit "zero shared code" below. Instead: a `backend/` folder at the repo root, one subfolder per service, each a fully independent, standalone NestJS project (own `package.json`, own `node_modules`, own `nest new` scaffold, own `Dockerfile`) — e.g. `backend/gateway/`, `backend/auth/`, `backend/orders/`. Nothing links them except being sibling folders in the same git repo. This project lives inside the `Learn-folder` umbrella repo as a subdirectory — separate top-level repos per service would break that existing structure.
-- **No shared code between services, categorically** — no `libs/` folder. Each service has its own DTOs, interceptors, `ApiResponse` wrapper. Deliberate: shared internal libraries create hidden coupling that undermines independent deployability — same reasoning as DB isolation below. This replaces the earlier target of a shared `libs/` (guards, decorators, interceptors, ApiResponse, RabbitMQ event types) — that's no longer the plan.
-- **No Consul, no service registry.** Docker Compose's built-in DNS (service name → container IP) is sufficient for this project's fixed, small, single-machine service set. Consul solves dynamic multi-host instance discovery — not a problem this project has. Revisit only if this ever moves to Kubernetes or dynamic scaling.
-- **Auth is centralized, not duplicated.** One Auth service owns login/registration/password hashing/issuing JWTs. Verification happens **once**, at the Gateway (or a dedicated auth-checking step) before a request is dispatched — downstream services (Users, Orders, etc.) receive already-authenticated requests and never independently re-verify a JWT. This isn't "no shared guard code," it's "no per-service guard code at all" — the check only exists in one place.
-- **Routing:** an API Gateway is the single entry point; forwards by path to the right service over Docker's internal network (service-name resolution, same mechanic as Postgres's container hostname).
-- **Database isolation, technically enforced:** one Postgres container, one database per service (e.g. `auth_db`, `users_db`), each with its own dedicated role granted `CONNECT` only on its own database (public `CONNECT` revoked). See Key Patterns → Module DB isolation for the full mechanism.
-- RabbitMQ remains the event transport for async communication between services once needed.
-
-### Folder Layout (decided 2026-09-25)
-```
-ecommerce/                 project root — CLAUDE.md, README.md, docker-compose.yml, .env(.example), single .idea/
-├── backend/               one independent NestJS project per service
-│   ├── gateway/           single entry point for both frontends; JWT verified here
-│   ├── auth/              (exists)
-│   └── <service>/         users, catalog, orders, ... as phases land
-├── frontend/              one independent project per app — frontends call only the gateway
-│   ├── crm/               Angular, internal operators
-│   └── storefront/        customer-facing, very low priority
-└── infra/
-    └── postgres/init/     mounted to /docker-entrypoint-initdb.d — CREATE DATABASE + role per service
-```
-No `packages/`/`libs/` — consistent with zero shared code. Folders are created when their work actually starts, not pre-scaffolded empty.
-
-### CRM Side Project
-Do not start the CRM until **Categories**, **Inventory/Products**, and **Customer Profiles** are complete. Those three phases establish the repeatable patterns needed to start a new project confidently. Customer Profiles maps directly to CRM concepts and is the natural bridge.
-
-CRM is a separate Angular project (`frontend/crm/`) — a frontend that consumes the API through the gateway. No separate CRM backend.
-
-### Naming Convention
-DB columns use `snake_case`. DTO fields and API response properties use `camelCase`. Mapping happens in the service layer — never return raw DB column names to the client.
-
-### Frontend Plan
-The backend (via the gateway) serves two frontends, both living in this repo under `frontend/`:
-- **CRM** (`frontend/crm/`) — Angular frontend, for internal operators. Start after Categories + Inventory + Customer Profiles.
-- **Customer storefront** (`frontend/storefront/`) — planned (revised 2026-09-25, previously "not planned"), **very low priority** — after the CRM. Framework not decided yet.
-
-Angular is the chosen frontend for the CRM.
-
-The API should remain frontend-friendly — clean response shapes, proper error codes, pagination-ready endpoints.
+| ADR | Decision | Rule for Claude |
+|---|---|---|
+| [0001](docs/adr/0001-no-orm.md) | Raw SQL only, no ORM | Never suggest an ORM or query builder, regardless of complexity. |
+| [0002](docs/adr/0002-reset-sqlite-to-postgres.md) | 2026-08-08 reset: rebuild on PostgreSQL | Don't pre-write DB layer code (`DatabaseModule`/`DatabaseService`, `schema.sql`, DB setup) unless explicitly asked — the user writes it. |
+| [0003](docs/adr/0003-restart-docs-from-zero.md) | All docs deleted, restarted with the code | Never reconstruct deleted docs from memory/git; write fresh with the user. |
+| [0004](docs/adr/0004-microservices-from-phase-1.md) | Microservices from Phase 1, independent-projects monorepo | Each service standalone (own `package.json`, `Dockerfile`); zero shared code, no `libs/`; no Consul; JWT verified only at the gateway; one DB + role per service. |
+| [0005](docs/adr/0005-folder-layout.md) | Folder layout `backend/` `frontend/` `infra/` `docs/` | Create folders only when their work starts. |
+| [0006](docs/adr/0006-frontends-crm-and-storefront.md) | Angular CRM + low-priority storefront | Don't start the CRM before Categories, Inventory and Customer Profiles are done; frontends call only the gateway. |
+| [0007](docs/adr/0007-naming-snake-case-db-camel-case-api.md) | `snake_case` DB, `camelCase` API | Map in the service layer; never return raw column names. |
+| [0008](docs/adr/0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; compose fragments + root `include:` | Frame infra choices by owning team. Each service/infra owns its compose fragment + `.env`; root `compose.yaml` only `include:`s; compose is dev/CI only. |
+| [0009](docs/adr/0009-jira-team-spaces.md) | Jira: one company-managed space per team, shared workflow | Follow **For Claude → Task management**. |
+| [0010](docs/adr/0010-record-decisions-as-adrs.md) | ADRs, DoR/DoD, initiative labels | Record decisions as ADRs; apply DoR/DoD; label initiative tickets `init-<name>`. |
 
 ---
 ---
