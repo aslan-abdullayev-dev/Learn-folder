@@ -5,6 +5,9 @@
 - **Owner (team):** Platform
 - **Jira:** PLAT-1
 
+> **Note:** Overridden by [ADR 0011](0011-polyrepo-e-commerce-learn-org.md) — the layout moves to separate
+> repos in the `e-commerce-learn` org.
+
 ## Context
 
 The project lived at `projects/e_commerce_sql/ecommerce_api/`: a wrapper folder holding nothing but the
