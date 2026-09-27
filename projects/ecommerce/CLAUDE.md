@@ -126,16 +126,27 @@ Setup and reasoning: [ADR 0009](docs/adr/0009-jira-team-spaces.md), [ADR 0010](d
 
 Multi-vendor e-commerce platform. **Learning project** — phases tackled one at a time to practice raw SQL and backend architecture.
 
-**Where we left off (2026-09-26)** — resume here. Live ticket status is in Jira (check it first); this is the handoff summary:
+**Where we left off (2026-09-27)**: resume here. Live ticket status is in Jira (check it first); this is the handoff summary.
+
+**Direction change (2026-09-26): polyrepo.** The project moves out of this Learn-folder monorepo into separate repos in the GitHub org `e-commerce-learn` (`architecture`, `infra-postgres`, `backend-identity`). Tracked as epics PLAT-8 (platform side) and IDN-5 (identity side). This `projects/ecommerce` folder gets deleted after the migration (PLAT-14, last step).
 
 | # | Next step | Ticket | Notes |
 |---|---|---|---|
-| ✅ | PLAT-1 and PLAT-7 Done, committed (`2d2db66`, `4575d6b`) and pushed to `origin/ecommerce_api` | | Commit style: `Type(KEY-N): message`, e.g. `Chore(PLAT-1): …`, `Docs(PLAT-7): …` |
-| 3 | PLAT-2 Split Compose — files moved, data verified, docs updated; next: `/code-review` → In Review → commit | PLAT-2 (In Progress) | **Scope: ONLY move the Postgres service + `pgdata` volume (keep `name: ecommerce_api_pgdata`) into `infra/compose.yaml`, move `POSTGRES_*` env to `infra/.env`/`.env.example`, and replace root `docker-compose.yml` with a `compose.yaml` containing only `include: [infra/compose.yaml]`.** No per-service compose files — auth's is IDN-3, gateway's is PLAT-4. Follow the acceptance criteria in the Jira ticket. Unblocks IDN-3 and PLAT-3. Flow: In Progress → branch `feature/PLAT-2` → work → `/code-review` → In Review → commit → Done |
-| 4 | Decide "Auth and Users: one service or two?" → ADR 0011 + follow-up tickets | IDN-1 | Must happen before IDN-2 (decides which tables exist) |
-| 5 | Then in parallel: PLAT-3 init script (user writes), IDN-2 auth schema (user writes), IDN-4 docs sweep (Claude can do) | | IDN-3 stays in backlog, labelled `blocked`, until PLAT-2 is Done |
+| ✅ | PLAT-1, PLAT-2, PLAT-7 Done and merged into `ecommerce_api` (`2d2db66`, `4575d6b`, `66afcc3`) | | Commit style: `Type(KEY-N): message`, e.g. `Chore(PLAT-1): …`. Always run compose from the project root. |
+| 1 | Write ADR 0011: polyrepo in the `e-commerce-learn` org (draft locally for review) | PLAT-10 (PLAT Sprint 2) | Unblocked. Everything in the migration builds on it. |
+| 2 | Migrate the repos: `architecture` (PLAT-11, sub-tasks PLAT-15–19), `infra-postgres` (PLAT-12, PLAT-20–23), `backend-identity` (IDN-6, IDN-7–10) | PLAT-11 (PLAT Sprint 2), IDN-6 (IDN Sprint 2), PLAT-12 (backlog) | Fresh start with no history import. Squash merge only. Global ADRs go in `architecture/adr/`, local ADRs in each repo's `docs/adr/`. |
+| 3 | Decisions (each one becomes an ADR): service boundaries (IDN-11), DB access model (PLAT-24, blocks PLAT-3), migrations approach (PLAT-25, blocks IDN-2), authN (IDN-12), authZ (IDN-13), API conventions (PLAT-26), gateway (PLAT-27), observability (PLAT-28) | | IDN-11, PLAT-24, PLAT-25 come first because they unblock build work |
+| 4 | Build work: PLAT-3 init script, IDN-2 auth schema (user writes both), IDN-3 Dockerfile + compose fragment, IDN-4 per-repo docs structure | | Blocked by the decisions above; IDN-2/3/4 are in the backlog on purpose |
+| 5 | Decide local dev across repos (PLAT-13), then delete this folder (PLAT-14) | | PLAT-14 goes last |
 
-Sprints: PLAT Sprint 1 (PLAT-1,2,3,7) and IDN Sprint 1 (IDN-2, IDN-4), both Sep 25 → Oct 2. Postgres runs as `ecommerce-postgres-1` on volume `ecommerce_api_pgdata` (`auth_db` + `auth_service` intact).
+Sprints are **1 week**; the user has **~5–6 hours/week**, so size sprints to that. Sprint 1 (both teams) was closed early on 2026-09-27 because the polyrepo decision made its goals obsolete; PLAT-3 went back to the backlog (blocked by PLAT-24).
+
+| Sprint | Dates | Goal | Contents |
+|---|---|---|---|
+| PLAT Sprint 2 | Sep 27 → Oct 4 | The polyrepo decision is recorded and the architecture repo is live as the home for global docs. | PLAT-10, PLAT-11 (PLAT-15–19) |
+| IDN Sprint 2 | Sep 27 → Oct 4 | The backend-identity repo exists, runs, and connects to auth_db | IDN-6 (IDN-7–10) |
+
+Order across teams: PLAT-19 (`services.md`) before IDN-10 (adds a row to it). Postgres runs as `ecommerce-postgres-1` on volume `ecommerce_api_pgdata` (`auth_db` + `auth_service` intact).
 
 **History (2026-08-08):** Full reset, twice over. First pass wiped all source code but kept docs (see Decisions). Same day, the user deleted every remaining doc too (`core.md`, `core.tech.md`, `auth.md`, `auth.tech.md`, `categories.md`, `categories.tech.md`, `users.md`, `users.tech.md`, `roadmap.md`, `errors.md`) — a deliberate choice, not an accident. **Only this `CLAUDE.md` and `README.md` exist right now.** `src/` is empty. The Reading Guide and Module Doc Links below describe the intended structure for when docs get recreated — none of those files currently exist, so don't try to read or reference them until they're written fresh.
 
