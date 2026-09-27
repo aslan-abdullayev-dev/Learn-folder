@@ -5,7 +5,7 @@
 - **Owner (team):** all
 
 > **Note:** Partly overridden by [ADR 0011](0011-polyrepo-e-commerce-learn-org.md) — the monorepo part
-> ("one monorepo … inside `Learn-folder`"). Everything else still applies.
+> (one monorepo of independent projects, living inside `Learn-folder`). Everything else still applies.
 
 ## Context
 

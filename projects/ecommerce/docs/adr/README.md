@@ -2,7 +2,8 @@
 
 One file per significant decision: what we decided, why, what we rejected, and what it costs us.
 Decisions are **never edited after they're accepted**. If a decision changes, write a new ADR that
-supersedes the old one and set the old one's status to `Superseded by NNNN`.
+overrides the old one. The old ADR stays untouched except for a note under its header pointing to the new
+one (e.g. `> **Note:** Partly overridden by ADR NNNN — …`); the new ADR lists what it overrides.
 
 ## When to write one
 
@@ -23,11 +24,11 @@ supersedes the old one and set the old one's status to `Superseded by NNNN`.
 | [0001](0001-no-orm.md) | Raw SQL only, no ORM | Accepted | — |
 | [0002](0002-reset-sqlite-to-postgres.md) | Reset: rebuild on PostgreSQL instead of SQLite | Accepted | 2026-08-08 |
 | [0003](0003-restart-docs-from-zero.md) | Delete all docs and restart them alongside the code | Accepted | 2026-08-08 |
-| [0004](0004-microservices-from-phase-1.md) | Microservices from Phase 1, independent-projects monorepo | Accepted | 2026-08-08 |
-| [0005](0005-folder-layout.md) | Folder layout: `backend/`, `frontend/`, `infra/` | Accepted | 2026-09-25 |
+| [0004](0004-microservices-from-phase-1.md) | Microservices from Phase 1, independent-projects monorepo | Accepted (partly overridden by [0011](0011-polyrepo-e-commerce-learn-org.md)) | 2026-08-08 |
+| [0005](0005-folder-layout.md) | Folder layout: `backend/`, `frontend/`, `infra/` | Accepted (overridden by [0011](0011-polyrepo-e-commerce-learn-org.md)) | 2026-09-25 |
 | [0006](0006-frontends-crm-and-storefront.md) | Two frontends: Angular CRM, low-priority storefront | Accepted | 2026-09-25 |
 | [0007](0007-naming-snake-case-db-camel-case-api.md) | `snake_case` in the DB, `camelCase` in the API | Accepted | — |
-| [0008](0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; per-service compose fragments + root `include:` | Accepted | 2026-09-25 |
+| [0008](0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; per-service compose fragments + root `include:` | Accepted (partly overridden by [0011](0011-polyrepo-e-commerce-learn-org.md)) | 2026-09-25 |
 | [0009](0009-jira-team-spaces.md) | Jira: one company-managed space per team, shared workflow | Accepted | 2026-09-25 |
 | [0010](0010-record-decisions-as-adrs.md) | Record decisions as ADRs; DoR/DoD; initiative labels | Accepted | 2026-09-26 |
 | [0011](0011-polyrepo-e-commerce-learn-org.md) | Polyrepo in the `e-commerce-learn` GitHub org (overrides parts of 0004, 0008; all of 0005) | Accepted | 2026-09-27 |
