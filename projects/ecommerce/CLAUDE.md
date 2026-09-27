@@ -364,6 +364,7 @@ Full records live in **[`docs/adr/`](docs/adr/README.md)** (context, alternative
 | [0008](docs/adr/0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; compose fragments + root `include:` | Frame infra choices by owning team. Each service/infra owns its compose fragment + `.env`; root `compose.yaml` only `include:`s; compose is dev/CI only. |
 | [0009](docs/adr/0009-jira-team-spaces.md) | Jira: one company-managed space per team, shared workflow | Follow **For Claude → Task management**. |
 | [0010](docs/adr/0010-record-decisions-as-adrs.md) | ADRs, DoR/DoD, initiative labels | Record decisions as ADRs; apply DoR/DoD; label initiative tickets `init-<name>`. |
+| [0011](docs/adr/0011-polyrepo-e-commerce-learn-org.md) | Polyrepo in the `e-commerce-learn` org (overrides 0004 monorepo part, all of 0005, 0008 root `include:`) | Repos named `architecture` / `infra-<tool>` / `backend-<service>` / `frontend-<app>`, cloned to `~/Desktop/Code/e-commerce-learn/<group>/<repo>`; squash merge only; global ADRs in `architecture/adr/`, local in `<repo>/docs/adr/`, local can't override global. Local dev across repos is still open (PLAT-13). |
 
 ---
 ---

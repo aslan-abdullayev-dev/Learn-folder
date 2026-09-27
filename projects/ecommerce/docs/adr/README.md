@@ -30,3 +30,4 @@ supersedes the old one and set the old one's status to `Superseded by NNNN`.
 | [0008](0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; per-service compose fragments + root `include:` | Accepted | 2026-09-25 |
 | [0009](0009-jira-team-spaces.md) | Jira: one company-managed space per team, shared workflow | Accepted | 2026-09-25 |
 | [0010](0010-record-decisions-as-adrs.md) | Record decisions as ADRs; DoR/DoD; initiative labels | Accepted | 2026-09-26 |
+| [0011](0011-polyrepo-e-commerce-learn-org.md) | Polyrepo in the `e-commerce-learn` GitHub org (overrides parts of 0004, 0008; all of 0005) | Accepted | 2026-09-27 |

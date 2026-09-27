@@ -5,6 +5,9 @@
 - **Owner (team):** Platform
 - **Jira:** PLAT-2
 
+> **Note:** Partly overridden by [ADR 0011](0011-polyrepo-e-commerce-learn-org.md) — the root `compose.yaml`
+> with `include:`. Team ownership and per-repo compose fragments still apply.
+
 ## Context
 
 **A core purpose of this project** is to practice how a real org with separate frontend, backend,

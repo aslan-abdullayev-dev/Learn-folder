@@ -4,6 +4,9 @@
 - **Date:** 2026-08-08
 - **Owner (team):** all
 
+> **Note:** Partly overridden by [ADR 0011](0011-polyrepo-e-commerce-learn-org.md) — the monorepo part
+> ("one monorepo … inside `Learn-folder`"). Everything else still applies.
+
 ## Context
 
 The original plan was a monolith first, split into microservices later (after Cart & Orders or
