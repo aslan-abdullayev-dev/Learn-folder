@@ -114,7 +114,7 @@ Setup and reasoning: [ADR 0009](docs/adr/0009-jira-team-spaces.md), [ADR 0010](d
 
 **Definition of Done** (may move to `Done`):
 - All acceptance criteria met and verified (run it, not just "it compiles").
-- Reviewed (`/code-review`, CodeRabbit, or the user) and merged/committed with the ticket key in the message.
+- Reviewed (`/code-review` or the user) and merged/committed with the ticket key in the message.
 - Docs updated per the Write triggers above (CLAUDE.md, README, module docs, ADR if a decision was made).
 - No secrets committed; nothing left that only works on one machine.
 - The user confirmed.
@@ -350,18 +350,18 @@ External-facing only. Contains: description, tech stack, setup, env vars, script
 
 ## Decisions
 
-Full records live in **[`docs/adr/`](docs/adr/README.md)** (context, alternatives, consequences). This index holds the rule Claude must follow for each. New decision → new ADR file + index row here + row in `docs/adr/README.md`. Never edit an accepted ADR; supersede it.
+Full records live in **[`docs/adr/`](docs/adr/README.md)** (context, alternatives, consequences). This index holds the rule Claude must follow for each. New decision → new ADR file + index row here + row in `docs/adr/README.md`. Never edit an accepted ADR; override it with a new one and add a note to the old one pointing there.
 
 | ADR | Decision | Rule for Claude |
 |---|---|---|
 | [0001](docs/adr/0001-no-orm.md) | Raw SQL only, no ORM | Never suggest an ORM or query builder, regardless of complexity. |
 | [0002](docs/adr/0002-reset-sqlite-to-postgres.md) | 2026-08-08 reset: rebuild on PostgreSQL | Don't pre-write DB layer code (`DatabaseModule`/`DatabaseService`, `schema.sql`, DB setup) unless explicitly asked — the user writes it. |
 | [0003](docs/adr/0003-restart-docs-from-zero.md) | All docs deleted, restarted with the code | Never reconstruct deleted docs from memory/git; write fresh with the user. |
-| [0004](docs/adr/0004-microservices-from-phase-1.md) | Microservices from Phase 1, independent-projects monorepo | Each service standalone (own `package.json`, `Dockerfile`); zero shared code, no `libs/`; no Consul; JWT verified only at the gateway; one DB + role per service. |
-| [0005](docs/adr/0005-folder-layout.md) | Folder layout `backend/` `frontend/` `infra/` `docs/` | Create folders only when their work starts. |
+| [0004](docs/adr/0004-microservices-from-phase-1.md) | Microservices from Phase 1, independent-projects monorepo (monorepo part overridden by 0011) | Each service standalone (own `package.json`, `Dockerfile`); zero shared code, no `libs/`; no Consul; JWT verified only at the gateway; one DB + role per service. |
+| [0005](docs/adr/0005-folder-layout.md) | Folder layout `backend/` `frontend/` `infra/` `docs/` | Create folders only when their work starts. **Overridden by 0011 for the new repos** — use repo prefixes + local group folders instead. |
 | [0006](docs/adr/0006-frontends-crm-and-storefront.md) | Angular CRM + low-priority storefront | Don't start the CRM before Categories, Inventory and Customer Profiles are done; frontends call only the gateway. |
 | [0007](docs/adr/0007-naming-snake-case-db-camel-case-api.md) | `snake_case` DB, `camelCase` API | Map in the service layer; never return raw column names. |
-| [0008](docs/adr/0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; compose fragments + root `include:` | Frame infra choices by owning team. Each service/infra owns its compose fragment + `.env`; root `compose.yaml` only `include:`s; compose is dev/CI only. |
+| [0008](docs/adr/0008-multi-team-ownership-and-compose-layout.md) | Simulated multi-team ownership; compose fragments + root `include:` | Frame infra choices by owning team. Each service/infra owns its compose fragment + `.env`; root `compose.yaml` only `include:`s; compose is dev/CI only. **Root `include:` overridden by 0011 for the new repos** (local dev across repos: PLAT-13). |
 | [0009](docs/adr/0009-jira-team-spaces.md) | Jira: one company-managed space per team, shared workflow | Follow **For Claude → Task management**. |
 | [0010](docs/adr/0010-record-decisions-as-adrs.md) | ADRs, DoR/DoD, initiative labels | Record decisions as ADRs; apply DoR/DoD; label initiative tickets `init-<name>`. |
 | [0011](docs/adr/0011-polyrepo-e-commerce-learn-org.md) | Polyrepo in the `e-commerce-learn` org (overrides 0004 monorepo part, all of 0005, 0008 root `include:`) | Repos named `architecture` / `infra-<tool>` / `backend-<service>` / `frontend-<app>`, cloned to `~/Desktop/Code/e-commerce-learn/<group>/<repo>`; squash merge only; global ADRs in `architecture/adr/`, local in `<repo>/docs/adr/`, local can't override global. Local dev across repos is still open (PLAT-13). |
